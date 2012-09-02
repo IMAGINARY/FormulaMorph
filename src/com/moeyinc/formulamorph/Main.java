@@ -27,6 +27,7 @@ public class Main {
 			f.pack();
 			f.setVisible( true );
         }
+        new ControllerAdapterGUI( null, null );
     }
     
     public static void main(String[] args) {
