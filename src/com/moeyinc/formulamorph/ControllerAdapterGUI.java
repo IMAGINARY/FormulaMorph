@@ -38,6 +38,8 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 			content.add( slider_panel );
 		}
 		pack();
+		if( isAlwaysOnTopSupported() )
+			setAlwaysOnTop( true );
 		setVisible( true );
 	}
 	

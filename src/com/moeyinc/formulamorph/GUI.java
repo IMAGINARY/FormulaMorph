@@ -51,11 +51,11 @@ public class GUI extends JFrame
 		
 		try {
 			surfF = new JSurferRenderPanel(); //surfF.setBackground( Color.gray );
-			loadFromFile( surfF.getAlgebraicSurfaceRenderer(), new URL( "file:///home/stussak/Desktop/JSurfer-SVN/branches/MoMath/FormulaMorph/src/com/moeyinc/formulamorph/gallery/barthsextic.jsurf" ) );
+			loadFromFile( surfF.getAlgebraicSurfaceRenderer(), this.getClass().getResource( "gallery/barthsextic.jsurf" ) );
 			surfM = new JSurferRenderPanel(); //surfM.setBackground( Color.gray );
-			loadFromFile( surfM.getAlgebraicSurfaceRenderer(), new URL( "file:///home/stussak/Desktop/JSurfer-SVN/branches/MoMath/FormulaMorph/src/com/moeyinc/formulamorph/gallery/barthsextic.jsurf" ) );
+			loadFromFile( surfM.getAlgebraicSurfaceRenderer(), this.getClass().getResource( "gallery/barthsextic.jsurf" ) );
 			surfG = new JSurferRenderPanel(); //surfG.setBackground( Color.gray );
-			loadFromFile( surfG.getAlgebraicSurfaceRenderer(), new URL( "file:///home/stussak/Desktop/JSurfer-SVN/branches/MoMath/FormulaMorph/src/com/moeyinc/formulamorph/gallery/heart.jsurf" ) );
+			loadFromFile( surfG.getAlgebraicSurfaceRenderer(), this.getClass().getResource( "gallery/heart.jsurf" ) );
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -140,13 +140,15 @@ public class GUI extends JFrame
     public void tryFullScreen() {
 		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         boolean isFullScreen = device.isFullScreenSupported();
-        setUndecorated(isFullScreen);
-        setResizable(!isFullScreen);
-        if (isFullScreen) {
-            device.setFullScreenWindow( this );
+        if (isFullScreen)
 			hideCursor();
-            validate();
-        }
+		else
+			System.err.println( "Fullscreen mode not supported on this plattform! We try it anyway ..." );
+
+        setUndecorated(true);
+        setResizable(false);
+        validate();
+        device.setFullScreenWindow( this );
     }
     
     private static final String staticLaTeXSrc = "" +
