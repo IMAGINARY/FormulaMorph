@@ -51,11 +51,11 @@ public class GUI extends JFrame
 		
 		try {
 			surfF = new JSurferRenderPanel(); //surfF.setBackground( Color.gray );
-			loadFromFile( surfF.getAlgebraicSurfaceRenderer(), this.getClass().getResource( "gallery/barthsextic.jsurf" ) );
+			loadFromFile( surfF.getAlgebraicSurfaceRenderer(), new File( "gallery/barthsextic.jsurf" ).toURI().toURL() );
 			surfM = new JSurferRenderPanel(); //surfM.setBackground( Color.gray );
-			loadFromFile( surfM.getAlgebraicSurfaceRenderer(), this.getClass().getResource( "gallery/barthsextic.jsurf" ) );
+			loadFromFile( surfM.getAlgebraicSurfaceRenderer(), new File( "gallery/barthsextic.jsurf" ).toURI().toURL() );
 			surfG = new JSurferRenderPanel(); //surfG.setBackground( Color.gray );
-			loadFromFile( surfG.getAlgebraicSurfaceRenderer(), this.getClass().getResource( "gallery/heart.jsurf" ) );
+			loadFromFile( surfG.getAlgebraicSurfaceRenderer(), new File( "gallery/heart.jsurf" ).toURI().toURL() );
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

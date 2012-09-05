@@ -13,8 +13,8 @@ public class Main {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-//    	boolean fullscreen = false;
-    	boolean fullscreen = true;
+    	boolean fullscreen = false;
+//    	boolean fullscreen = true;
 		GUI f = new GUI();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if( fullscreen )
