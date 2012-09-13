@@ -15,6 +15,7 @@ public class Main {
         //Create and set up the window.
     	boolean fullscreen = false;
 //    	boolean fullscreen = true;
+    	
 		GUI f = new GUI();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if( fullscreen )
@@ -24,11 +25,11 @@ public class Main {
         else
         {
 	        //Size and display the window. (size has no effect in fullscree mode)
-			f.getContentPane().setPreferredSize(new Dimension(16*50,9*50));
+			f.getContentPane().setPreferredSize(new Dimension(16*75,9*75));
 			f.pack();
 			f.setVisible( true );
         }
-        new ControllerAdapterGUI( null, null );
+        
     }
     
     public static void main(String[] args) {

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import javax.vecmath.*;
 
 import java.io.ByteArrayInputStream;
@@ -12,26 +13,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Properties;
 import java.util.Set;
+import java.util.EnumSet;
+import java.text.DecimalFormat;
 
-import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
-import com.moeyinc.formulamorph.Parameters.Name;
-import com.moeyinc.formulamorph.Parameters.Surface;
+//import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
+import com.moeyinc.formulamorph.Parameters.*;
 
-import de.mfo.jsurfer.rendering.Camera;
-import de.mfo.jsurfer.rendering.LightSource;
+import de.mfo.jsurfer.algebra.*;
+import de.mfo.jsurfer.rendering.*;
 import de.mfo.jsurfer.util.BasicIO;
-import de.mfo.jsurfer.rendering.AlgebraicSurfaceRenderer;;
 
-public class GUI extends JFrame
+public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListener
 {
+	final ControllerAdapterGUI caGUI = new ControllerAdapterGUI( null );
 	JPanel content; // fixed 16:9 top container
 	static final double aspectRatio = 16.0 / 9.0;
 
-	JSurferRenderPanel surfF;
-	JSurferRenderPanel surfM; // morphed surface
-	JSurferRenderPanel surfG;
+	EnumMap< Parameters.Surface, JSurferRenderPanel > surface2panel = new EnumMap< Parameters.Surface, JSurferRenderPanel >( Parameters.Surface.class );
+	EnumMap< Parameters.Surface, String > surface2latex = new EnumMap< Parameters.Surface, String>( Parameters.Surface.class );
 	
 	LaTeXLabel equationLaTeX;
 	
@@ -41,26 +44,32 @@ public class GUI extends JFrame
 	public GUI()
 	{
 		super( "FormulaMorph Main Window" );
+	
+		caGUI.setDefaultCloseOperation( HIDE_ON_CLOSE );
+		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { caGUI.setVisible( true ); } } );
+		
+		for( Parameter p : Parameter.values() )
+			p.addValueChangeListener( this );
 
 		// setup the contained which has fixed 16:9 aspect ratio
 		content = new JPanel();
 		content.setBackground(Color.white);
-		content.setLayout( null ); 
+		content.setLayout( null );
 
 		// init components
 		
 		try {
-			surfF = new JSurferRenderPanel(); //surfF.setBackground( Color.gray );
-			loadFromFile( surfF.getAlgebraicSurfaceRenderer(), new File( "gallery/barthsextic.jsurf" ).toURI().toURL() );
-			surfM = new JSurferRenderPanel(); //surfM.setBackground( Color.gray );
-			loadFromFile( surfM.getAlgebraicSurfaceRenderer(), new File( "gallery/barthsextic.jsurf" ).toURI().toURL() );
-			surfG = new JSurferRenderPanel(); //surfG.setBackground( Color.gray );
-			loadFromFile( surfG.getAlgebraicSurfaceRenderer(), new File( "gallery/heart.jsurf" ).toURI().toURL() );
+			surface2panel.put( Surface.F, new JSurferRenderPanel() ); //surfF.setBackground( Color.gray );
+			surface2panel.put( Surface.M, new JSurferRenderPanel() ); //surfM.setBackground( Color.gray );
+			surface2panel.put( Surface.G, new JSurferRenderPanel() ); //surfG.setBackground( Color.gray );
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		Border border = BorderFactory.createLineBorder( Color.LIGHT_GRAY );
+		for( Surface s : Surface.values() )
+			surface2panel.get( s ).setBorder(border);
+		
 		equationLaTeX = new LaTeXLabel( setupLaTeXSrc() );
  //equationLaTeX.setBackground( Color.gray ); equationLaTeX.setOpaque( true );
 
@@ -68,9 +77,9 @@ public class GUI extends JFrame
 		galG = new JPanel(); galG.setBackground( Color.lightGray );
 
 		// add components
-		content.add( surfF );
-		content.add( surfM );
-		content.add( surfG );
+		content.add( surface2panel.get( Surface.F ) );
+		content.add( surface2panel.get( Surface.M ) );
+		content.add( surface2panel.get( Surface.G ) );
 		
 		content.add( equationLaTeX );
 
@@ -99,13 +108,32 @@ public class GUI extends JFrame
 		getContentPane().setLayout( null );
 		getContentPane().add( content );
 		getContentPane().setBackground( Color.black );		
+
+		try
+		{
+	        Properties props = new Properties();
+	        props.load( new File( "gallery/defaults.jsurf" ).toURI().toURL().openStream() );
+	        for( Surface s : Surface.values() )
+	        	setDefaults( s, props );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+		
+		idChanged( Surface.F );
+		idChanged( Surface.G );
 	}
+	
+	JSurferRenderPanel surfF() { return surface2panel.get( Surface.F ); }
+	JSurferRenderPanel surfM() { return surface2panel.get( Surface.M ); }
+	JSurferRenderPanel surfG() { return surface2panel.get( Surface.G ); }
 
 	public void refreshLayout()
 	{
-		surfF.setBounds( computeBounds( content, 10, 5 * aspectRatio, 23, 23 * aspectRatio ) );
-		surfM.setBounds( computeBounds( content, 50 - ( 25 / 2 ), 3 * aspectRatio, 25, 25 * aspectRatio ) ); // center horizontally
-		surfG.setBounds( computeBounds( content, 100 - 10 - 23, 5 * aspectRatio, 23, 23 * aspectRatio ) );
+		surfF().setBounds( computeBounds( content, 10, 5 * aspectRatio, 23, 23 * aspectRatio ) );		
+		surfM().setBounds( computeBounds( content, 50 - ( 25 / 2 ), 3 * aspectRatio, 25, 25 * aspectRatio ) ); // center horizontally
+		surfG().setBounds( computeBounds( content, 100 - 10 - 23, 5 * aspectRatio, 23, 23 * aspectRatio ) );
 
 		double elPrefWidth = 95.0;
 		double elPrefHeight = 15 * aspectRatio;
@@ -152,22 +180,22 @@ public class GUI extends JFrame
     }
     
     private static final String staticLaTeXSrc = "" +
-			"\\newcommand{\\nl}{\\\\\\sf}\n" +
+			"\\newcommand{\\nl}{\\\\\\sf\\small}\n" +
 			"\\begin{array}{rcl@{}c@{}rcl}\n" +
 			"\\left[\\vspace{7em} \\right.\n" +
 			"&\n" +
 			"\\begin{array}{c}\n" +
-			"	\\sf \\formulaF\n" +
+			"	\\sf\\small \\formulaF\n" +
 			"\\end{array}\n" +
 			"&\n" +
 			"\\left.\\vspace{7em} \\right]\n" +
 			"&\n" +
-			"\\sf\\cdot\\ \\pT+(1-\\pT)\\:\\cdot\n" +
+			"\\sf\\small\\cdot\\ \\FMPMt+(1-\\FMPMt)\\:\\cdot\n" +
 			"&\n" +
 			"\\left[\\vspace{7em} \\right.\n" +
 			"&\n" +
 			"\\begin{array}{c}\n" +
-			"	\\sf \\formulaG\n" +
+			"	\\sf\\small \\formulaG\n" +
 			"\\end{array}\n" +
 			"&\n" +
 			"\\left.\\vspace{7em} \\right]\n" +
@@ -176,79 +204,232 @@ public class GUI extends JFrame
 			"\\end{array}\n";
     
     private String setupLaTeXSrc()
-    {
-    	String result = "" +
-    			"\\newcommand{\\valAl}{0.01}\n" +
-    			"\\newcommand{\\valT}{0.25}\n" +
-    			"\\newcommand{\\pAl}{\\colorbox{yellow}{\\valAl}}\n" +
-    			"\\newcommand{\\pT}{\\colorbox{red}{\\valT}}\n" +
-    			"\\newcommand{\\formulaF}{4((\\frac{1+\\sqrt{5}}{2})^2x^2-y^2)\\cdot((\\frac{1+\\sqrt{5}}{2})^2y^2-z^2)\\nl\\cdot((\\frac{1+\\sqrt{5}}{2})^2z^2-x^2)-(2+\\sqrt{5})\\nl\\cdot(x^2+y^2+z^2-1)^2-\\pAl}\n" +
-    			"\\newcommand{\\formulaG}{xyz+x^2+y^2+z^2+1}\n" +
-    			staticLaTeXSrc;
-    	return result;
+    {    	
+    	DecimalFormat f = new DecimalFormat("0.00");
+    	StringBuilder sb = new StringBuilder();
+    	for( Parameter p : Parameter.values() )
+    	{
+    		if( p.isActive() )
+    		{
+    			sb.append( p.getLaTeXColorDefinition() );
+    			sb.append( "\\newcommand{\\FMP" );
+    			sb.append( p.getSurface().name() );
+    			sb.append( p.getName() );
+    			sb.append( "}{\\fgcolor{" );
+    			sb.append( p.getLaTeXColorName() );
+    			sb.append( "}\\ovalbox{\\fgcolor{black}{" );
+    			sb.append( f.format( p.getValue() ) );
+    			sb.append( "}}}\n" );
+    		}
+    	}
+    	for( Surface s : Surface.values() )
+    	{
+    		sb.append( "\\newcommand{\\formula" );
+    		sb.append( s.name() );
+    		sb.append( "}{" );
+    		sb.append( surface2latex.get( s ) );
+    		sb.append( "}\n" );
+    	}
+    	//sb.append("\\begin{array}{c}\\formulaF \\\\ \\FMPMt \\\\ \\formulaG\\end{array}");
+    	//sb.append( "a" );
+    	sb.append( staticLaTeXSrc );
+    	System.out.println( sb.toString() );
+    	return sb.toString();
     }
     
-	public void setParameterValue( Name name, double value )
-	{
-		
-	}
-
-	private Set< ActiveParameterListener > apls; 
-	public void addActiveParameterListener( ActiveParameterListener apl ) { apls.add( apl ); }
-	public void removeActiveParameterListener( ActiveParameterListener apl ) { apls.remove( apl ); }	
-	
-	public void setSurface( Surface surface, int index_in_gallery ) {}
-    
-
-    public void loadFromString( AlgebraicSurfaceRenderer asr, String s )
-            throws Exception
+    public void setDefaults( Surface surf, Properties props )
     {
-        Properties props = new Properties();
-        props.load( new ByteArrayInputStream( s.getBytes() ) );
-        loadFromProperties( asr, props );
-    }
-
-    public void loadFromFile( AlgebraicSurfaceRenderer asr, URL url )
-            throws IOException, Exception
-    {
-        Properties props = new Properties();
-        props.load( url.openStream() );
-        loadFromProperties( asr, props );
-    }
-
-    public void loadFromProperties( AlgebraicSurfaceRenderer asr, Properties props )
-            throws Exception
-    {
-        asr.setSurfaceFamily( props.getProperty( "surface_equation" ) );
-
-        Set< Map.Entry< Object, Object > > entries = props.entrySet();
-        String parameter_prefix = "surface_parameter_";
-        for( Map.Entry< Object, Object > entry : entries )
-        {
-            String name = (String) entry.getKey();
-            if( name.startsWith( parameter_prefix ) )
-            {
-                String parameterName = name.substring( parameter_prefix.length() );
-                asr.setParameterValue( parameterName, Float.parseFloat( ( String ) entry.getValue() ) );
-                System.out.println("LoadRenderPar: " + parameterName + "=" + entry.getValue() + " (" + Float.parseFloat( (String) entry.getValue()) + ") "+ asr.getParameterValue( parameterName));
-            }
-        }
+    	AlgebraicSurfaceRenderer asr = surface2panel.get( surf ).getAlgebraicSurfaceRenderer();
 
         asr.getCamera().loadProperties( props, "camera_", "" );
         setOptimalCameraDistance( asr.getCamera() );
-        asr.getFrontMaterial().loadProperties(props, "front_material_", "");
-        asr.getBackMaterial().loadProperties(props, "back_material_", "");
+
         for( int i = 0; i < asr.MAX_LIGHTS; i++ )
         {
             asr.getLightSource( i ).setStatus(LightSource.Status.OFF);
             asr.getLightSource( i ).loadProperties( props, "light_", "_" + i );
         }
         asr.setBackgroundColor( BasicIO.fromColor3fString( props.getProperty( "background_color" ) ) );
+
+        Matrix4d identity = new Matrix4d();
+        identity.setIdentity();
         asr.setTransform( BasicIO.fromMatrix4dString( props.getProperty( "rotation_matrix" ) ) );
         Matrix4d scaleMatrix = new Matrix4d();
         scaleMatrix.setIdentity();
         scaleMatrix.setScale( 1.0 / Double.parseDouble( props.getProperty( "scale_factor" ) ) );
         asr.setSurfaceTransform( scaleMatrix );
+    }
+    
+    public void valueChanged( Parameter p )
+    {
+    	JSurferRenderPanel jsp = surface2panel.get( p.getSurface() );
+    	jsp.getAlgebraicSurfaceRenderer().setParameterValue( Character.toString( p.getName() ), p.getValue() );
+    	jsp.scheduleSurfaceRepaint();
+
+    	AlgebraicSurfaceRenderer asr_M =  surface2panel.get( Surface.M ).getAlgebraicSurfaceRenderer();
+    	if( p.getSurface() == Surface.M )
+    	{
+    		// interpolate colors of the morph
+    		float t = (float) Parameter.M_t.getValue();
+    		asr_M.setParameterValue( Character.toString( p.getName() ), p.getValue() );
+
+    		AlgebraicSurfaceRenderer asr_F =  surface2panel.get( Surface.F ).getAlgebraicSurfaceRenderer();
+    		AlgebraicSurfaceRenderer asr_G =  surface2panel.get( Surface.G ).getAlgebraicSurfaceRenderer();
+    		
+    		asr_M.setFrontMaterial( Material.lerp( asr_F.getFrontMaterial(), asr_G.getFrontMaterial(), t ) );
+    		asr_M.setBackMaterial( Material.lerp( asr_F.getBackMaterial(), asr_G.getBackMaterial(), t ) );
+    	}
+    	else
+    	{
+    		// the parameter at morph, too
+    		asr_M.setParameterValue( p.name(), p.getValue() );
+    	}
+		surface2panel.get( Surface.M ).scheduleSurfaceRepaint();
+		equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+    }
+	
+    public void idChanged( Surface s )
+    {
+    	try
+    	{
+	    	switch( s )
+	    	{
+	    	case F:
+	    		loadFromFile( Surface.F, new File( "gallery/zitrus.jsurf" ).toURI().toURL() );
+	    		break;
+	    	case G:
+	    		loadFromFile( Surface.G, new File( "gallery/heart.jsurf" ).toURI().toURL() );
+	    		break;
+	    	case M:
+	    		// should not occur - do nothing
+	    	}
+    		surface2panel.get( s ).scheduleSurfaceRepaint();
+    	}
+    	catch( Exception e )
+    	{
+    		e.printStackTrace();
+    	}
+
+    	// set the morphed surface
+    	AlgebraicSurfaceRenderer asr_F = surface2panel.get( Surface.F ).getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr_M = surface2panel.get( Surface.M ).getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr_G = surface2panel.get( Surface.G ).getAlgebraicSurfaceRenderer();
+    	
+    	CloneVisitor cv = new CloneVisitor();
+
+    	// retrieve syntax tree for F and rename parameters (a->F_a,...)
+    	PolynomialOperation po_F = asr_F.getSurfaceFamily().accept( cv, ( Void ) null );
+    	Map< String, String > m_F = new HashMap< String, String >();
+    	for( Parameter p : Surface.F.getParameters() )
+    		m_F.put( Character.toString( p.getName() ), p.name() );
+    	po_F = po_F.accept( new DoubleVariableRenameVisitor( m_F ), ( Void ) null );
+
+    	// retrieve syntax tree for G and rename parameters (a->G_a,...)
+    	PolynomialOperation po_G = asr_G.getSurfaceFamily().accept( cv, ( Void ) null );
+    	Map< String, String > m_G = new HashMap< String, String >();
+    	for( Parameter p : Surface.G.getParameters() )
+    		m_G.put( Character.toString( p.getName() ), p.name() );
+    	po_G = po_G.accept( new DoubleVariableRenameVisitor( m_G ), ( Void ) null );
+    	
+    	// connect both syntax trees using po_F*(1-t)+t+po_G
+    	PolynomialOperation po_M = new PolynomialAddition(
+    			new PolynomialMultiplication(
+    					new DoubleBinaryOperation(
+    							DoubleBinaryOperation.Op.sub,
+    							new DoubleValue( 1.0 ),
+    							new DoubleVariable( "t" )
+    							),
+    					po_F
+    					),
+    			new PolynomialMultiplication(
+    					new DoubleVariable( "t" ),
+    					po_G
+    					)
+    			);
+    	asr_M.setSurfaceFamily( po_M );
+    	Parameter.M_t.setActive( true );
+    	Parameter.M_t.setMin( 0.0 );
+    	Parameter.M_t.setMax( 1.0 );
+		surface2panel.get( Surface.M ).scheduleSurfaceRepaint();
+		for( Parameter p : Surface.F.getParameters() )
+		{
+			p.notifyActivationStateListeners();
+			p.notifyValueChangeListeners();
+		}
+		for( Parameter p : Surface.M.getParameters() )
+		{
+			p.notifyActivationStateListeners();
+			p.notifyValueChangeListeners();
+		}
+		for( Parameter p : Surface.G.getParameters() )
+		{
+			p.notifyActivationStateListeners();
+			p.notifyValueChangeListeners();
+		}
+		equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+    }
+
+    public void loadFromString( Surface surf, String s )
+            throws Exception
+    {
+        Properties props = new Properties();
+        props.load( new ByteArrayInputStream( s.getBytes() ) );
+        loadFromProperties( surf, props );
+    }
+
+    public void loadFromFile( Surface s, URL url )
+            throws IOException, Exception
+    {
+        Properties props = new Properties();
+        props.load( url.openStream() );
+        loadFromProperties( s, props );
+    }
+
+    public void loadFromProperties( Surface surf, Properties props ) // load only attributes that are not handled in setDefaults(...)
+            throws Exception
+    {
+    	AlgebraicSurfaceRenderer asr = surface2panel.get( surf ).getAlgebraicSurfaceRenderer();
+        asr.setSurfaceFamily( props.getProperty( "surface_equation" ) );
+        Set< String > param_names = asr.getAllParameterNames();
+        EnumSet< Parameter > unsetFormulaMorphParams = surf.getParameters();
+
+        for( String name : param_names )
+        {
+        	double value, min, max;
+        	try { value = Double.parseDouble( props.getProperty( "surface_parameter_" + name ) ); } catch( NumberFormatException nfe ) { value = Double.NaN; }
+        	try { min = Double.parseDouble( props.getProperty( "surface_parametermin_" + name ) ); } catch( NumberFormatException nfe ) { min = Double.NaN; }
+        	try { max = Double.parseDouble( props.getProperty( "surface_parametermax_" + name ) ); } catch( NumberFormatException nfe ) { max = Double.NaN; }
+
+        	min = Double.isNaN( min ) ? value : min;
+        	max = Double.isNaN( max ) ? value : max;
+        	value = value < min ? min : ( value > max ? max : value );
+        	
+    		Parameter fmp = ( name.length() == 1 ) ? surf.getParameter( name.charAt(0) ) : null;
+    		if( fmp != null )
+    		{
+    			// set value/min/max of FormulaMorph parameter and activate
+    			fmp.setMin( min );
+    			fmp.setMax( max );
+    			fmp.setValue( value );
+    			fmp.setActive( true );
+    			fmp.notifyActivationStateListeners();
+    			fmp.notifyValueChangeListeners();
+    			unsetFormulaMorphParams.remove( fmp );
+    		}
+    		else
+    		{
+	        	// disable FormulaMorphParameters that are not set
+	        	for( Parameter p : unsetFormulaMorphParams )
+	        		p.setActive( false );
+        	}
+        }
+
+        asr.getFrontMaterial().loadProperties(props, "front_material_", "");
+        asr.getBackMaterial().loadProperties(props, "back_material_", "");
+        
+        System.out.println( props.getProperty( "surface_equation_latex" ) );
+        System.out.println( props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) );
+        surface2latex.put( surf, props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) );
     }
 
     protected static void setOptimalCameraDistance( Camera c )
@@ -266,37 +447,5 @@ public class GUI extends JFrame
                 throw new RuntimeException();
         }
         c.lookAt( new Point3d( 0, 0, cameraDistance ), new Point3d( 0, 0, -1 ), new Vector3d( 0, 1, 0 ) );
-    }    
-    
-    public void saveToFile( AlgebraicSurfaceRenderer asr, URL url )
-            throws IOException
-    {
-        Properties props = new Properties();
-        props.setProperty( "surface_equation", asr.getSurfaceFamilyString() );
-
-        Set< String > paramNames = asr.getAllParameterNames();
-        for( String paramName : paramNames )
-        {
-            try
-            {
-                props.setProperty( "surface_parameter_" + paramName, "" + asr.getParameterValue( paramName ) );
-            }
-            catch( Exception e ) {}
-        }
-
-        asr.getCamera().saveProperties( props, "camera_", "" );
-        asr.getFrontMaterial().saveProperties(props, "front_material_", "");
-        asr.getBackMaterial().saveProperties(props, "back_material_", "");
-        for( int i = 0; i < asr.MAX_LIGHTS; i++ )
-            asr.getLightSource( i ).saveProperties( props, "light_", "_" + i );
-        props.setProperty( "background_color", BasicIO.toString( asr.getBackgroundColor() ) );
-
-        //props.setProperty( "scale_factor", ""+this.getScale() );
-        //props.setProperty( "rotation_matrix", BasicIO.toString( rsd.getRotation() ));
-
-        File property_file = new File( url.getFile() );
-        props.store( new FileOutputStream( property_file ), "jSurfer surface description" );
     }
-	
-	
 }

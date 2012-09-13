@@ -22,7 +22,15 @@ public class LaTeXLabel extends JComponent
 	public void setLaTeXSrc( String laTeXSrc )
 	{
 		this.texSrc = laTeXSrc;
-		texFormula = new TeXFormula( this.texSrc );
+		try
+		{
+			texFormula = new TeXFormula( this.texSrc );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+		this.repaint();
 	}
 	
 	public void setInsets( int top, int left, int bottom, int right )

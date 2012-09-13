@@ -445,7 +445,7 @@ public class JSurferRenderPanel extends JComponent
                 gl.glTexParameteri( GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP );
                 gl.glTexParameteri ( GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP );
                 gl.glTexParameteri( GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR );
-		gl.glTexParameteri( GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR );
+                gl.glTexParameteri( GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR );
                 Color3f bg_color = JSurferRenderPanel.this.asr.getBackgroundColor();
                 float[] borderColor={ bg_color.x, bg_color.y, bg_color.z, 1.0f };
                 gl.glTexParameterfv( GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_BORDER_COLOR, borderColor, 0 ); // set texture border to background color to guarantee correct texture interpolation at the boundary
@@ -596,68 +596,6 @@ public class JSurferRenderPanel extends JComponent
         javax.imageio.ImageIO.write( bufferedImage, "png", f );
     }
 
-    protected void paintComponent( Graphics g )
-    {
-        super.paintComponent( g );
-//        glcanvas.repaint();
-        if( true )
-            return;
-/*
-        if( g instanceof Graphics2D )
-        {
-            final Graphics2D g2 = ( Graphics2D ) g;
-
-            g2.setColor( this.asr.getBackgroundColor().get() );
-
-            // calculate necessary painting information
-            BufferedImage bi = this.currentSurfaceImage;
-            if( bi == null )
-            {
-                g2.fillRect( 0, 0, this.getWidth(), this.getHeight() );
-                return;
-            }
-
-            final Point startPosition;
-            final double scale;
-            double aspectRatioComponent = this.getWidth() / ( double ) this.getHeight();
-            double aspectRatioImage = bi.getWidth() / ( double ) bi.getHeight();
-            final Rectangle r1, r2;
-            if( aspectRatioImage > aspectRatioComponent )
-            {
-                // scale image width to component width
-                scale = this.getWidth() / ( double ) bi.getWidth();
-                int newImageHeight = ( int ) ( bi.getHeight() * scale );
-                startPosition = new Point( 0, ( this.getHeight() - newImageHeight ) / 2 );
-                r1 = new Rectangle( 0, 0, this.getWidth(), startPosition.y );
-                r2 = new Rectangle( 0, startPosition.y + newImageHeight, this.getWidth(), this.getHeight() - newImageHeight );
-            }
-            else
-            {
-                // scale image height to component height
-                scale = this.getHeight() / ( double ) bi.getHeight();
-                int newImageWidth = ( int ) ( bi.getWidth() * scale );
-                startPosition = new Point( ( this.getWidth() - newImageWidth ) / 2, 0 );
-                r1 = new Rectangle( 0, 0, startPosition.x, this.getHeight() );
-                r2 = new Rectangle( startPosition.x + newImageWidth, 0, this.getWidth() - newImageWidth, this.getHeight() );
-            }
-            final AffineTransform t = new AffineTransform();
-            t.scale( scale, scale );
-
-            // fill margins with background color
-            g2.fillRect( r1.x, r1.y, r1.width, r1.height );
-            g2.fillRect( r2.x, r2.y, r2.width, r2.height );
-
-            // draw the surface image to the component and apply appropriate scaling
-            g2.drawImage( bi, new AffineTransformOp( t, AffineTransformOp.TYPE_BILINEAR ), startPosition.x, startPosition.y );
-        }
-        else
-        {
-            super.paintComponents( g );
-            g.drawString( "this component needs a Graphics2D for painting", 2, this.getHeight() - 2 );
-        }
- * */
-    }
-
     protected void scheduleSurfaceRepaint()
     {
         rw.scheduleRepaint();
@@ -672,39 +610,5 @@ public class JSurferRenderPanel extends JComponent
     public void drawCoordinatenSystem(boolean b)
     {
         renderCoordinatenSystem=b;
-    }
-    
-    public static void main( String[]args )
-    {
-        JSurferRenderPanel p = new JSurferRenderPanel();
-        //p.setResizeImageWithComponent( true );
-
-        try
-        {
-            p.getAlgebraicSurfaceRenderer().setSurfaceFamily( "x^2+y^2+z^2+2*x*y*z-1" );
-            de.mfo.jsurfer.algebra.XYZPolynomial poly = p.getAlgebraicSurfaceRenderer().getSurfaceFamily().accept( new de.mfo.jsurfer.algebra.Expand(), null );
-            /*
-            PolynomialOperation t1=new PolynomialPower(new PolynomialVariable( PolynomialVariable.Var.valueOf( "x" ) ), 2 );
-    PolynomialOperation t2=new PolynomialPower(new PolynomialVariable( PolynomialVariable.Var.valueOf( "y" ) ), 2 );
-    PolynomialOperation t3=new PolynomialPower(new PolynomialVariable( PolynomialVariable.Var.valueOf( "z" ) ), 2 );
-    PolynomialOperation t4=new PolynomialAddition(new PolynomialAddition(t1,t2),t3);
-    PolynomialOperation t5=new PolynomialMultiplication(new PolynomialMultiplication(new DoubleValue( 2.0 ),new PolynomialVariable( PolynomialVariable.Var.valueOf( "x" ) )),
-                                                        new PolynomialMultiplication(new PolynomialVariable( PolynomialVariable.Var.valueOf( "y" ) ),new PolynomialVariable( PolynomialVariable.Var.valueOf( "z" ) )));
-    PolynomialOperation t6=new PolynomialSubtraction(t5,new DoubleValue( 1.0 ));
-    PolynomialOperation t7=new PolynomialAddition(t4,t6);
-            p.getAlgebraicSurfaceRenderer().setSurfaceExpression( t7 );
-
-             */
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace();
-        }
-
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        f.getContentPane().add( p );
-        f.pack();
-        f.setVisible( true );
     }
 }
