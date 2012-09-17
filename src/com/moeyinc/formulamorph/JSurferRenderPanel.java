@@ -32,6 +32,9 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.glu.*;
 import javax.media.opengl.awt.GLJPanel;
 
+import com.moeyinc.formulamorph.Parameters.Parameter;
+import com.moeyinc.formulamorph.Parameters.SurfaceIdListener;
+
 import java.awt.BorderLayout;
 
 import java.util.concurrent.*;
@@ -44,12 +47,12 @@ public class JSurferRenderPanel extends JComponent
         public int width;
         public int height;
 
-        public ImgBuffer( int w, int h ) { rgbBuffer = new int[ 3 * w * h ]; width = w; height = h; }
+        public ImgBuffer( int w, int h ) { rgbBuffer = new int[ w * h ]; width = w; height = h; }
     }
-
 
     CPUAlgebraicSurfaceRenderer asr;
     ImgBuffer currentSurfaceImage;
+    
     boolean resizeImageWithComponent;
     boolean renderCoordinatenSystem;
     Dimension renderSize;
@@ -94,6 +97,17 @@ public class JSurferRenderPanel extends JComponent
                 JSurferRenderPanel.this.asr.stopDrawing();
         }
 
+        void notiftyImageUpdateListeners( ImgBuffer imgbuf )
+        {
+        	final ImgBuffer imgbuf_final = imgbuf;
+        	SwingUtilities.invokeLater( new Runnable() {
+        		public void run()
+        		{
+                	JSurferRenderPanel.this.notifyImageUpdateListeners( imgbuf_final );        			
+        		}
+        	});
+        }
+        
         @Override
         public void run()
         {
@@ -118,8 +132,8 @@ public class JSurferRenderPanel extends JComponent
                         ImgBuffer ib = draw( renderSize.width, renderSize.height, AntiAliasingMode.ADAPTIVE_SUPERSAMPLING, AntiAliasingPattern.QUINCUNX, true );
                         if( ib != null )
                         {
-                            currentSurfaceImage =  ib;
-                            JSurferRenderPanel.this.repaint();
+                        	currentSurfaceImage = ib;
+                            notiftyImageUpdateListeners( ib );
                         }
                     }
 
@@ -137,9 +151,10 @@ public class JSurferRenderPanel extends JComponent
                         ImgBuffer ib = draw( JSurferRenderPanel.this.getWidth(), JSurferRenderPanel.this.getHeight(), AntiAliasingMode.ADAPTIVE_SUPERSAMPLING, AntiAliasingPattern.OG_4x4, false );
                         if( ib != null )
                         {
-                            currentSurfaceImage =  ib;
-                            JSurferRenderPanel.this.repaint();
+                        	currentSurfaceImage = ib;
+                            notiftyImageUpdateListeners( ib );
                         }
+                        
                         is_drawing_hi_res = false;
                     }
 
@@ -155,9 +170,10 @@ public class JSurferRenderPanel extends JComponent
                         ImgBuffer ib = draw( JSurferRenderPanel.this.getWidth(), JSurferRenderPanel.this.getHeight(), AntiAliasingMode.SUPERSAMPLING, AntiAliasingPattern.OG_4x4, false );
                         if( ib != null )
                         {
-                            currentSurfaceImage =  ib;
-                            JSurferRenderPanel.this.repaint();
+                        	currentSurfaceImage = ib;
+                            notiftyImageUpdateListeners( ib );
                         }
+
                         is_drawing_hi_res = false;
                         //System.out.println( "finised hi res");
                     }
@@ -215,6 +231,24 @@ public class JSurferRenderPanel extends JComponent
         }
     }
 
+    public interface  ImageUpdateListener {
+    	public void imageUpdated( Image img );
+    }
+	private Set< ImageUpdateListener > imgListeners = new HashSet< ImageUpdateListener >();
+	public void addImageUpdateListener( ImageUpdateListener iul ) { imgListeners.add( iul ); }
+	public void removeImageUpdateListener( ImageUpdateListener iul ) { imgListeners.remove( iul ); }	
+	void notifyImageUpdateListeners( ImgBuffer imgbuf )
+	{
+    	DirectColorModel r8g8b8_colormodel = new DirectColorModel( 24, 0xff0000, 0xff00, 0xff );
+    	MemoryImageSource mis = new MemoryImageSource( imgbuf.width, imgbuf.height, r8g8b8_colormodel, imgbuf.rgbBuffer, 0, imgbuf.width );
+        mis.setAnimated( true );
+        mis.setFullBufferUpdates( true );    	
+    	Image img = Toolkit.getDefaultToolkit().createImage( mis ); 
+    					
+		for( ImageUpdateListener iul : imgListeners )
+			iul.imageUpdated( img );
+	}
+    
     public JSurferRenderPanel()
     {
         renderCoordinatenSystem = false;
@@ -230,7 +264,7 @@ public class JSurferRenderPanel extends JComponent
         scale.setIdentity();
 
         ComponentAdapter ca = new ComponentAdapter() {
-            public void componentResized( ComponentEvent ce ) { System.out.println("a"); JSurferRenderPanel.this.componentResized( ce ); }
+            public void componentResized( ComponentEvent ce ) { JSurferRenderPanel.this.componentResized( ce ); }
         };
         addComponentListener( ca );
 
@@ -241,8 +275,14 @@ public class JSurferRenderPanel extends JComponent
         setLayout( new BorderLayout() );
         add( glcanvas, BorderLayout.CENTER );
 
+        this.addImageUpdateListener( new ImageUpdateListener() { 
+        	public void imageUpdated( Image img ) {
+        		JSurferRenderPanel.this.repaint();
+        	}
+        });
         rw = new RenderWorker();
         rw.start();
+        
         currentSurfaceImage = null;
     }
 

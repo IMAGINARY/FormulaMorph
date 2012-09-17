@@ -1,7 +1,7 @@
 package com.moeyinc.formulamorph;
 
+import java.util.Locale;
 import java.awt.Dimension;
-
 import javax.swing.JFrame;
 
 public class Main {
@@ -33,6 +33,8 @@ public class Main {
     }
     
     public static void main(String[] args) {
+    	Locale.setDefault( Locale.US );
+
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {

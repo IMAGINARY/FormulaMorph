@@ -36,7 +36,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	EnumMap< Parameters.Surface, JSurferRenderPanel > surface2panel = new EnumMap< Parameters.Surface, JSurferRenderPanel >( Parameters.Surface.class );
 	EnumMap< Parameters.Surface, String > surface2latex = new EnumMap< Parameters.Surface, String>( Parameters.Surface.class );
 	
-	LaTeXLabel equationLaTeX;
+	final LaTeXLabel equationLaTeX;
 	
 	JPanel galF;
 	JPanel galG;
@@ -58,24 +58,37 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 
 		// init components
 		
-		try {
-			surface2panel.put( Surface.F, new JSurferRenderPanel() ); //surfF.setBackground( Color.gray );
-			surface2panel.put( Surface.M, new JSurferRenderPanel() ); //surfM.setBackground( Color.gray );
-			surface2panel.put( Surface.G, new JSurferRenderPanel() ); //surfG.setBackground( Color.gray );
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		surface2panel.put( Surface.F, new JSurferRenderPanel() ); //surfF.setBackground( Color.gray );
+		surface2panel.put( Surface.M, new JSurferRenderPanel() ); //surfM.setBackground( Color.gray );
+		surface2panel.put( Surface.G, new JSurferRenderPanel() ); //surfG.setBackground( Color.gray );
+
 		Border border = BorderFactory.createLineBorder( Color.LIGHT_GRAY );
 		for( Surface s : Surface.values() )
 			surface2panel.get( s ).setBorder(border);
 		
+		LaTeXCommands.getImageMap().put( "imageF", null );
+		LaTeXCommands.getImageMap().put( "imageG", null );
 		equationLaTeX = new LaTeXLabel( setupLaTeXSrc() );
  //equationLaTeX.setBackground( Color.gray ); equationLaTeX.setOpaque( true );
 
 		galF = new JPanel(); galF.setBackground( Color.lightGray );
 		galG = new JPanel(); galG.setBackground( Color.lightGray );
 
+		surface2panel.get( Surface.F ).addImageUpdateListener( new JSurferRenderPanel.ImageUpdateListener() {
+			public void imageUpdated( Image img )
+			{
+				LaTeXCommands.getImageMap().put( "imageF", img );
+				equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+			}
+		});		
+		surface2panel.get( Surface.G ).addImageUpdateListener( new JSurferRenderPanel.ImageUpdateListener() {
+			public void imageUpdated( Image img )
+			{
+				LaTeXCommands.getImageMap().put( "imageG", img );
+				equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+			}
+		});
+		
 		// add components
 		content.add( surface2panel.get( Surface.F ) );
 		content.add( surface2panel.get( Surface.M ) );
@@ -190,7 +203,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			"&\n" +
 			"\\left.\\vspace{7em} \\right]\n" +
 			"&\n" +
-			"\\sf\\small\\cdot\\ \\FMPMt+(1-\\FMPMt)\\:\\cdot\n" +
+			"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}\\cdot\\ \\FMPMt+(1-\\FMPMt)\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}\n" +
 			"&\n" +
 			"\\left[\\vspace{7em} \\right.\n" +
 			"&\n" +
