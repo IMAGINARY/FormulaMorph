@@ -67,7 +67,7 @@ public class LaTeXLabel extends JComponent
 		float yScale = this.getPreferredSize() != null ? this.getHeight() / ( float ) this.getPreferredSize().height : 1.0f;
 		float scale = ( xScale < yScale ? xScale : yScale );
 //		System.out.println( scale );
-		TeXIcon texIcon = texFormula.createTeXIcon( TeXConstants.STYLE_TEXT, ( int ) ( 36.5f * scale ) );
+		TeXIcon texIcon = texFormula.createTeXIcon( TeXConstants.STYLE_TEXT, 35f * scale );
 		texIcon.setInsets( this.getInsets() );
 		texIcon.paintIcon( this, g, 0, 0 );
 	}

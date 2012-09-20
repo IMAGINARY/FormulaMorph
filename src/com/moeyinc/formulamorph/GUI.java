@@ -234,13 +234,13 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     public void saveScreenShot( OutputStream out )
     	throws IOException
     {
-    	BufferedImage image = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB );
+    	BufferedImage image = new BufferedImage( content.getWidth(), content.getHeight(), BufferedImage.TYPE_INT_RGB );
         Graphics2D graphics2D = image.createGraphics();
         this.equationLaTeX.reparse();
-        this.paint( graphics2D );
+        content.paint( graphics2D );
         javax.imageio.ImageIO.write( image, "png", out );    	
     }
-    
+/*    
     private static final String staticLaTeXSrc = "" +
 			"\\newcommand{\\nl}{\\\\\\sf\\small}\n" +
 			"\\begin{array}{rcl@{}c@{}rcl}\n" +
@@ -255,7 +255,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			"&\n" +
 			"\\fgcolor{Gray}{\\left.\\vspace{12em} \\right]}\n" +
 			"&\n" +
-			"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}\\cdot\\ \\FMPMt+(1-\\FMPMt)\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}\n" +
+			"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}\n" +
 			"&\n" +
 			"\\fgcolor{Gray}{\\left[\\vspace{12em} \\right.}\n" +
 			"&\n" +
@@ -268,6 +268,43 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			"\\fgcolor{Gray}{\\left.\\vspace{12em} \\right]}\n" +
 			"\\\\\n" +
 			"&\\hspace{30em}&&&&\\hspace{30em}&\n" +
+			"\\end{array}\n";
+    */
+    private static final String staticLaTeXSrc = "" +
+			"\\newcommand{\\nl}{\\\\}\n" +
+			"\\sf\\begin{array}{ccc}\n" +
+				"\\raisebox{-2em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleF}}\n" +
+					"&\\raisebox{-5em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula Morph}}\n" +
+					"&\\raisebox{-2em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleG}}\\\\\n" +
+				"\\fgcolor{Gray}{\n" +
+					"\\left[\n" +
+					"\\fgcolor{black}{\n" + 
+						"\\begin{array}{c}\n" +
+							"\\ \\vspace{1em} \\\\\n" +
+							"{\\Large\\text{\\titleF}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}}\\\\\\\\\n" +
+							"\\formulaF\\\\\n" +
+							"\\hphantom{MMMMMMMMMMMMMMMM}\n" +
+						"\\end{array}\n" +
+					"}\n" +
+					"\\right]\n" +
+				"}\n" +
+				"&\n" +
+				"{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}}\n" +
+				"\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\n" +
+				"{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}}\n" +
+				"&\n" +
+				"\\fgcolor{Gray}{\n" +
+				"\\left[\n" +
+				"\\fgcolor{black}{\n" + 
+					"\\begin{array}{c}\n" +
+						"\\ \\vspace{1em} \\\\\n" +
+						"{\\Large\\text{\\titleG}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}}\\\\\\\\\n" +
+						"\\formulaG\\\\\n" +
+						"\\hphantom{MMMMMMMMMMMMMMMM}\n" +
+					"\\end{array}\n" +
+				"}\n" +
+				"\\right]\n" +
+				"}\n" +
 			"\\end{array}\n";
     
     private String setupLaTeXSrc()
