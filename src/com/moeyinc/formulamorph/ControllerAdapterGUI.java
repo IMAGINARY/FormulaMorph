@@ -29,8 +29,20 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 		
 		Container content = getContentPane();
 		content.setLayout( new FlowLayout() );
+		final JButton screenshotleft = new JButton( "Screenshot Left" );
+		screenshotleft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
+		content.add( screenshotleft );
+		Parameter last_param = null;
 		for( Parameters.Parameter param : Parameters.Parameter.values() )
 		{
+			if( last_param == null || last_param.getSurface() != param.getSurface() )
+			{
+				JSeparator s = new JSeparator( JSeparator.VERTICAL );
+				s.setPreferredSize(new Dimension(10,200));
+				content.add( s );
+			}
+			last_param = param;
+
 			final Parameter p = param;
 			JPanel slider_panel = new JPanel();
 			slider_panel.setLayout( new BoxLayout( slider_panel, BoxLayout.Y_AXIS ) );
@@ -47,6 +59,13 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 			p2s.put( p, s );
 			content.add( slider_panel );
 		}
+		JSeparator s = new JSeparator( JSeparator.VERTICAL );
+		s.setPreferredSize(new Dimension(5,200));
+		content.add( s );
+		JButton screenshotright = new JButton( "Screenshot Right" );
+		screenshotright.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
+		content.add( screenshotright );
+
 		pack();
 		if( isAlwaysOnTopSupported() )
 			setAlwaysOnTop( true );

@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 
 public class Main {
 
+	private static GUI gui;
+	public static GUI gui() { return gui; }
+	
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
@@ -16,18 +19,18 @@ public class Main {
     	boolean fullscreen = false;
 //    	boolean fullscreen = true;
     	
-		GUI f = new GUI();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gui = new GUI();
+        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if( fullscreen )
         {
-        	f.tryFullScreen();
+        	gui.tryFullScreen();
         }
         else
         {
 	        //Size and display the window. (size has no effect in fullscree mode)
-			f.getContentPane().setPreferredSize(new Dimension(16*75,9*75));
-			f.pack();
-			f.setVisible( true );
+			gui.getContentPane().setPreferredSize(new Dimension(16*75,9*75));
+			gui.pack();
+			gui.setVisible( true );
         }
         
     }

@@ -2,16 +2,16 @@ package com.moeyinc.formulamorph;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.vecmath.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
@@ -36,6 +36,8 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	EnumMap< Parameters.Surface, JSurferRenderPanel > surface2panel = new EnumMap< Parameters.Surface, JSurferRenderPanel >( Parameters.Surface.class );
 	EnumMap< Parameters.Surface, String > surface2latex = new EnumMap< Parameters.Surface, String>( Parameters.Surface.class );
 	
+	final LaTeXLabel titleFLaTeX;
+	final LaTeXLabel titleGLaTeX;
 	final LaTeXLabel equationLaTeX;
 	
 	JPanel galF;
@@ -68,7 +70,17 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		
 		LaTeXCommands.getImageMap().put( "imageF", null );
 		LaTeXCommands.getImageMap().put( "imageG", null );
+		titleFLaTeX = new LaTeXLabel( "\\sf\\huge\\text{Zitrus}" ); titleFLaTeX.setBackground( Color.gray ); titleFLaTeX.setOpaque( true );
+		titleGLaTeX = new LaTeXLabel( "\\sf\\huge\\text{Heart}" ); titleGLaTeX.setBackground( Color.gray ); titleGLaTeX.setOpaque( true );
 		equationLaTeX = new LaTeXLabel( setupLaTeXSrc() );
+
+		javax.swing.JFrame f = new JFrame();
+		f.setDefaultCloseOperation( HIDE_ON_CLOSE );
+		f.getContentPane().add( new LaTeXLabel("123") );
+		f.setMinimumSize( new Dimension( 100, 100 ) );
+		f.pack();
+		f.setVisible( true );
+		
  //equationLaTeX.setBackground( Color.gray ); equationLaTeX.setOpaque( true );
 
 		galF = new JPanel(); galF.setBackground( Color.lightGray );
@@ -94,6 +106,8 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		content.add( surface2panel.get( Surface.M ) );
 		content.add( surface2panel.get( Surface.G ) );
 		
+		content.add( titleFLaTeX );
+		content.add( titleGLaTeX );
 		content.add( equationLaTeX );
 
 		content.add( galF );
@@ -148,10 +162,13 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		surfM().setBounds( computeBounds( content, 50 - ( 25 / 2 ), 3 * aspectRatio, 25, 25 * aspectRatio ) ); // center horizontally
 		surfG().setBounds( computeBounds( content, 100 - 10 - 23, 5 * aspectRatio, 23, 23 * aspectRatio ) );
 
+		titleFLaTeX.setBounds( computeBounds( content, 10, 2 * aspectRatio, 23, 2.75 * aspectRatio ) );
+		titleGLaTeX.setBounds( computeBounds( content, 100 - 10 -23, 2 * aspectRatio, 23, 2.75 * aspectRatio ) );
+
 		double elPrefWidth = 95.0;
-		double elPrefHeight = 15 * aspectRatio;
+		double elPrefHeight = 35.0 * aspectRatio;
 		equationLaTeX.setPreferredSize( new Dimension( (int) (elPrefWidth * 1920 / 100.0), (int) (elPrefHeight * 1080 / 100.0) ) );
-		equationLaTeX.setBounds( computeBounds( content, 50 - elPrefWidth / 2, 65, elPrefWidth, elPrefHeight ) ); // center horizontally
+		equationLaTeX.setBounds( computeBounds( content, 50 - elPrefWidth / 2, 55, elPrefWidth, elPrefHeight ) ); // center horizontally
 
 		galF.setBounds( computeBounds( content, 2, 5 * aspectRatio, 5, 25 * aspectRatio ) );
 		galG.setBounds( computeBounds( content, 100 - 2 - 5, 5 * aspectRatio, 5, 25 * aspectRatio ) );
@@ -192,34 +209,81 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
         device.setFullScreenWindow( this );
     }
     
+    public void saveScreenShotLeft() { try { saveScreenShotToFile( new File( "left.png" ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
+    public void saveScreenShotRight() { try { saveScreenShotToFile( new File( "right.png" ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
+    
+    public void saveScreenShotToFile( File f )
+    		throws IOException
+    {
+    	FileOutputStream fos = new FileOutputStream( f );
+    	saveScreenShot( fos );
+    	fos.close();
+    }
+    
+    public void saveScreenShotToURL( URL url )
+    		throws IOException
+    {
+		URLConnection urlCon = url.openConnection();
+		urlCon.setDoOutput( true );
+		urlCon.connect();
+		OutputStream out = urlCon.getOutputStream();
+		saveScreenShot( out );    	
+		out.close();
+    }
+    
+    public void saveScreenShot( OutputStream out )
+    	throws IOException
+    {
+    	BufferedImage image = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB );
+        Graphics2D graphics2D = image.createGraphics();
+        this.equationLaTeX.reparse();
+        this.paint( graphics2D );
+        javax.imageio.ImageIO.write( image, "png", out );    	
+    }
+    
     private static final String staticLaTeXSrc = "" +
 			"\\newcommand{\\nl}{\\\\\\sf\\small}\n" +
 			"\\begin{array}{rcl@{}c@{}rcl}\n" +
-			"\\left[\\vspace{7em} \\right.\n" +
+			"\\fgcolor{Gray}{\\left[\\vspace{11em} \\right.}\n" +
 			"&\n" +
 			"\\begin{array}{c}\n" +
-			"	\\sf\\small \\formulaF\n" +
+			"	\\sf\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleF}\\\\\\\\" +
+			"	\\sf\\bf\\Large\\text{\\titleF}={\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}}\\\\\\\\" +
+			"	\\sf\\small\\formulaF\n" +
 			"\\end{array}\n" +
 			"&\n" +
-			"\\left.\\vspace{7em} \\right]\n" +
+			"\\fgcolor{Gray}{\\left.\\vspace{11em} \\right]}\n" +
 			"&\n" +
 			"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}\\cdot\\ \\FMPMt+(1-\\FMPMt)\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}\n" +
 			"&\n" +
-			"\\left[\\vspace{7em} \\right.\n" +
+			"\\fgcolor{Gray}{\\left[\\vspace{11em} \\right.}\n" +
 			"&\n" +
 			"\\begin{array}{c}\n" +
-			"	\\sf\\small \\formulaG\n" +
+			"	\\sf\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleG}\\\\\\\\" +
+			"	\\sf\\bf\\Large\\text{\\titleG}={\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}}\\\\\\\\" +
+			"	\\sf\\small\\formulaG\n" +
 			"\\end{array}\n" +
 			"&\n" +
-			"\\left.\\vspace{7em} \\right]\n" +
+			"\\fgcolor{Gray}{\\left.\\vspace{11em} \\right]}\n" +
 			"\\\\\n" +
 			"&\\hspace{30em}&&&&\\hspace{30em}&\n" +
 			"\\end{array}\n";
     
     private String setupLaTeXSrc()
     {    	
+    	titleFLaTeX.reparse();
+    	
     	DecimalFormat f = new DecimalFormat("0.00");
     	StringBuilder sb = new StringBuilder();
+    	
+    	// surface names
+    	sb.append( "\\newcommand{\\titleF}{");
+    	sb.append( "Zitrus" );
+    	sb.append( "}\n\\newcommand{\\titleG}{" );
+    	sb.append( "Heart" );
+    	sb.append( "}\n" );
+
+    	// parameters
     	for( Parameter p : Parameter.values() )
     	{
     		if( p.isActive() )
@@ -246,7 +310,6 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     	//sb.append("\\begin{array}{c}\\formulaF \\\\ \\FMPMt \\\\ \\formulaG\\end{array}");
     	//sb.append( "a" );
     	sb.append( staticLaTeXSrc );
-    	System.out.println( sb.toString() );
     	return sb.toString();
     }
     
@@ -380,6 +443,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			p.notifyValueChangeListeners();
 		}
 		equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+		repaint();
     }
 
     public void loadFromString( Surface surf, String s )

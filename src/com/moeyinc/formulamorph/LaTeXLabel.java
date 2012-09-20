@@ -12,7 +12,6 @@ public class LaTeXLabel extends JComponent
 {
 	private String texSrc;
 	private TeXFormula texFormula;
-	private TeXIcon texIcon;
 	private Insets insets;
 	
 	
@@ -28,9 +27,16 @@ public class LaTeXLabel extends JComponent
 		}
 		catch( Exception e )
 		{
+			System.out.println( "Problem with LaTeX source:" );
+			System.out.println( laTeXSrc );
 			e.printStackTrace();
 		}
 		this.repaint();
+	}
+	
+	public void reparse()
+	{
+		this.setLaTeXSrc( this.texSrc );
 	}
 	
 	public void setInsets( int top, int left, int bottom, int right )
@@ -60,8 +66,8 @@ public class LaTeXLabel extends JComponent
 		float xScale = this.getPreferredSize() != null ? this.getWidth() / ( float ) this.getPreferredSize().width : 1.0f; 
 		float yScale = this.getPreferredSize() != null ? this.getHeight() / ( float ) this.getPreferredSize().height : 1.0f;
 		float scale = ( xScale < yScale ? xScale : yScale );
-		System.out.println( scale );
-		texIcon = texFormula.createTeXIcon( TeXConstants.STYLE_TEXT, 40 * scale );
+//		System.out.println( scale );
+		TeXIcon texIcon = texFormula.createTeXIcon( TeXConstants.STYLE_TEXT, ( int ) ( 36.5f * scale ) );
 		texIcon.setInsets( this.getInsets() );
 		texIcon.paintIcon( this, g, 0, 0 );
 	}
