@@ -244,7 +244,8 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     private static final String staticLaTeXSrc = "" +
 			"\\newcommand{\\nl}{\\\\\\sf\\small}\n" +
 			"\\begin{array}{rcl@{}c@{}rcl}\n" +
-			"\\fgcolor{Gray}{\\left[\\vspace{11em} \\right.}\n" +
+			"&\\sf\\small\\text{\\hphantom{MMMMMMMMMMMMMMMMMMMM}}&&&&\\sf\\small\\ \\hspace{20em}\\ &\\\\" +
+			"\\fgcolor{Gray}{\\left[\\vspace{12em} \\right.}\n" +
 			"&\n" +
 			"\\begin{array}{c}\n" +
 			"	\\sf\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleF}\\\\\\\\" +
@@ -252,11 +253,11 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			"	\\sf\\small\\formulaF\n" +
 			"\\end{array}\n" +
 			"&\n" +
-			"\\fgcolor{Gray}{\\left.\\vspace{11em} \\right]}\n" +
+			"\\fgcolor{Gray}{\\left.\\vspace{12em} \\right]}\n" +
 			"&\n" +
 			"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}\\cdot\\ \\FMPMt+(1-\\FMPMt)\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}\n" +
 			"&\n" +
-			"\\fgcolor{Gray}{\\left[\\vspace{11em} \\right.}\n" +
+			"\\fgcolor{Gray}{\\left[\\vspace{12em} \\right.}\n" +
 			"&\n" +
 			"\\begin{array}{c}\n" +
 			"	\\sf\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleG}\\\\\\\\" +
@@ -264,7 +265,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			"	\\sf\\small\\formulaG\n" +
 			"\\end{array}\n" +
 			"&\n" +
-			"\\fgcolor{Gray}{\\left.\\vspace{11em} \\right]}\n" +
+			"\\fgcolor{Gray}{\\left.\\vspace{12em} \\right]}\n" +
 			"\\\\\n" +
 			"&\\hspace{30em}&&&&\\hspace{30em}&\n" +
 			"\\end{array}\n";
