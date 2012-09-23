@@ -29,19 +29,37 @@ import de.mfo.jsurfer.util.BasicIO;
 
 public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListener
 {
+	class SurfaceGUIElements
+	{
+		final public JSurferRenderPanel panel;
+		final public LaTeXLabel title;
+		final public LaTeXLabel equation;
+		
+		public SurfaceGUIElements( Surface s )
+		{
+			LaTeXCommands.getDynamicLaTeXMap().put( "FMImage" + s.name(), "\\includejavaimage[width=5ex,interpolation=bicubic]{FMImage" + s.name() + "}" );
+			
+			this.panel = new JSurferRenderPanel();
+			//this.panel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
+			
+			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\text{\\jlmDynamic{FMTitle" + s.name() + "}}" );
+			this.title.setHAlignment( LaTeXLabel.HAlignment.CENTER );
+			this.title.setVAlignment( LaTeXLabel.VAlignment.CENTER_BASELINE );
+			
+			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
+		}		
+	}
+	
 	final ControllerAdapterGUI caGUI = new ControllerAdapterGUI( null );
 	JPanel content; // fixed 16:9 top container
 	static final double aspectRatio = 16.0 / 9.0;
+	static final DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
 
-	EnumMap< Parameters.Surface, JSurferRenderPanel > surface2panel = new EnumMap< Parameters.Surface, JSurferRenderPanel >( Parameters.Surface.class );
-	EnumMap< Parameters.Surface, String > surface2latex = new EnumMap< Parameters.Surface, String>( Parameters.Surface.class );
-	
-	final LaTeXLabel titleFLaTeX;
-	final LaTeXLabel titleGLaTeX;
-	final LaTeXLabel equationLaTeX;
-	
+	EnumMap< Parameters.Surface, SurfaceGUIElements > surface2guielems = new EnumMap< Parameters.Surface, SurfaceGUIElements >( Parameters.Surface.class );
+		
 	JPanel galF;
 	JPanel galG;
+	JPanel blackStrip;
 
 	public GUI()
 	{
@@ -50,68 +68,61 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		caGUI.setDefaultCloseOperation( HIDE_ON_CLOSE );
 		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { caGUI.setVisible( true ); } } );
 		
+    	Parameter.M_t.setMin( 0.0 );
+    	Parameter.M_t.setMax( 1.0 );
+		Parameter.M_t.setValue( 0.5 );
 		for( Parameter p : Parameter.values() )
 			p.addValueChangeListener( this );
 
-		// setup the contained which has fixed 16:9 aspect ratio
+		// setup the container which has fixed 16:9 aspect ratio
 		content = new JPanel();
 		content.setBackground(Color.white);
 		content.setLayout( null );
 
 		// init components
+		surface2guielems.put( Surface.F, new SurfaceGUIElements( Surface.F ) );
+		surface2guielems.put( Surface.M, new SurfaceGUIElements( Surface.M ) );
+		surface2guielems.put( Surface.G, new SurfaceGUIElements( Surface.G ) );
 		
-		surface2panel.put( Surface.F, new JSurferRenderPanel() ); //surfF.setBackground( Color.gray );
-		surface2panel.put( Surface.M, new JSurferRenderPanel() ); //surfM.setBackground( Color.gray );
-		surface2panel.put( Surface.G, new JSurferRenderPanel() ); //surfG.setBackground( Color.gray );
-
-		Border border = BorderFactory.createLineBorder( Color.LIGHT_GRAY );
-		for( Surface s : Surface.values() )
-			surface2panel.get( s ).setBorder(border);
-		
-		LaTeXCommands.getImageMap().put( "imageF", null );
-		LaTeXCommands.getImageMap().put( "imageG", null );
-		titleFLaTeX = new LaTeXLabel( "\\sf\\huge\\text{Zitrus}" ); titleFLaTeX.setBackground( Color.gray ); titleFLaTeX.setOpaque( true );
-		titleGLaTeX = new LaTeXLabel( "\\sf\\huge\\text{Heart}" ); titleGLaTeX.setBackground( Color.gray ); titleGLaTeX.setOpaque( true );
-		equationLaTeX = new LaTeXLabel( setupLaTeXSrc() );
-
-		javax.swing.JFrame f = new JFrame();
-		f.setDefaultCloseOperation( HIDE_ON_CLOSE );
-		f.getContentPane().add( new LaTeXLabel("123") );
-		f.setMinimumSize( new Dimension( 100, 100 ) );
-		f.pack();
-		f.setVisible( true );
-		
- //equationLaTeX.setBackground( Color.gray ); equationLaTeX.setOpaque( true );
-
+		blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
 		galF = new JPanel(); galF.setBackground( Color.lightGray );
 		galG = new JPanel(); galG.setBackground( Color.lightGray );
 
-		surface2panel.get( Surface.F ).addImageUpdateListener( new JSurferRenderPanel.ImageUpdateListener() {
+		final LaTeXLabel eqF = s2g( Surface.F ).equation;
+		final LaTeXLabel eqM = s2g( Surface.M ).equation;
+		final LaTeXLabel eqG = s2g( Surface.G ).equation;
+		s2g( Surface.F ).panel.addImageUpdateListener( new JSurferRenderPanel.ImageUpdateListener() {
 			public void imageUpdated( Image img )
 			{
-				LaTeXCommands.getImageMap().put( "imageF", img );
-				equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+				LaTeXCommands.getImageMap().put( "FMImageF", img );
+				eqF.repaint();
+				eqM.repaint();
 			}
 		});		
-		surface2panel.get( Surface.G ).addImageUpdateListener( new JSurferRenderPanel.ImageUpdateListener() {
+		s2g( Surface.G ).panel.addImageUpdateListener( new JSurferRenderPanel.ImageUpdateListener() {
 			public void imageUpdated( Image img )
 			{
-				LaTeXCommands.getImageMap().put( "imageG", img );
-				equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+				LaTeXCommands.getImageMap().put( "FMImageG", img );
+				eqG.repaint();
+				eqM.repaint();
 			}
 		});
 		
 		// add components
-		content.add( surface2panel.get( Surface.F ) );
-		content.add( surface2panel.get( Surface.M ) );
-		content.add( surface2panel.get( Surface.G ) );
-		
-		content.add( titleFLaTeX );
-		content.add( titleGLaTeX );
-		content.add( equationLaTeX );
+		content.add( s2g( Surface.F ).title );
+		content.add( s2g( Surface.F ).panel );		
+		content.add( s2g( Surface.F ).equation );
+
+		content.add( s2g( Surface.M ).panel );		
+		content.add( s2g( Surface.M ).equation );
+
+		content.add( s2g( Surface.G ).title );
+		content.add( s2g( Surface.G ).panel );		
+		content.add( s2g( Surface.G ).equation );
 
 		content.add( galF );
 		content.add( galG );
+		content.add( blackStrip );
 
 		// layout components
 		refreshLayout();
@@ -152,28 +163,42 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		idChanged( Surface.G );
 	}
 	
-	JSurferRenderPanel surfF() { return surface2panel.get( Surface.F ); }
-	JSurferRenderPanel surfM() { return surface2panel.get( Surface.M ); }
-	JSurferRenderPanel surfG() { return surface2panel.get( Surface.G ); }
+	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
 
 	public void refreshLayout()
 	{
-		surfF().setBounds( computeBounds( content, 10, 5 * aspectRatio, 23, 23 * aspectRatio ) );		
-		surfM().setBounds( computeBounds( content, 50 - ( 25 / 2 ), 3 * aspectRatio, 25, 25 * aspectRatio ) ); // center horizontally
-		surfG().setBounds( computeBounds( content, 100 - 10 - 23, 5 * aspectRatio, 23, 23 * aspectRatio ) );
+		blackStrip.setBounds( computeBoundsFullHD( content, 0, 84, 1920, 624 ) );
+		
+		s2g( Surface.F ).panel.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );		
+		s2g( Surface.M ).panel.setBounds( computeBoundsFullHD( content, 1920 / 2 - 624 / 2, 84, 624, 624  ) );
+		s2g( Surface.G ).panel.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );
 
-		titleFLaTeX.setBounds( computeBounds( content, 10, 2 * aspectRatio, 23, 2.75 * aspectRatio ) );
-		titleGLaTeX.setBounds( computeBounds( content, 100 - 10 -23, 2 * aspectRatio, 23, 2.75 * aspectRatio ) );
+		int titlePrefWidth = 550;
+		int titlePrefHeight = 84;
+		s2g( Surface.F ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.F ).title.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 0, titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.G ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 0, titlePrefWidth, titlePrefHeight ) );
 
-		double elPrefWidth = 95.0;
-		double elPrefHeight = 35.0 * aspectRatio;
-		equationLaTeX.setPreferredSize( new Dimension( (int) (elPrefWidth * 1920 / 100.0), (int) (elPrefHeight * 1080 / 100.0) ) );
-		equationLaTeX.setBounds( computeBounds( content, 50 - elPrefWidth / 2, 55, elPrefWidth, elPrefHeight ) ); // center horizontally
+		int elPrefWidth = 550;
+		int elPrefHeight = 1080 - 708;
+		s2g( Surface.F ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
+		s2g( Surface.F ).equation.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.M ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
+		s2g( Surface.M ).equation.setBounds( computeBoundsFullHD( content, 1920 / 2 - elPrefWidth / 2, 708, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.G ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
+		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
 
-		galF.setBounds( computeBounds( content, 2, 5 * aspectRatio, 5, 25 * aspectRatio ) );
-		galG.setBounds( computeBounds( content, 100 - 2 - 5, 5 * aspectRatio, 5, 25 * aspectRatio ) );
+		galF.setBounds( computeBoundsFullHD( content, 38, 151, 60, 492 ) );
+		galG.setBounds( computeBoundsFullHD( content, 1920 - 38 - 60, 151, 60, 492 ) );
 
 		repaint();
+	}
+
+	private static Rectangle computeBoundsFullHD( Component p, double x, double y, double w, double h )
+	{
+		x = x / 19.2; y = y / 10.8; w = w / 19.2; h = h / 10.8;
+		return computeBounds( p, x, y, w, h );
 	}
 
 	private static Rectangle computeBounds( Component p, double x, double y, double w, double h )
@@ -184,7 +209,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 
 	protected void hideCursor()
 	{
-		// Transparent 16 x 16 pixboolean fullscreenel cursor image.
+		// Transparent 16 x 16 pixel boolean fullscreen cursor image.
 		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 
 		// Create a new blank cursor.
@@ -236,124 +261,76 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     {
     	BufferedImage image = new BufferedImage( content.getWidth(), content.getHeight(), BufferedImage.TYPE_INT_RGB );
         Graphics2D graphics2D = image.createGraphics();
-        this.equationLaTeX.reparse();
         content.paint( graphics2D );
         javax.imageio.ImageIO.write( image, "png", out );    	
     }
-/*    
-    private static final String staticLaTeXSrc = "" +
-			"\\newcommand{\\nl}{\\\\\\sf\\small}\n" +
-			"\\begin{array}{rcl@{}c@{}rcl}\n" +
-			"&\\sf\\small\\text{\\hphantom{MMMMMMMMMMMMMMMMMMMM}}&&&&\\sf\\small\\ \\hspace{20em}\\ &\\\\" +
-			"\\fgcolor{Gray}{\\left[\\vspace{12em} \\right.}\n" +
-			"&\n" +
-			"\\begin{array}{c}\n" +
-			"	\\sf\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleF}\\\\\\\\" +
-			"	\\sf\\bf\\Large\\text{\\titleF}={\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}}\\\\\\\\" +
-			"	\\sf\\small\\formulaF\n" +
-			"\\end{array}\n" +
-			"&\n" +
-			"\\fgcolor{Gray}{\\left.\\vspace{12em} \\right]}\n" +
-			"&\n" +
-			"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}\n" +
-			"&\n" +
-			"\\fgcolor{Gray}{\\left[\\vspace{12em} \\right.}\n" +
-			"&\n" +
-			"\\begin{array}{c}\n" +
-			"	\\sf\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleG}\\\\\\\\" +
-			"	\\sf\\bf\\Large\\text{\\titleG}={\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}}\\\\\\\\" +
-			"	\\sf\\small\\formulaG\n" +
-			"\\end{array}\n" +
-			"&\n" +
-			"\\fgcolor{Gray}{\\left.\\vspace{12em} \\right]}\n" +
-			"\\\\\n" +
-			"&\\hspace{30em}&&&&\\hspace{30em}&\n" +
-			"\\end{array}\n";
-    */
-    private static final String staticLaTeXSrc = "" +
-			"\\newcommand{\\nl}{\\\\}\n" +
-			"\\sf\\begin{array}{ccc}\n" +
-				"\\raisebox{-2em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleF}}\n" +
-					"&\\raisebox{-5em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula Morph}}\n" +
-					"&\\raisebox{-2em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\titleG}}\\\\\n" +
-				"\\fgcolor{Gray}{\n" +
-					"\\left[\n" +
-					"\\fgcolor{black}{\n" + 
-						"\\begin{array}{c}\n" +
-							"\\ \\vspace{1em} \\\\\n" +
-							"{\\Large\\text{\\titleF}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}}\\\\\\\\\n" +
-							"\\formulaF\\\\\n" +
-							"\\hphantom{MMMMMMMMMMMMMMMM}\n" +
-						"\\end{array}\n" +
-					"}\n" +
-					"\\right]\n" +
-				"}\n" +
-				"&\n" +
-				"{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageF}}}}\n" +
-				"\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\n" +
-				"{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}}\n" +
-				"&\n" +
-				"\\fgcolor{Gray}{\n" +
-				"\\left[\n" +
-				"\\fgcolor{black}{\n" + 
-					"\\begin{array}{c}\n" +
-						"\\ \\vspace{1em} \\\\\n" +
-						"{\\Large\\text{\\titleG}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\includejavaimage[width=5ex,interpolation=bicubic]{imageG}}}}\\\\\\\\\n" +
-						"\\formulaG\\\\\n" +
-						"\\hphantom{MMMMMMMMMMMMMMMM}\n" +
-					"\\end{array}\n" +
-				"}\n" +
-				"\\right]\n" +
-				"}\n" +
-			"\\end{array}\n";
-    
-    private String setupLaTeXSrc()
-    {    	
-    	titleFLaTeX.reparse();
+
+    private static final String staticLaTeXSrc( Surface s )
+    {
+		LaTeXCommands.getImageMap().put( "FMPImage" + s.name(), null ); // at least put it in the map although it is still null
     	
-    	DecimalFormat f = new DecimalFormat("0.00");
     	StringBuilder sb = new StringBuilder();
     	
-    	// surface names
-    	sb.append( "\\newcommand{\\titleF}{");
-    	sb.append( "Zitrus" );
-    	sb.append( "}\n\\newcommand{\\titleG}{" );
-    	sb.append( "Heart" );
-    	sb.append( "}\n" );
+    	// surface name
+    	sb.append( "\\newcommand{\\title" + s.name() + "}{\\FMDynamic[i]{FMTitle" + s.name() + "}}\n" );
 
     	// parameters
-    	for( Parameter p : Parameter.values() )
+    	for( Parameter p : s.getParameters() )
     	{
-    		if( p.isActive() )
-    		{
-    			sb.append( p.getLaTeXColorDefinition() );
-    			sb.append( "\\newcommand{\\FMP" );
-    			sb.append( p.getSurface().name() );
-    			sb.append( p.getName() );
-    			sb.append( "}{\\fgcolor{" );
-    			sb.append( p.getLaTeXColorName() );
-    			sb.append( "}\\ovalbox{\\fgcolor{black}{" );
-    			sb.append( f.format( p.getValue() ) );
-    			sb.append( "}}}\n" );
-    		}
+			sb.append( p.getLaTeXColorDefinition() );
+			sb.append( "\\newcommand{\\FMP" );
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}{\\fgcolor{" );
+			sb.append( p.getLaTeXColorName() );
+			sb.append( "}\\ovalbox{\\fgcolor{black}{\\jlmDynamic{FMParam" );
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}}}}\n" );
     	}
-    	for( Surface s : Surface.values() )
+    	
+    	String rem;
+    	switch( s )
     	{
-    		sb.append( "\\newcommand{\\formula" );
-    		sb.append( s.name() );
-    		sb.append( "}{" );
-    		sb.append( surface2latex.get( s ) );
-    		sb.append( "}\n" );
+    	case M:
+        	rem = "" +
+    			"\\newcommand{\\nl}{\\\\}\n" +
+    			"\\sf\\begin{array}{c}\n" +
+    				"\\bf\\Large\\fgcolor{Gray}{\\text{Formula Morph}}\\\\\\\\\n" +
+					"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImageF}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImageG}}}\n" +
+    			"\\end{array}";
+        	break;
+    	case F:
+        case G:
+        	rem = "" +
+    			"\\newcommand{\\nl}{\\\\}\n" +
+    			"\\sf\\begin{array}{c}\n" +
+    				"\\raisebox{-2em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\title" + s.name() +  "}}\\\\\n" +
+    				"\\fgcolor{Gray}{\n" +
+    					"\\left[\n" +
+    					"\\fgcolor{black}{\n" + 
+    						"\\begin{array}{c}\n" +
+    							"\\ \\vspace{1em} \\\\\n" +
+    							"{\\Large\\text{\\title" + s.name() + "}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImage" + s.name() + "}}}}\\\\\\\\\n" +
+    							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
+    							"\\hphantom{MMMMMMMMMMMMMMMM}\n" +
+    						"\\end{array}\n" +
+    					"}\n" +
+    					"\\right]\n" +
+    				"}\n" +
+    			"\\end{array}";
+        	break;
+        default:
+        	rem = "unknown surface: " + s;	
     	}
-    	//sb.append("\\begin{array}{c}\\formulaF \\\\ \\FMPMt \\\\ \\formulaG\\end{array}");
-    	//sb.append( "a" );
-    	sb.append( staticLaTeXSrc );
+    	
+    	sb.append( rem );
     	return sb.toString();
     }
     
     public void setDefaults( Surface surf, Properties props )
     {
-    	AlgebraicSurfaceRenderer asr = surface2panel.get( surf ).getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr = s2g( surf ).panel.getAlgebraicSurfaceRenderer();
 
         asr.getCamera().loadProperties( props, "camera_", "" );
         setOptimalCameraDistance( asr.getCamera() );
@@ -376,19 +353,21 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     
     public void valueChanged( Parameter p )
     {
-    	JSurferRenderPanel jsp = surface2panel.get( p.getSurface() );
+    	LaTeXCommands.getDynamicLaTeXMap().put( "FMParam" + p.getSurface().name() + p.getName(), decimalFormatter.format( p.getValue()) );
+		
+    	JSurferRenderPanel jsp = s2g( p.getSurface() ).panel;
     	jsp.getAlgebraicSurfaceRenderer().setParameterValue( Character.toString( p.getName() ), p.getValue() );
     	jsp.scheduleSurfaceRepaint();
 
-    	AlgebraicSurfaceRenderer asr_M =  surface2panel.get( Surface.M ).getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr_M =  s2g( Surface.M ).panel.getAlgebraicSurfaceRenderer();
     	if( p.getSurface() == Surface.M )
     	{
     		// interpolate colors of the morph
     		float t = (float) Parameter.M_t.getValue();
     		asr_M.setParameterValue( Character.toString( p.getName() ), p.getValue() );
 
-    		AlgebraicSurfaceRenderer asr_F =  surface2panel.get( Surface.F ).getAlgebraicSurfaceRenderer();
-    		AlgebraicSurfaceRenderer asr_G =  surface2panel.get( Surface.G ).getAlgebraicSurfaceRenderer();
+    		AlgebraicSurfaceRenderer asr_F =  s2g( Surface.F ).panel.getAlgebraicSurfaceRenderer();
+    		AlgebraicSurfaceRenderer asr_G =  s2g( Surface.G ).panel.getAlgebraicSurfaceRenderer();
     		
     		asr_M.setFrontMaterial( Material.lerp( asr_F.getFrontMaterial(), asr_G.getFrontMaterial(), t ) );
     		asr_M.setBackMaterial( Material.lerp( asr_F.getBackMaterial(), asr_G.getBackMaterial(), t ) );
@@ -398,8 +377,9 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     		// the parameter at morph, too
     		asr_M.setParameterValue( p.name(), p.getValue() );
     	}
-		surface2panel.get( Surface.M ).scheduleSurfaceRepaint();
-		equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+		s2g( p.getSurface() ).equation.repaint();
+		s2g( Surface.M ).panel.scheduleSurfaceRepaint();
+//		System.out.println(LaTeXCommands.getDynamicLaTeXMap().toString() );
     }
 	
     public void idChanged( Surface s )
@@ -417,7 +397,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	    	case M:
 	    		// should not occur - do nothing
 	    	}
-    		surface2panel.get( s ).scheduleSurfaceRepaint();
+    		s2g( s ).panel.scheduleSurfaceRepaint();
     	}
     	catch( Exception e )
     	{
@@ -425,9 +405,9 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     	}
 
     	// set the morphed surface
-    	AlgebraicSurfaceRenderer asr_F = surface2panel.get( Surface.F ).getAlgebraicSurfaceRenderer();
-    	AlgebraicSurfaceRenderer asr_M = surface2panel.get( Surface.M ).getAlgebraicSurfaceRenderer();
-    	AlgebraicSurfaceRenderer asr_G = surface2panel.get( Surface.G ).getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr_F = s2g( Surface.F ).panel.getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr_M = s2g( Surface.M ).panel.getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr_G = s2g( Surface.G ).panel.getAlgebraicSurfaceRenderer();
     	
     	CloneVisitor cv = new CloneVisitor();
 
@@ -464,7 +444,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     	Parameter.M_t.setActive( true );
     	Parameter.M_t.setMin( 0.0 );
     	Parameter.M_t.setMax( 1.0 );
-		surface2panel.get( Surface.M ).scheduleSurfaceRepaint();
+		s2g( Surface.M ).panel.scheduleSurfaceRepaint();
 		for( Parameter p : Surface.F.getParameters() )
 		{
 			p.notifyActivationStateListeners();
@@ -480,7 +460,8 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			p.notifyActivationStateListeners();
 			p.notifyValueChangeListeners();
 		}
-		equationLaTeX.setLaTeXSrc( setupLaTeXSrc() );
+		s2g( s ).title.reparseOnRepaint();
+		s2g( s ).equation.reparseOnRepaint();
 		repaint();
     }
 
@@ -503,7 +484,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     public void loadFromProperties( Surface surf, Properties props ) // load only attributes that are not handled in setDefaults(...)
             throws Exception
     {
-    	AlgebraicSurfaceRenderer asr = surface2panel.get( surf ).getAlgebraicSurfaceRenderer();
+    	AlgebraicSurfaceRenderer asr = s2g( surf ).panel.getAlgebraicSurfaceRenderer();
         asr.setSurfaceFamily( props.getProperty( "surface_equation" ) );
         Set< String > param_names = asr.getAllParameterNames();
         EnumSet< Parameter > unsetFormulaMorphParams = surf.getParameters();
@@ -542,9 +523,8 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
         asr.getFrontMaterial().loadProperties(props, "front_material_", "");
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
         
-        System.out.println( props.getProperty( "surface_equation_latex" ) );
-        System.out.println( props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) );
-        surface2latex.put( surf, props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), props.getProperty( "surface_title_latex" ) );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
     }
 
     protected static void setOptimalCameraDistance( Camera c )

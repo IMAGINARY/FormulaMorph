@@ -125,7 +125,9 @@ public class JSurferRenderPanel extends JComponent
                     minPixels = Math.min( minPixels, maxPixels );
                     long numPixelsAt15FPS = ( long ) ( 1.0 / ( desired_fps * time_per_pixel ) );
                     long pixelsToUse = Math.max( minPixels, Math.min( maxPixels, numPixelsAt15FPS ) );
-                    JSurferRenderPanel.this.renderSize = new Dimension( (int) Math.sqrt( pixelsToUse ), (int) Math.sqrt( pixelsToUse ) );
+                    int widthToUse = (int) Math.sqrt( pixelsToUse );
+                    widthToUse += widthToUse % 2 == 0 ? 1 : 0;
+                    JSurferRenderPanel.this.renderSize = new Dimension( widthToUse, widthToUse );
 
                     // render low res
                     {
@@ -252,8 +254,8 @@ public class JSurferRenderPanel extends JComponent
     public JSurferRenderPanel()
     {
         renderCoordinatenSystem = false;
-        minLowResRenderSize = new Dimension( 150, 150 );
-        maxLowResRenderSize = new Dimension( 512, 512 );
+        minLowResRenderSize = new Dimension( 151, 151 );
+        maxLowResRenderSize = new Dimension( 513, 513 );
         //renderSize = minLowResRenderSize;
 
         resizeImageWithComponent = false;

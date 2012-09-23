@@ -31,8 +31,7 @@ public class Main {
 			gui.getContentPane().setPreferredSize(new Dimension(16*75,9*75));
 			gui.pack();
 			gui.setVisible( true );
-        }
-        
+        } 
     }
     
     public static void main(String[] args) {

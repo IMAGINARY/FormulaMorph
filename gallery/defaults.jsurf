@@ -1,5 +1,6 @@
 #jSurfer surface description
-background_color=0.95 0.95 0.95
+background_color=0 0 0
+#background_color=0.95 0.95 0.95
 camera_fov_y=60.0
 camera_height=2.2
 camera_transform=1.0 0.0 0.0 0.0  0.0 1.0 0.0 0.0  0.0 0.0 1.0 -1.0  0.0 0.0 0.0 1.0
