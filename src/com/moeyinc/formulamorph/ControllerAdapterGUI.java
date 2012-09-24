@@ -64,12 +64,21 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.Y_AXIS ) );
+		
 		JButton screenshotleft = new JButton( "Screenshot Left" );
 		screenshotleft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
 		buttonPanel.add( screenshotleft );
 		JButton screenshotright = new JButton( "Screenshot Right" );
 		screenshotright.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
 		buttonPanel.add( screenshotright );
+		
+		JButton pauseAnim = new JButton( "Pause" );
+		pauseAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().pauseAnimation(); } } );
+		buttonPanel.add( pauseAnim );
+		JButton resumeAnim = new JButton( "Resume" );
+		resumeAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().resumeAnimation(); } } );
+		buttonPanel.add( resumeAnim );
+		
 		content.add( buttonPanel );
 
 		getContentPane().add( content );

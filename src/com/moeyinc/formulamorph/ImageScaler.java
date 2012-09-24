@@ -4,11 +4,13 @@ import javax.swing.JComponent;
 import javax.swing.ImageIcon;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class ImageScaler extends JComponent {
 
 	private Image image;
 	private Image scaledImage;
+	private boolean grayscale; 
 	
 	public ImageScaler()
 	{
@@ -19,12 +21,16 @@ public class ImageScaler extends JComponent {
 	{
 		super();
 		this.image = image;
+		this.grayscale = false;
 	}
 	
 	public void setImage( Image image ) { this.image = image; this.scaledImage = null; }
 	public Image getImage() { return this.image; }
 	
-    public void paintComponent(Graphics g) 
+	public void setGrayScale( boolean grayscale ) { this.grayscale = grayscale; this.scaledImage = null; }
+	public boolean getGrayScale() { return this.grayscale; }
+	
+    public void paintComponent(Graphics g)
     { 
     	if( this.isOpaque() )
     	{
@@ -35,7 +41,17 @@ public class ImageScaler extends JComponent {
         if( image != null )
         {
         	if( scaledImage == null || scaledImage.getWidth( null ) != image.getWidth( null ) || scaledImage.getHeight( null ) != image.getHeight( null ) )
+        	{
         		scaledImage = image.getScaledInstance( getWidth(), getHeight(), Image.SCALE_SMOOTH );
+        		if( grayscale )
+        		{
+        			BufferedImage bi = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_BYTE_GRAY );
+        			Graphics g_bi = bi.getGraphics();  
+        			g_bi.drawImage( scaledImage, 0, 0, null);  
+        			g_bi.dispose();
+        			scaledImage = bi;
+        		}
+        	}
         	g.drawImage( scaledImage, 0, 0, getWidth(), getHeight(), null ); 
         }
     }
