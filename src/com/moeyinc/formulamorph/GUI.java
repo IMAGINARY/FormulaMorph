@@ -57,8 +57,35 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 
 	EnumMap< Parameters.Surface, SurfaceGUIElements > surface2guielems = new EnumMap< Parameters.Surface, SurfaceGUIElements >( Parameters.Surface.class );
 		
-	JPanel galF;
-	JPanel galG;
+	ImageScaler[] galF;
+	ImageScaler[] galG;
+	static BufferedImage triangle;
+	static BufferedImage triangleFlipped;
+	static {
+		triangle = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+		Graphics2D g = (Graphics2D) triangle.getGraphics();
+		g.setColor( new Color( 0, 0, 0, 0 ) );
+		g.fillRect( 0, 0, triangle.getWidth(), triangle.getHeight() );
+		g.setColor( Color.LIGHT_GRAY );
+		Polygon p = new Polygon();
+		p.addPoint( -triangle.getWidth() / 2, 0 );
+		p.addPoint( triangle.getWidth() / 2, 0 );
+		p.addPoint( 0, (int) ( triangle.getWidth() * Math.sqrt( 3.0 ) / 2.0 ) );
+		AffineTransform tx = AffineTransform.getScaleInstance( 0.6, 0.6 );
+		tx.preConcatenate( AffineTransform.getTranslateInstance( triangle.getWidth() / 2, 0 ) );
+		g.setTransform( tx );
+		g.fillPolygon( p );
+		
+		tx = AffineTransform.getScaleInstance(1, -1);
+		tx.translate(0, -triangle.getHeight(null));
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		triangleFlipped = op.filter( triangle, null);
+	}
+	ImageScaler triangleFTop = new ImageScaler( triangleFlipped );
+	ImageScaler triangleFBottom = new ImageScaler( triangle );
+	ImageScaler triangleGTop = new ImageScaler( triangleFlipped );
+	ImageScaler triangleGBottom = new ImageScaler( triangle );
+	
 	JPanel blackStrip;
 
 	public GUI()
@@ -85,9 +112,17 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		surface2guielems.put( Surface.G, new SurfaceGUIElements( Surface.G ) );
 		
 		blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
-		galF = new JPanel(); galF.setBackground( Color.lightGray );
-		galG = new JPanel(); galG.setBackground( Color.lightGray );
-
+		galF = new ImageScaler[ 7 ];
+		galG = new ImageScaler[ 7 ];
+		for( int i = 0; i < galF.length; ++i )
+		{
+			galF[ i ] = new ImageScaler(); galF[ i ].setBackground( Color.lightGray ); galF[ i ].setOpaque( true );
+			galG[ i ] = new ImageScaler(); galG[ i ].setBackground( Color.lightGray ); galG[ i ].setOpaque( true );
+		}
+		Border galBorder = BorderFactory.createLineBorder( Color.WHITE, 2 );
+		galF[ galF.length / 2 ].setBorder( galBorder );
+		galG[ galG.length / 2 ].setBorder( galBorder );
+		
 		final LaTeXLabel eqF = s2g( Surface.F ).equation;
 		final LaTeXLabel eqM = s2g( Surface.M ).equation;
 		final LaTeXLabel eqG = s2g( Surface.G ).equation;
@@ -120,8 +155,15 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		content.add( s2g( Surface.G ).panel );		
 		content.add( s2g( Surface.G ).equation );
 
-		content.add( galF );
-		content.add( galG );
+		for( JComponent c : galF )
+			content.add( c );
+		for( JComponent c : galG )
+			content.add( c );
+		content.add( triangleFTop );
+		content.add( triangleFBottom );
+		content.add( triangleGTop );
+		content.add( triangleGBottom );
+		
 		content.add( blackStrip );
 
 		// layout components
@@ -189,9 +231,19 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		s2g( Surface.G ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
 		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
 
-		galF.setBounds( computeBoundsFullHD( content, 38, 151, 60, 492 ) );
-		galG.setBounds( computeBoundsFullHD( content, 1920 - 38 - 60, 151, 60, 492 ) );
-
+		int galSize = 62;
+		int spacing = 8;
+		int galYStart = 84 + 624 / 2 - ( galF.length * galSize + ( galF.length - 1 ) * spacing ) / 2;
+		for( int i = 0; i < galF.length; ++i )
+		{
+			galF[ i ].setBounds( computeBoundsFullHD( content, 36, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+			galG[ i ].setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+		}
+		triangleFTop.setBounds( computeBoundsFullHD( content, 36, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
+		triangleFBottom.setBounds( computeBoundsFullHD( content, 36, galYStart + galF.length * ( galSize + spacing ), galSize, galSize ) );
+		triangleGTop.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
+		triangleGBottom.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + galF.length * ( galSize + spacing ), galSize, galSize ) );
+		
 		repaint();
 	}
 
