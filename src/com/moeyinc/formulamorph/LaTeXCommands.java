@@ -89,7 +89,6 @@ public class LaTeXCommands {
 		extConv = new ExternalConverter() {
 				public String getLaTeXString( String externalCode ) {
 					String s = LaTeXCommands.dynamicLaTeXStrings.get( externalCode );
-					System.out.println( externalCode + ": " + s );
 					return s == null ? "\\text{no value for \\backslash jlmDynamic\\{"+externalCode+"\\}}" : s;
 				}
 			};

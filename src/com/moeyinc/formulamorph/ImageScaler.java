@@ -21,7 +21,7 @@ public class ImageScaler extends JComponent {
 		this.image = image;
 	}
 	
-	public void setImage( Image image ) { this.image = image; }
+	public void setImage( Image image ) { this.image = image; this.scaledImage = null; }
 	public Image getImage() { return this.image; }
 	
     public void paintComponent(Graphics g) 

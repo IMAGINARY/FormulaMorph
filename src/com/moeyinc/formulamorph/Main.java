@@ -36,6 +36,13 @@ public class Main {
     
     public static void main(String[] args) {
     	Locale.setDefault( Locale.US );
+    	try {
+            // Set System L&F
+    		javax.swing.UIManager.setLookAndFeel( javax.swing.UIManager.getSystemLookAndFeelClassName());
+    	} 
+	    catch ( Exception e ) {
+	       e.printStackTrace();
+	    }
 
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.

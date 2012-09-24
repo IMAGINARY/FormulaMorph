@@ -203,6 +203,8 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		
 		idChanged( Surface.F );
 		idChanged( Surface.G );
+		
+		new Thread( new RotationAnimation() ).start();
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
@@ -222,7 +224,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		s2g( Surface.G ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
 		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 0, titlePrefWidth, titlePrefHeight ) );
 
-		int elPrefWidth = 550;
+		int elPrefWidth = 570;
 		int elPrefHeight = 1080 - 708;
 		s2g( Surface.F ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
 		s2g( Surface.F ).equation.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
@@ -335,10 +337,10 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			sb.append( p.getName() );
 			sb.append( "}{\\fgcolor{" );
 			sb.append( p.getLaTeXColorName() );
-			sb.append( "}\\ovalbox{\\fgcolor{black}{\\jlmDynamic{FMParam" );
+			sb.append( "}\\ovalbox{\\fgcolor{black}{\\vphantom{-}\\jlmDynamic{FMParam" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}}}}\n" );
+			sb.append( "}\\vphantom{-}}}}\n" );
     	}
     	
     	String rem;
@@ -365,11 +367,12 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     							"\\ \\vspace{1em} \\\\\n" +
     							"{\\Large\\text{\\title" + s.name() + "}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImage" + s.name() + "}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
-    							"\\hphantom{MMMMMMMMMMMMMMMM}\n" +
+    							"\\hphantom{MMMMMMMMMMMMMMMMMM}\n" +
     						"\\end{array}\n" +
     					"}\n" +
     					"\\right]\n" +
-    				"}\n" +
+    				"}\\\\\n" +
+        			"\\vspace{1em}\n" +    					
     			"\\end{array}";
         	break;
         default:
@@ -387,7 +390,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
         asr.getCamera().loadProperties( props, "camera_", "" );
         setOptimalCameraDistance( asr.getCamera() );
 
-        for( int i = 0; i < asr.MAX_LIGHTS; i++ )
+        for( int i = 0; i < AlgebraicSurfaceRenderer.MAX_LIGHTS; i++ )
         {
             asr.getLightSource( i ).setStatus(LightSource.Status.OFF);
             asr.getLightSource( i ).loadProperties( props, "light_", "_" + i );
@@ -594,5 +597,62 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
                 throw new RuntimeException();
         }
         c.lookAt( new Point3d( 0, 0, cameraDistance ), new Point3d( 0, 0, -1 ), new Vector3d( 0, 1, 0 ) );
+    }
+    
+    class RotationAnimation implements Runnable
+    {
+    	boolean stop;
+    	
+    	public RotationAnimation() { stop = false; }
+    	
+    	public void stop() { this.stop = true; }
+    	
+    	double smootherstep( double edge0, double edge1, double x)
+    	{
+    	    // Scale, and saturate x to 0..1 range
+    	    x = Math.min( 0.0, Math.max( (x - edge0)/(edge1 - edge0), 1.0 ) );
+    	    // Evaluate polynomial
+    	    return x*x*x*(x*(x*6 - 15) + 10);
+    	}
+    	
+    	public void run()
+    	{
+			try{ Thread.sleep( 500 ); } catch( Exception e ) {}
+    		Matrix4d rotation = new Matrix4d();
+    		rotation.setIdentity();
+    		Matrix4d rotStep = new Matrix4d(); rotStep.setIdentity();
+    		{
+	    		double angleStep = Math.PI / 1000;
+	    		Matrix4d rotX = new Matrix4d(); rotX.rotX( angleStep ); rotStep.mul( rotX );
+	    		Matrix4d rotY = new Matrix4d(); rotY.rotY( angleStep ); rotStep.mul( rotY );
+	    		Matrix4d rotZ = new Matrix4d(); rotZ.rotZ( angleStep ); rotStep.mul( rotZ );
+	    		
+    		}
+    		//int[] angles = { 0, 90, 180, 270, 360 };
+    		int iterations = 0;
+    		
+    		while( !stop )
+    		{
+//    			for( int i = 0; i < angles.length - 1; ++i )
+    			{
+	    			try{ Thread.sleep( 20 ); } catch( Exception e ) {}
+	    			if( iterations == 10000 )
+	    			{
+	    				// ensure from time to time that the matrix is still a rotation matrix
+	    				AxisAngle4d aa = new AxisAngle4d();
+	    				aa.set( rotation );
+	    				rotation.set( aa );
+	    				iterations = 0;
+	    			}
+	    			rotation.mul( rotStep );
+	    			Matrix4d newRotation = new Matrix4d( rotation );
+	    			for( Surface s : Surface.values() )
+	    			{
+	    				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
+	    				GUI.this.s2g(s).panel.scheduleSurfaceRepaint();
+	    			}
+    			}
+    		}
+    	}
     }
 }

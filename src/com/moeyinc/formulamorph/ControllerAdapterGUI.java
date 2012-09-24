@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.border.EmptyBorder;
 
 import com.moeyinc.formulamorph.Parameters.*;
 
@@ -27,18 +28,16 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 		else
 			this.c = c;	
 		
-		Container content = getContentPane();
-		content.setLayout( new FlowLayout() );
-		final JButton screenshotleft = new JButton( "Screenshot Left" );
-		screenshotleft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
-		content.add( screenshotleft );
+		JPanel content = new JPanel();	
+		content.setLayout( new BoxLayout( content, BoxLayout.X_AXIS ) );
+		content.setBorder( new EmptyBorder( 10, 0, 10, 0 ) );
 		Parameter last_param = null;
 		for( Parameters.Parameter param : Parameters.Parameter.values() )
 		{
 			if( last_param == null || last_param.getSurface() != param.getSurface() )
 			{
 				JSeparator s = new JSeparator( JSeparator.VERTICAL );
-				s.setPreferredSize(new Dimension(10,200));
+				s.setPreferredSize(new Dimension(5,200));
 				content.add( s );
 			}
 			last_param = param;
@@ -62,10 +61,19 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 		JSeparator s = new JSeparator( JSeparator.VERTICAL );
 		s.setPreferredSize(new Dimension(5,200));
 		content.add( s );
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.Y_AXIS ) );
+		JButton screenshotleft = new JButton( "Screenshot Left" );
+		screenshotleft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
+		buttonPanel.add( screenshotleft );
 		JButton screenshotright = new JButton( "Screenshot Right" );
 		screenshotright.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
-		content.add( screenshotright );
+		buttonPanel.add( screenshotright );
+		content.add( buttonPanel );
 
+		getContentPane().add( content );
+		
 		pack();
 		if( isAlwaysOnTopSupported() )
 			setAlwaysOnTop( true );
