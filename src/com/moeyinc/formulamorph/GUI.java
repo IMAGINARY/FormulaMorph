@@ -7,6 +7,8 @@ import java.awt.image.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.vecmath.*;
 
 import java.io.*;
@@ -50,7 +52,6 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		}		
 	}
 	
-	final ControllerAdapterGUI caGUI = new ControllerAdapterGUI( null );
 	JPanel content; // fixed 16:9 top container
 	static final double aspectRatio = 16.0 / 9.0;
 	static final DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
@@ -90,12 +91,16 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 
 	RotationAnimation rotationAnimation;
 	
+	final ControllerAdapterGUI caGUI = new ControllerAdapterGUI( null );
+	JFrame caGUIFrame = new JFrame();;
+	JInternalFrame caGUIInternalFrame = new JInternalFrame();
+	
 	public GUI()
 	{
 		super( "FormulaMorph Main Window" );
 	
-		caGUI.setDefaultCloseOperation( HIDE_ON_CLOSE );
-		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { caGUI.setVisible( true ); } } );
+		this.getLayeredPane().add( caGUIInternalFrame );
+		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { setupControllerGUI( true ); } } );
 		
     	Parameter.M_t.setMin( 0.0 );
     	Parameter.M_t.setMax( 1.0 );
@@ -294,6 +299,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
         validate();
         device.setFullScreenWindow( this );
         setVisible(visible);
+        setupControllerGUI( caGUIFrame.isVisible() || caGUIInternalFrame.isVisible() );
     }
     
     public void tryWindowed()
@@ -308,6 +314,39 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
         if( device.getFullScreenWindow() == this )
         	device.setFullScreenWindow( null );
         setVisible( visible );
+        setupControllerGUI( caGUIFrame.isVisible() || caGUIInternalFrame.isVisible() );
+    }
+
+    public void setupControllerGUI( boolean visible )
+    {
+		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		caGUIFrame.setVisible( false );
+		caGUIInternalFrame.setVisible( false );
+		caGUIFrame.dispose();
+		caGUIInternalFrame.dispose();
+		caGUIFrame.getContentPane().remove( caGUI );
+		caGUIInternalFrame.getContentPane().remove( caGUI );
+		
+		if( device.getFullScreenWindow() == GUI.this )
+		{
+			caGUIInternalFrame = new JInternalFrame();
+			caGUIInternalFrame.setClosable( true );
+			caGUIInternalFrame.setDefaultCloseOperation( JInternalFrame.DISPOSE_ON_CLOSE );
+			caGUIInternalFrame.getContentPane().add( caGUI );
+			caGUIInternalFrame.pack();
+			GUI.this.getLayeredPane().add( caGUIInternalFrame );
+			caGUIInternalFrame.setVisible( visible );
+		}
+		else
+		{
+			caGUIFrame = new JFrame();
+			caGUIFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+			caGUIFrame.getContentPane().add( caGUI );
+			caGUIFrame.pack();
+			if( caGUIFrame.isAlwaysOnTopSupported() )
+				caGUIFrame.setAlwaysOnTop( true );
+			caGUIFrame.setVisible( visible );
+		}    	
     }
     
     public void saveScreenShotLeft() { try { saveScreenShotToFile( new File( "left.png" ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }

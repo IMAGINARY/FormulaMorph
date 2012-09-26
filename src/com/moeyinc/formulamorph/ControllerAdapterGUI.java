@@ -11,26 +11,24 @@ import com.moeyinc.formulamorph.Parameters.*;
 import java.util.EnumMap;
 import java.util.Hashtable;
 
-public class ControllerAdapterGUI extends JFrame implements Controller, Parameters.ValueChangeListener, Parameters.ActivationStateListener {
+public class ControllerAdapterGUI extends JPanel implements Controller, Parameters.ValueChangeListener, Parameters.ActivationStateListener {
 
 	private Controller c;
 	
 	final static int maxSliderValue = 10000;
 	//final static int sliderMajorTicks = 5;
 	private EnumMap< Parameters.Parameter, JSlider > p2s = new EnumMap< Parameters.Parameter, JSlider >( Parameters.Parameter.class );
-	
+		
 	public ControllerAdapterGUI( Controller c )
 	{
-		super( "Controller GUI" );
 		if( c == null )
 			this.c = new Controller() { // Dummy adapter to ensure that c is not null
 				};
 		else
 			this.c = c;	
 		
-		JPanel content = new JPanel();	
-		content.setLayout( new BoxLayout( content, BoxLayout.X_AXIS ) );
-		content.setBorder( new EmptyBorder( 10, 0, 10, 0 ) );
+		this.setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
+		this.setBorder( new EmptyBorder( 10, 0, 10, 0 ) );
 		Parameter last_param = null;
 		for( Parameters.Parameter param : Parameters.Parameter.values() )
 		{
@@ -38,7 +36,7 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 			{
 				JSeparator s = new JSeparator( JSeparator.VERTICAL );
 				s.setPreferredSize(new Dimension(5,200));
-				content.add( s );
+				this.add( s );
 			}
 			last_param = param;
 
@@ -56,11 +54,11 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 			p.addActivationStateListener( new ActivationStateListener() { public void stateChanged( Parameter p ) { s.setEnabled( p.isActive() ); } });
 			p.addValueChangeListener( new ValueChangeListener() { public void valueChanged( Parameter p ) { ControllerAdapterGUI.this.valueChanged( p ); } });
 			p2s.put( p, s );
-			content.add( slider_panel );
+			this.add( slider_panel );
 		}
 		JSeparator s = new JSeparator( JSeparator.VERTICAL );
 		s.setPreferredSize(new Dimension(5,200));
-		content.add( s );
+		this.add( s );
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.Y_AXIS ) );
@@ -79,20 +77,14 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 		resumeAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().resumeAnimation(); } } );
 		buttonPanel.add( resumeAnim );
 		
-		JButton fullscreenOn = new JButton( "Fullscreen ON" );
+		JButton fullscreenOn = new JButton( "Fullscreen ON" ); 
 		fullscreenOn.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryFullScreen(); } } );
 		buttonPanel.add( fullscreenOn );
 		JButton fullscreenOff = new JButton( "Fullscreen OFF" );
 		fullscreenOff.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryWindowed(); } } );
 		buttonPanel.add( fullscreenOff );
 
-		content.add( buttonPanel );
-
-		getContentPane().add( content );
-		
-		pack();
-		if( isAlwaysOnTopSupported() )
-			setAlwaysOnTop( true );
+		this.add( buttonPanel );
 	}
 	
 	public void valueChanged( Parameter p )
@@ -109,5 +101,14 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 	public void stateChanged( Parameter p )	
 	{
 		p2s.get( p ).setEnabled( p.isActive() );
+	}
+	
+	public void setVisible( boolean visible )
+	{
+		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		if( device.getFullScreenWindow() == Main.gui() )
+		{
+			
+		}
 	}
 }
