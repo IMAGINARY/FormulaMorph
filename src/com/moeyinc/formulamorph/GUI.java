@@ -286,10 +286,28 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		else
 			System.err.println( "Fullscreen mode not supported on this plattform! We try it anyway ..." );
 
+        boolean visible = isVisible();
+        setVisible(false);
+        dispose();
         setUndecorated(true);
         setResizable(false);
         validate();
         device.setFullScreenWindow( this );
+        setVisible(visible);
+    }
+    
+    public void tryWindowed()
+    {
+    	GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    	boolean visible = isVisible();
+    	setVisible( false );
+    	dispose();
+        setUndecorated(false);
+        setResizable(true);
+        validate();
+        if( device.getFullScreenWindow() == this )
+        	device.setFullScreenWindow( null );
+        setVisible( visible );
     }
     
     public void saveScreenShotLeft() { try { saveScreenShotToFile( new File( "left.png" ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }

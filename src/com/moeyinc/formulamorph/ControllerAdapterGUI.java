@@ -79,6 +79,13 @@ public class ControllerAdapterGUI extends JFrame implements Controller, Paramete
 		resumeAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().resumeAnimation(); } } );
 		buttonPanel.add( resumeAnim );
 		
+		JButton fullscreenOn = new JButton( "Fullscreen ON" );
+		fullscreenOn.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryFullScreen(); } } );
+		buttonPanel.add( fullscreenOn );
+		JButton fullscreenOff = new JButton( "Fullscreen OFF" );
+		fullscreenOff.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryWindowed(); } } );
+		buttonPanel.add( fullscreenOff );
+
 		content.add( buttonPanel );
 
 		getContentPane().add( content );
