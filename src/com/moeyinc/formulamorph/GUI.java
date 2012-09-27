@@ -335,6 +335,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			caGUIInternalFrame.getContentPane().add( caGUI );
 			caGUIInternalFrame.pack();
 			GUI.this.getLayeredPane().add( caGUIInternalFrame );
+			caGUIInternalFrame.setLocation( ( this.getWidth() - caGUIInternalFrame.getWidth() ) / 2, ( this.getHeight() - caGUIInternalFrame.getHeight() ) / 2 );
 			caGUIInternalFrame.setVisible( visible );
 		}
 		else
