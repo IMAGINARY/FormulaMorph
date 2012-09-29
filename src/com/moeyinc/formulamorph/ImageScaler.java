@@ -24,10 +24,10 @@ public class ImageScaler extends JComponent {
 		this.grayscale = false;
 	}
 	
-	public void setImage( Image image ) { this.image = image; this.scaledImage = null; }
+	public void setImage( Image image ) { this.image = image; this.scaledImage = null; this.repaint(); }
 	public Image getImage() { return this.image; }
 	
-	public void setGrayScale( boolean grayscale ) { this.grayscale = grayscale; this.scaledImage = null; }
+	public void setGrayScale( boolean grayscale ) { this.grayscale = grayscale; this.scaledImage = null; this.repaint(); }
 	public boolean getGrayScale() { return this.grayscale; }
 	
     public void paintComponent(Graphics g)

@@ -19,7 +19,16 @@ public class Main {
     	boolean fullscreen = false;
 //    	boolean fullscreen = true;
     	
-		gui = new GUI();
+    	try
+    	{
+    		gui = new GUI();
+    	}
+    	catch( Exception e )
+    	{
+    		System.err.println( "Could not start GUI. Cause:" );
+    		e.printStackTrace( System.err );
+    		System.exit( -1 );
+    	}
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if( fullscreen )
         {

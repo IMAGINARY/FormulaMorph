@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
 import java.util.Properties;
+import java.util.List;
 import java.util.Set;
 import java.util.EnumSet;
 import java.text.DecimalFormat;
@@ -95,10 +96,24 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	JFrame caGUIFrame = new JFrame();;
 	JInternalFrame caGUIInternalFrame = new JInternalFrame();
 	
+	
+	Gallery basicGalleryF = new Gallery( new File( "gallery" + File.separator + "basic" ) );
+	Gallery intermediateGalleryF = new Gallery( new File( "gallery" + File.separator + "intermediate" ) );
+	Gallery advancedGalleryF = new Gallery( new File( "gallery" + File.separator + "advanced" ) );
+	Gallery currentGalleryF;
+	
+	Gallery basicGalleryG = new Gallery( new File( "gallery" + File.separator + "basic" ) );
+	Gallery intermediateGalleryG = new Gallery( new File( "gallery" + File.separator + "intermediate" ) );
+	Gallery advancedGalleryG = new Gallery( new File( "gallery" + File.separator + "advanced" ) );
+	Gallery currentGalleryG;
+
 	public GUI()
+		throws Exception, IOException
 	{
 		super( "FormulaMorph Main Window" );
-	
+		currentGalleryF = basicGalleryF;
+		currentGalleryG = basicGalleryG;
+		
 		this.getLayeredPane().add( caGUIInternalFrame );
 		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { setupControllerGUI( true ); } } );
 		
@@ -121,10 +136,12 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
 		galF = new ImageScaler[ 7 ];
 		galG = new ImageScaler[ 7 ];
+		List< Gallery.GalleryItem > itemsF = currentGalleryF.getItems();
+		List< Gallery.GalleryItem > itemsG = currentGalleryG.getItems();
 		for( int i = 0; i < galF.length; ++i )
 		{
-			galF[ i ] = new ImageScaler(); galF[ i ].setBackground( Color.lightGray ); galF[ i ].setOpaque( true );
-			galG[ i ] = new ImageScaler(); galG[ i ].setBackground( Color.lightGray ); galG[ i ].setOpaque( true );
+			galF[ i ] = itemsF.get( i ).image(); galF[ i ].setBackground( Color.lightGray ); galF[ i ].setOpaque( true );
+			galG[ i ] = itemsG.get( i ).image(); galG[ i ].setBackground( Color.lightGray ); galG[ i ].setOpaque( true );
 		}
 		Border galBorder = BorderFactory.createLineBorder( Color.WHITE, 2 );
 		galF[ galF.length / 2 ].setBorder( galBorder );
@@ -450,7 +467,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     	AlgebraicSurfaceRenderer asr = s2g( surf ).panel.getAlgebraicSurfaceRenderer();
 
         asr.getCamera().loadProperties( props, "camera_", "" );
-        setOptimalCameraDistance( asr.getCamera() );
+        Util.setOptimalCameraDistance( asr.getCamera() );
 
         for( int i = 0; i < AlgebraicSurfaceRenderer.MAX_LIGHTS; i++ )
         {
@@ -642,23 +659,6 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
         
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), props.getProperty( "surface_title_latex" ) );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
-    }
-
-    protected static void setOptimalCameraDistance( Camera c )
-    {
-        float cameraDistance;
-        switch( c.getCameraType() )
-        {
-            case ORTHOGRAPHIC_CAMERA:
-                cameraDistance = 1.0f;
-                break;
-            case PERSPECTIVE_CAMERA:
-                cameraDistance = ( float ) ( 1.0 / Math.sin( ( Math.PI / 180.0 ) * ( c.getFoVY() / 2.0 ) ) );
-                break;
-            default:
-                throw new RuntimeException();
-        }
-        c.lookAt( new Point3d( 0, 0, cameraDistance ), new Point3d( 0, 0, -1 ), new Vector3d( 0, 1, 0 ) );
     }
 
     public void pauseAnimation() { this.rotationAnimation.pause(); }
