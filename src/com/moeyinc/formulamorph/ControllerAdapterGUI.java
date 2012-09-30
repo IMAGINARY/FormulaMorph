@@ -6,18 +6,16 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.EmptyBorder;
 
-import com.moeyinc.formulamorph.Parameters.*;
-
 import java.util.EnumMap;
 import java.util.Hashtable;
 
-public class ControllerAdapterGUI extends JPanel implements Controller, Parameters.ValueChangeListener, Parameters.ActivationStateListener {
+public class ControllerAdapterGUI extends JPanel implements Controller, Parameter.ValueChangeListener, Parameter.ActivationStateListener {
 
 	private Controller c;
 	
 	final static int maxSliderValue = 10000;
 	//final static int sliderMajorTicks = 5;
-	private EnumMap< Parameters.Parameter, JSlider > p2s = new EnumMap< Parameters.Parameter, JSlider >( Parameters.Parameter.class );
+	private EnumMap< Parameter, JSlider > p2s = new EnumMap< Parameter, JSlider >( Parameter.class );
 		
 	public ControllerAdapterGUI( Controller c )
 	{
@@ -30,7 +28,7 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 		this.setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
 		this.setBorder( new EmptyBorder( 10, 0, 10, 0 ) );
 		Parameter last_param = null;
-		for( Parameters.Parameter param : Parameters.Parameter.values() )
+		for( Parameter param : Parameter.values() )
 		{
 			if( last_param == null || last_param.getSurface() != param.getSurface() )
 			{
@@ -51,8 +49,8 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 			s.setMinorTickSpacing( maxSliderValue / 50 );
 			s.setPaintTicks(true);
 			s.setPaintLabels( true );
-			p.addActivationStateListener( new ActivationStateListener() { public void stateChanged( Parameter p ) { s.setEnabled( p.isActive() ); } });
-			p.addValueChangeListener( new ValueChangeListener() { public void valueChanged( Parameter p ) { ControllerAdapterGUI.this.valueChanged( p ); } });
+			p.addActivationStateListener( new Parameter.ActivationStateListener() { public void stateChanged( Parameter p ) { s.setEnabled( p.isActive() ); } });
+			p.addValueChangeListener( new Parameter.ValueChangeListener() { public void valueChanged( Parameter p ) { ControllerAdapterGUI.this.valueChanged( p ); } });
 			p2s.put( p, s );
 			this.add( slider_panel );
 		}
@@ -73,11 +71,11 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 		buttonPanelLeft.add( reloadLeft );
 
 		JButton prevLeft = new JButton( "Previous Left" );
-		prevLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.F.setId( Surface.F.getId() - 1 ); } } );
+		prevLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().previousSurface( Surface.F ); } } );
 		buttonPanelLeft.add( prevLeft );
 		
 		JButton nextLeft = new JButton( "Next Left" );
-		nextLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.F.setId( Surface.F.getId() + 1 ); } } );
+		nextLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().nextSurface( Surface.F ); } } );
 		buttonPanelLeft.add( nextLeft );
 		
 		this.add( buttonPanelLeft, 0 );
@@ -94,11 +92,11 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 		buttonPanelRight.add( reloadRight );
 
 		JButton prevRight = new JButton( "Previous Right" );
-		prevRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.G.setId( Surface.G.getId() - 1 ); } } );
+		prevRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().previousSurface( Surface.G ); } } );
 		buttonPanelRight.add( prevRight );
 		
 		JButton nextRight = new JButton( "Next Right" );
-		nextRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.G.setId( Surface.G.getId() + 1 ); } } );
+		nextRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().nextSurface( Surface.G ); } } );
 		buttonPanelRight.add( nextRight );
 
 		this.add( buttonPanelRight );

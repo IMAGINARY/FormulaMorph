@@ -32,8 +32,6 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.glu.*;
 import javax.media.opengl.awt.GLJPanel;
 
-import com.moeyinc.formulamorph.Parameters.Parameter;
-import com.moeyinc.formulamorph.Parameters.SurfaceIdListener;
 
 import java.awt.BorderLayout;
 

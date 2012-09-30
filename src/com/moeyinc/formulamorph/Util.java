@@ -20,8 +20,6 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import com.moeyinc.formulamorph.Parameters.Parameter;
-import com.moeyinc.formulamorph.Parameters.Surface;
 
 import de.mfo.jsurfer.rendering.*;
 import de.mfo.jsurfer.rendering.cpu.CPUAlgebraicSurfaceRenderer;

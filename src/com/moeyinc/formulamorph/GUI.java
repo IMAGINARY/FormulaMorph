@@ -26,14 +26,11 @@ import java.util.EnumSet;
 import java.text.DecimalFormat;
 
 //import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
-import com.moeyinc.formulamorph.Parameters.Surface;
-import com.moeyinc.formulamorph.Parameters.*;
-
 import de.mfo.jsurfer.algebra.*;
 import de.mfo.jsurfer.rendering.*;
 import de.mfo.jsurfer.util.BasicIO;
 
-public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListener
+public class GUI extends JFrame implements Parameter.ValueChangeListener
 {
 	public enum Level { BASIC, INTERMEDIATE, ADVANCED };
 	
@@ -46,7 +43,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		INTERMEDIATE_G( Surface.G, Level.INTERMEDIATE, new File( "gallery" + File.separator + "intermediate" ) ),
 		ADVANCED_H( Surface.G, Level.ADVANCED, new File( "gallery" + File.separator + "advanced" ) );
 		
-		private FMGallery( Parameters.Surface s, Level l, File f )
+		private FMGallery( Surface s, Level l, File f )
 		{
 			surface = s;
 			level = l;
@@ -64,7 +61,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 			gallery = tmp_gallery;
 		}
 		
-		public final Parameters.Surface surface;
+		public final Surface surface;
 		public final Level level;
 		public final Gallery gallery;
 		
@@ -137,7 +134,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	static final double aspectRatio = 16.0 / 9.0;
 	static final DecimalFormat decimalFormatter = new DecimalFormat("#0.00");
 
-	EnumMap< Parameters.Surface, SurfaceGUIElements > surface2guielems = new EnumMap< Parameters.Surface, SurfaceGUIElements >( Parameters.Surface.class );
+	EnumMap< Surface, SurfaceGUIElements > surface2guielems = new EnumMap< Surface, SurfaceGUIElements >( Surface.class );
 		
 	static BufferedImage triangle;
 	static BufferedImage triangleFlipped;
@@ -281,9 +278,9 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		rotationAnimation = new RotationAnimation(); 
 		rotationAnimation.pause();
 		new Thread( rotationAnimation ).start();
-		
-		Surface.F.addIdListener( this ); Surface.F.notifyIdListener();
-		Surface.G.addIdListener( this ); Surface.G.notifyIdListener();
+
+		idChanged( Surface.F );
+		idChanged( Surface.G );
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
@@ -572,37 +569,47 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 //		System.out.println(LaTeXCommands.getDynamicLaTeXMap().toString() );
     }
 	
+    public void nextSurface( Surface s )
+    {
+    	s2g( s ).setId( s2g( s ).id() + 1 );
+    	idChanged( s );
+    }
+    
+    public void previousSurface( Surface s )
+    {
+    	s2g( s ).setId( s2g( s ).id() - 1 );
+    	idChanged( s );    	
+    }
+    
     public void idChanged( Surface s )
     {
     	if( s == Surface.M )
     		return;
     	
     	List< Gallery.GalleryItem > galleryItems = s2g( s ).gallery().gallery.getItems();
-    	if( s.getId() < 0 )
+    	if( s2g( s ).id() < 0 )
     	{
-    		s.setId( 0 );
+    		s2g( s ).setId( 0 );
     		return;
     	}
-    	if( s.getId() >= galleryItems.size() )
+    	if( s2g( s ).id() >= galleryItems.size() )
     	{
-    		s.setId( galleryItems.size() - 1 );
+    		s2g( s ).setId( galleryItems.size() - 1 );
     		return;
     	}
 
     	try
     	{
-    		loadFromProperties( s, galleryItems.get( s.getId() ).jsurfProperties() );
+    		loadFromProperties( s, galleryItems.get( s2g( s ).id() ).jsurfProperties() );
     	}
     	catch( Exception e )
     	{
-    		System.err.println( "Could not load item " + s.getId() + " of " + s2g( s ).gallery().level + " gallery of " + s.name() );
+    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + s2g( s ).gallery().level + " gallery of " + s.name() );
     		e.printStackTrace();
     		return;
     	}
 
 		s2g( s ).panel.scheduleSurfaceRepaint();
-
-		s2g( s ).setId( s.getId() );
 		{	// set content of gallery panels 
 			List< JPanel > galleryPanels = s2g( s ).galleryPanels();
 	    	for( JPanel p : galleryPanels )
@@ -613,7 +620,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	    	for( int panel_id = 0; panel_id < galleryPanels.size(); ++panel_id )
 	    	{
 	    		JPanel p = galleryPanels.get( panel_id ); 
-	    		int galItemId = s.getId() - s2g( s ).highlightedGalleryPanel() + panel_id;
+	    		int galItemId = s2g( s ).id() - s2g( s ).highlightedGalleryPanel() + panel_id;
 	    		if( galItemId >= 0 && galItemId < galleryItems.size() )
 	    		{
 	    			System.out.println( "setting item " + galItemId + " at panel " + panel_id );
@@ -690,7 +697,7 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
     	throws IOException, Exception
     {
     	s2g( s ).gallery().gallery.getItems().get( s2g( s ).id() ).reload();
-    	s.notifyIdListener();
+    	idChanged( s );
     }
     
     public void loadFromString( Surface surf, String s )

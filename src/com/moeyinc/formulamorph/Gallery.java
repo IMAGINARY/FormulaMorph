@@ -6,7 +6,6 @@ import java.util.*;
 
 import javax.vecmath.Matrix4d;
 
-import com.moeyinc.formulamorph.Parameters.Surface;
 
 import de.mfo.jsurfer.gui.JSurfFilter;
 import de.mfo.jsurfer.rendering.AlgebraicSurfaceRenderer;
