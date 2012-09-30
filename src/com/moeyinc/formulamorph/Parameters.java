@@ -39,10 +39,11 @@ public interface Parameters {
 		Surface( int id ) { this.id = id; }
 		
 		public int getId() { return id; }
-		public void setId( int id ) { this.id = id; for( SurfaceIdListener sil : idListeners ) sil.idChanged( this ); }
+		public void setId( int id ) { this.id = id; this.notifyIdListener(); }
 		
 		public void addIdListener( SurfaceIdListener sil ) { idListeners.add( sil ); }
 		public void removeIdListener( SurfaceIdListener sil ) { idListeners.remove( sil ); }	
+		public void notifyIdListener() { for( SurfaceIdListener sil : idListeners ) sil.idChanged( this ); }
 		
 		public void addParameter( Parameter p )
 		{

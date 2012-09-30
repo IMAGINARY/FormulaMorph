@@ -14,16 +14,19 @@ import javax.vecmath.*;
 import java.io.*;
 import java.net.*;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
 import java.util.Properties;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.EnumSet;
 import java.text.DecimalFormat;
 
 //import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
+import com.moeyinc.formulamorph.Parameters.Surface;
 import com.moeyinc.formulamorph.Parameters.*;
 
 import de.mfo.jsurfer.algebra.*;
@@ -32,25 +35,102 @@ import de.mfo.jsurfer.util.BasicIO;
 
 public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListener
 {
+	public enum Level { BASIC, INTERMEDIATE, ADVANCED };
+	
+	public enum FMGallery
+	{
+		BASIC_F( Surface.F, Level.BASIC, new File( "gallery" + File.separator + "basic" ) ),
+		INTERMEDIATE_F( Surface.F, Level.INTERMEDIATE, new File( "gallery" + File.separator + "intermediate" ) ),
+		ADVANCED_F( Surface.F, Level.ADVANCED, new File( "gallery" + File.separator + "advanced" ) ),
+		BASIC_G( Surface.G, Level.BASIC, new File( "gallery" + File.separator + "basic" ) ),
+		INTERMEDIATE_G( Surface.G, Level.INTERMEDIATE, new File( "gallery" + File.separator + "intermediate" ) ),
+		ADVANCED_H( Surface.G, Level.ADVANCED, new File( "gallery" + File.separator + "advanced" ) );
+		
+		private FMGallery( Parameters.Surface s, Level l, File f )
+		{
+			surface = s;
+			level = l;
+			Gallery tmp_gallery = null;
+			try
+			{
+				tmp_gallery = new Gallery( f );
+			}
+			catch( Exception e )
+			{
+				System.err.println( "Unable to initialize galleries" );
+				e.printStackTrace( System.err );
+				System.exit( -1 );
+			}
+			gallery = tmp_gallery;
+		}
+		
+		public final Parameters.Surface surface;
+		public final Level level;
+		public final Gallery gallery;
+		
+		public static FMGallery get( Surface s, Level l )
+		{
+			for( FMGallery g : values() )
+				if( g.surface == s && g.level == l )
+					return g;
+			return null;
+		}
+	}	
+	
 	class SurfaceGUIElements
 	{
 		final public JSurferRenderPanel panel;
 		final public LaTeXLabel title;
 		final public LaTeXLabel equation;
+		final private Surface surface;
+		private Level level;
+		private FMGallery gallery;
+		private int id_in_gallery;
+		private ArrayList< JPanel > gallery_panels;
+		private List< JPanel > gallery_panels_unmodifiable;
 		
 		public SurfaceGUIElements( Surface s )
 		{
+			surface = s;
+			level = Level.BASIC;
+			gallery = FMGallery.get( s, level );
+			id_in_gallery = 0;
+			
 			LaTeXCommands.getDynamicLaTeXMap().put( "FMImage" + s.name(), "\\includejavaimage[width=5ex,interpolation=bicubic]{FMImage" + s.name() + "}" );
 			
 			this.panel = new JSurferRenderPanel();
-			//this.panel.setBorder( BorderFactory.createLineBorder( Color.LIGHT_GRAY ) );
 			
 			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\text{\\jlmDynamic{FMTitle" + s.name() + "}}" );
 			this.title.setHAlignment( LaTeXLabel.HAlignment.CENTER );
 			this.title.setVAlignment( LaTeXLabel.VAlignment.CENTER_BASELINE );
 			
 			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
+			
+			gallery_panels = new ArrayList< JPanel >();
+			for( int i = 0; i < 7; ++i )
+			{
+				JPanel p = new JPanel( new BorderLayout() );
+				p.setBackground( Color.lightGray );
+				p.setOpaque( true );
+				gallery_panels.add( i, p );
+			}
+			gallery_panels.get( gallery_panels.size() / 2 ).setBorder( BorderFactory.createLineBorder( Color.WHITE, 2 ) );		
+			gallery_panels_unmodifiable = Collections.unmodifiableList( gallery_panels );
 		}		
+		
+		public void setGalleryLevel( Level l )
+		{
+			level = l;
+			gallery = FMGallery.get( surface, level );
+		}
+		
+		public FMGallery gallery() { return gallery; }
+		
+		public int id() { return id_in_gallery; }
+		public void setId( int id ) { id_in_gallery = id; }
+		
+		public List< JPanel > galleryPanels() { return gallery_panels_unmodifiable; }
+		public int highlightedGalleryPanel() { return 3; }
 	}
 	
 	JPanel content; // fixed 16:9 top container
@@ -59,8 +139,6 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 
 	EnumMap< Parameters.Surface, SurfaceGUIElements > surface2guielems = new EnumMap< Parameters.Surface, SurfaceGUIElements >( Parameters.Surface.class );
 		
-	ImageScaler[] galF;
-	ImageScaler[] galG;
 	static BufferedImage triangle;
 	static BufferedImage triangleFlipped;
 	static {
@@ -95,24 +173,11 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	final ControllerAdapterGUI caGUI = new ControllerAdapterGUI( null );
 	JFrame caGUIFrame = new JFrame();;
 	JInternalFrame caGUIInternalFrame = new JInternalFrame();
-	
-	
-	Gallery basicGalleryF = new Gallery( new File( "gallery" + File.separator + "basic" ) );
-	Gallery intermediateGalleryF = new Gallery( new File( "gallery" + File.separator + "intermediate" ) );
-	Gallery advancedGalleryF = new Gallery( new File( "gallery" + File.separator + "advanced" ) );
-	Gallery currentGalleryF;
-	
-	Gallery basicGalleryG = new Gallery( new File( "gallery" + File.separator + "basic" ) );
-	Gallery intermediateGalleryG = new Gallery( new File( "gallery" + File.separator + "intermediate" ) );
-	Gallery advancedGalleryG = new Gallery( new File( "gallery" + File.separator + "advanced" ) );
-	Gallery currentGalleryG;
-
+		
 	public GUI()
 		throws Exception, IOException
 	{
 		super( "FormulaMorph Main Window" );
-		currentGalleryF = basicGalleryF;
-		currentGalleryG = basicGalleryG;
 		
 		this.getLayeredPane().add( caGUIInternalFrame );
 		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { setupControllerGUI( true ); } } );
@@ -134,18 +199,6 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		surface2guielems.put( Surface.G, new SurfaceGUIElements( Surface.G ) );
 		
 		blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
-		galF = new ImageScaler[ 7 ];
-		galG = new ImageScaler[ 7 ];
-		List< Gallery.GalleryItem > itemsF = currentGalleryF.getItems();
-		List< Gallery.GalleryItem > itemsG = currentGalleryG.getItems();
-		for( int i = 0; i < galF.length; ++i )
-		{
-			galF[ i ] = itemsF.get( i ).image(); galF[ i ].setBackground( Color.lightGray ); galF[ i ].setOpaque( true );
-			galG[ i ] = itemsG.get( i ).image(); galG[ i ].setBackground( Color.lightGray ); galG[ i ].setOpaque( true );
-		}
-		Border galBorder = BorderFactory.createLineBorder( Color.WHITE, 2 );
-		galF[ galF.length / 2 ].setBorder( galBorder );
-		galG[ galG.length / 2 ].setBorder( galBorder );
 		
 		final LaTeXLabel eqF = s2g( Surface.F ).equation;
 		final LaTeXLabel eqM = s2g( Surface.M ).equation;
@@ -179,9 +232,9 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		content.add( s2g( Surface.G ).panel );		
 		content.add( s2g( Surface.G ).equation );
 
-		for( JComponent c : galF )
+		for( JComponent c : s2g( Surface.F ).galleryPanels() )
 			content.add( c );
-		for( JComponent c : galG )
+		for( JComponent c : s2g( Surface.G ).galleryPanels() )
 			content.add( c );
 		content.add( triangleFTop );
 		content.add( triangleFBottom );
@@ -224,13 +277,13 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		{
 			e.printStackTrace();
 		}
-		
-		idChanged( Surface.F );
-		idChanged( Surface.G );
-		
+				
 		rotationAnimation = new RotationAnimation(); 
 		rotationAnimation.pause();
 		new Thread( rotationAnimation ).start();
+		
+		Surface.F.addIdListener( this ); Surface.F.notifyIdListener();
+		Surface.G.addIdListener( this ); Surface.G.notifyIdListener();
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
@@ -258,23 +311,26 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		s2g( Surface.M ).equation.setBounds( computeBoundsFullHD( content, 1920 / 2 - elPrefWidth / 2, 708, elPrefWidth, elPrefHeight ) );
 		s2g( Surface.G ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
 		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
-
+		
+		int gal_length = s2g( Surface.F ).galleryPanels().size();
 		int galSize = 62;
 		int spacing = 8;
-		int galYStart = 84 + 624 / 2 - ( galF.length * galSize + ( galF.length - 1 ) * spacing ) / 2;
-		for( int i = 0; i < galF.length; ++i )
+		int galYStart = 84 + 624 / 2 - ( gal_length * galSize + ( gal_length - 1 ) * spacing ) / 2;
+		for( int i = 0; i < gal_length; ++i )
 		{
-			galF[ i ].setBounds( computeBoundsFullHD( content, 36, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
-			galG[ i ].setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+			s2g( Surface.F ).galleryPanels().get( i ).setBounds( computeBoundsFullHD( content, 36, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+			s2g( Surface.F ).galleryPanels().get( i ).revalidate();
+			s2g( Surface.G ).galleryPanels().get( i ).setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+			s2g( Surface.G ).galleryPanels().get( i ).revalidate();
 		}
 		triangleFTop.setBounds( computeBoundsFullHD( content, 36, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
-		triangleFBottom.setBounds( computeBoundsFullHD( content, 36, galYStart + galF.length * ( galSize + spacing ), galSize, galSize ) );
+		triangleFBottom.setBounds( computeBoundsFullHD( content, 36, galYStart + gal_length * ( galSize + spacing ), galSize, galSize ) );
 		triangleGTop.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
-		triangleGBottom.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + galF.length * ( galSize + spacing ), galSize, galSize ) );
+		triangleGBottom.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + gal_length * ( galSize + spacing ), galSize, galSize ) );
 		
 		repaint();
 	}
-
+	
 	private static Rectangle computeBoundsFullHD( Component p, double x, double y, double w, double h )
 	{
 		x = x / 19.2; y = y / 10.8; w = w / 19.2; h = h / 10.8;
@@ -518,25 +574,56 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 	
     public void idChanged( Surface s )
     {
+    	if( s == Surface.M )
+    		return;
+    	
+    	List< Gallery.GalleryItem > galleryItems = s2g( s ).gallery().gallery.getItems();
+    	if( s.getId() < 0 )
+    	{
+    		s.setId( 0 );
+    		return;
+    	}
+    	if( s.getId() >= galleryItems.size() )
+    	{
+    		s.setId( galleryItems.size() - 1 );
+    		return;
+    	}
+
     	try
     	{
-	    	switch( s )
-	    	{
-	    	case F:
-	    		loadFromFile( Surface.F, new File( "gallery/zitrus.jsurf" ).toURI().toURL() );
-	    		break;
-	    	case G:
-	    		loadFromFile( Surface.G, new File( "gallery/heart.jsurf" ).toURI().toURL() );
-	    		break;
-	    	case M:
-	    		// should not occur - do nothing
-	    	}
-    		s2g( s ).panel.scheduleSurfaceRepaint();
+    		loadFromProperties( s, galleryItems.get( s.getId() ).jsurfProperties() );
     	}
     	catch( Exception e )
     	{
+    		System.err.println( "Could not load item " + s.getId() + " of " + s2g( s ).gallery().level + " gallery of " + s.name() );
     		e.printStackTrace();
+    		return;
     	}
+
+		s2g( s ).panel.scheduleSurfaceRepaint();
+
+		s2g( s ).setId( s.getId() );
+		{	// set content of gallery panels 
+			List< JPanel > galleryPanels = s2g( s ).galleryPanels();
+	    	for( JPanel p : galleryPanels )
+	    	{
+	    		p.removeAll();
+	    		p.revalidate();
+	    	}
+	    	for( int panel_id = 0; panel_id < galleryPanels.size(); ++panel_id )
+	    	{
+	    		JPanel p = galleryPanels.get( panel_id ); 
+	    		int galItemId = s.getId() - s2g( s ).highlightedGalleryPanel() + panel_id;
+	    		if( galItemId >= 0 && galItemId < galleryItems.size() )
+	    		{
+	    			System.out.println( "setting item " + galItemId + " at panel " + panel_id );
+	    			p.add( galleryItems.get( galItemId ) );
+	    			p.revalidate();
+	    			p.repaint();
+	    			
+	    		}
+	    	}
+	    }
 
     	// set the morphed surface
     	AlgebraicSurfaceRenderer asr_F = s2g( Surface.F ).panel.getAlgebraicSurfaceRenderer();
@@ -599,6 +686,13 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 		repaint();
     }
 
+    public void reload( Surface s )
+    	throws IOException, Exception
+    {
+    	s2g( s ).gallery().gallery.getItems().get( s2g( s ).id() ).reload();
+    	s.notifyIdListener();
+    }
+    
     public void loadFromString( Surface surf, String s )
             throws Exception
     {

@@ -59,16 +59,56 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 		JSeparator s = new JSeparator( JSeparator.VERTICAL );
 		s.setPreferredSize(new Dimension(5,200));
 		this.add( s );
+
+		
+		JPanel buttonPanelLeft = new JPanel();
+		buttonPanelLeft.setLayout( new BoxLayout( buttonPanelLeft, BoxLayout.Y_AXIS ) );
+		
+		JButton screenshotLeft = new JButton( "Screenshot Left" );
+		screenshotLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
+		buttonPanelLeft.add( screenshotLeft );
+		
+		JButton reloadLeft = new JButton( "Reload Left" );
+		reloadLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.F ); } catch ( Exception e ) { System.err.println( "Unable to reload left surface." ); e.printStackTrace( System.err ); } } } );
+		buttonPanelLeft.add( reloadLeft );
+
+		JButton prevLeft = new JButton( "Previous Left" );
+		prevLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.F.setId( Surface.F.getId() - 1 ); } } );
+		buttonPanelLeft.add( prevLeft );
+		
+		JButton nextLeft = new JButton( "Next Left" );
+		nextLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.F.setId( Surface.F.getId() + 1 ); } } );
+		buttonPanelLeft.add( nextLeft );
+		
+		this.add( buttonPanelLeft, 0 );
+
+		JPanel buttonPanelRight = new JPanel();
+		buttonPanelRight.setLayout( new BoxLayout( buttonPanelRight, BoxLayout.Y_AXIS ) );
+		
+		JButton screenshotRight = new JButton( "Screenshot Right" );
+		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
+		buttonPanelRight.add( screenshotRight );
+				
+		JButton reloadRight = new JButton( "Reload Right" );
+		reloadRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.G ); } catch ( Exception e ) { System.err.println( "Unable to reload right surface." ); e.printStackTrace( System.err ); } } } );
+		buttonPanelRight.add( reloadRight );
+
+		JButton prevRight = new JButton( "Previous Right" );
+		prevRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.G.setId( Surface.G.getId() - 1 ); } } );
+		buttonPanelRight.add( prevRight );
+		
+		JButton nextRight = new JButton( "Next Right" );
+		nextRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Surface.G.setId( Surface.G.getId() + 1 ); } } );
+		buttonPanelRight.add( nextRight );
+
+		this.add( buttonPanelRight );
+
+		JSeparator s2 = new JSeparator( JSeparator.VERTICAL );
+		s2.setPreferredSize(new Dimension(5,200));
+		this.add( s2 );
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.Y_AXIS ) );
-		
-		JButton screenshotleft = new JButton( "Screenshot Left" );
-		screenshotleft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
-		buttonPanel.add( screenshotleft );
-		JButton screenshotright = new JButton( "Screenshot Right" );
-		screenshotright.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
-		buttonPanel.add( screenshotright );
 		
 		JButton pauseAnim = new JButton( "Pause" );
 		pauseAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().pauseAnimation(); } } );
@@ -84,6 +124,7 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 		fullscreenOff.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryWindowed(); } } );
 		buttonPanel.add( fullscreenOff );
 
+		
 		this.add( buttonPanel );
 	}
 	
