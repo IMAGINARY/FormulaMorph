@@ -92,6 +92,7 @@ public interface Parameters {
 		private double value;
 		private double min;
 		private double max;
+		private double speed = 1.0;
 		private Set<ValueChangeListener> valueListeners = new HashSet<ValueChangeListener>();
 		private Set<ActivationStateListener> stateListeners = new HashSet<ActivationStateListener>();
 		
@@ -115,10 +116,12 @@ public interface Parameters {
 		public double getValue() { return value; }
 		public double getMin() { return min; }
 		public double getMax() { return max; }
+		public double getSpeed() { return speed; }
 		
 		public void setValue( double value ) { if( this.value != value ) { this.value = value; notifyValueChangeListeners(); } }
 		public void setMin( double min ) { if( this.min != min ) { this.min = min; notifyValueChangeListeners(); } }
 		public void setMax( double max ) { if( this.max != max ) { this.max = max; notifyValueChangeListeners(); } }
+		public void setSpeed( double spped ) { if( this.speed != speed ) { this.speed = speed; notifyValueChangeListeners(); } }
 		
 		public double setInterpolatedValue( double t ) { setValue( min * ( 1.0 - t ) + max * t ); return this.value; }
 		

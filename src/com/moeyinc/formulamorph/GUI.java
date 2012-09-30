@@ -719,10 +719,13 @@ public class GUI extends JFrame implements ValueChangeListener, SurfaceIdListene
 
         for( String name : param_names )
         {
-        	double value, min, max;
+        	double value, min, max, speed;
         	try { value = Double.parseDouble( props.getProperty( "surface_parameter_" + name ) ); } catch( NumberFormatException nfe ) { value = Double.NaN; }
         	try { min = Double.parseDouble( props.getProperty( "surface_parametermin_" + name ) ); } catch( NumberFormatException nfe ) { min = Double.NaN; }
         	try { max = Double.parseDouble( props.getProperty( "surface_parametermax_" + name ) ); } catch( NumberFormatException nfe ) { max = Double.NaN; }
+        	try { speed = Double.parseDouble( props.getProperty( "surface_parameterspeed_" + name ) ); }
+        		catch( NumberFormatException nfe ) { speed = Double.NaN; }
+        		catch( NullPointerException npe ) { speed = 1.0; }
 
         	min = Double.isNaN( min ) ? value : min;
         	max = Double.isNaN( max ) ? value : max;
