@@ -571,14 +571,23 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	
     public void nextSurface( Surface s )
     {
-    	s2g( s ).setId( s2g( s ).id() + 1 );
-    	idChanged( s );
+    	nextSurface( s, 1 );
     }
     
     public void previousSurface( Surface s )
     {
-    	s2g( s ).setId( s2g( s ).id() - 1 );
-    	idChanged( s );    	
+    	previousSurface( s, 1 );
+    }
+ 
+    public void nextSurface( Surface s, int offset )
+    {
+    	s2g( s ).setId( s2g( s ).id() + offset );
+    	idChanged( s );
+    }
+    
+    public void previousSurface( Surface s, int offset )
+    {
+    	nextSurface( s, -offset );   	
     }
     
     public void idChanged( Surface s )

@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.swing.SwingUtilities;
 
-public class PhidgetInterface
+public class PhidgetInterface implements Parameter.ActivationStateListener
 {
 	String host;
 	int port;
@@ -26,7 +26,11 @@ public class PhidgetInterface
 		this.port = port;
 		reconnect();
 		phidgetReaderClient = new PhidgetReaderClient();
-		phidgetWriterClient = new PhidgetWriterClient();
+		phidgetWriterClient = new PhidgetWriterClient();		
+		new Thread( phidgetReaderClient ).start();
+		new Thread( phidgetWriterClient ).start();
+		for( Parameter p : Parameter.values() )
+			p.addActivationStateListener( this );
 	}
 	
 	private synchronized void reconnect()
@@ -43,6 +47,11 @@ public class PhidgetInterface
 	{
 		shutdown = true;
 		try { socket.close(); } catch( IOException ioe ) {}
+	}
+	
+	public void stateChanged( Parameter p )
+	{
+		setLEDEnabled( p, p.isActive() );
 	}
 	
 	public void setLEDEnabled( Parameter p, boolean enabled )
@@ -89,7 +98,7 @@ public class PhidgetInterface
 			{
 				try
 				{
-					if( !PhidgetInterface.this.socket.isConnected() )
+					if( !PhidgetInterface.this.socket.isConnected() || PhidgetInterface.this.socket.isClosed() )
 						PhidgetInterface.this.reconnect();
 					BufferedReader in = new BufferedReader( new InputStreamReader( PhidgetInterface.this.socket.getInputStream() ) );
 					String cmd;
@@ -104,21 +113,35 @@ public class PhidgetInterface
 							final int id = Integer.parseInt( parts[ 1 ] );
 							String[] values = Arrays.copyOfRange( parts, 2, parts.length );
 
-							if( dev.equals( "RE" ) )
+							if( dev.equals( "FS" ) )
+							{ // formula selector
+								if( id == 1 || id == 2 )
+								{
+									final int offset = Integer.parseInt( values[ 0 ] );
+									final Surface surface = id == 1 ? Surface.F : Surface.G;
+									SwingUtilities.invokeLater( new Runnable()
+									{
+										public void run()
+										{
+											Main.gui().nextSurface( surface, offset );
+										}
+									} );
+								}
+								else
+								{
+									unknown_command = true;
+								}
+							}
+							else if( dev.equals( "RE" ) )
 							{ // rotary encoder
 								final int angle = Integer.parseInt( values[ 0 ] );
 								
-								// assume id=1 and id=2 are the formula selectors
-								if( id == 1 || id == 2 )
-								{
-									// TODO
-								}
-								else if( id > 2 && id <= 14 )
+								if( id > 0 && id <= 12 )
 								{
 									final Parameter[] params = {
 										Parameter.F_a, Parameter.F_b, Parameter.F_c, Parameter.F_d, Parameter.F_e, Parameter.F_f,
 										Parameter.G_a, Parameter.G_b, Parameter.G_c, Parameter.G_d, Parameter.G_e, Parameter.G_f };
-									final Parameter param = params[ id - 3 ];
+									final Parameter param = params[ id - 1 ];
 									SwingUtilities.invokeLater( new Runnable()
 									{
 										public void run()
@@ -199,13 +222,14 @@ public class PhidgetInterface
 					{
 						try
 						{
-							if( cmd != null )
+							if( cmd == null )
 								cmd = outDeque.take();
 							try
 							{
 								out.write( cmd );
 								out.write( '\n' );
 								out.flush();
+								cmd = null;
 							}
 							catch( IOException ioe )
 							{
