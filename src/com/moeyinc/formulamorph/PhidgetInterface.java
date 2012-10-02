@@ -18,6 +18,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	PhidgetReaderClient phidgetReaderClient;
 	PhidgetWriterClient phidgetWriterClient;
 	private boolean shutdown = false;
+	static int heartbeat_ms = 1000;
 		
 	public PhidgetInterface( String host, int port )
 		throws IOException
@@ -31,6 +32,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 		new Thread( phidgetWriterClient ).start();
 		for( Parameter p : Parameter.values() )
 			p.addActivationStateListener( this );
+		new Thread( new HeartBeat() ).start();
 	}
 	
 	private synchronized void reconnect()
@@ -38,8 +40,11 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	{
 		if( ! shutdown )
 		{
+			if( socket != null )
+				socket.close();
 			socket = new Socket( host, port );
 			socket.setKeepAlive( true );
+			socket.setSoTimeout( heartbeat_ms * 5 );
 		}
 	}
 	
@@ -105,10 +110,13 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 					boolean[] digital_switch = { false, false };
 					while( ( cmd = in.readLine() ) != null )
 					{
+						cmd = cmd.replaceAll( "\\s", "" );
+						if( cmd.isEmpty() )
+							continue; // heart beat
 						boolean unknown_command = false;
 						try
 						{
-							String[] parts = cmd.replaceAll( "\\s", "" ).split(",");
+							String[] parts = cmd.split(",");
 							String dev = parts[ 0 ];
 							final int id = Integer.parseInt( parts[ 1 ] );
 							String[] values = Arrays.copyOfRange( parts, 2, parts.length );
@@ -255,6 +263,26 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 				}
 			}	
 		}		
+	}
+	
+	class HeartBeat implements Runnable
+	{
+		public void run()
+		{
+			while( !PhidgetInterface.this.shutdown )
+			{
+				try
+				{
+					Thread.sleep( heartbeat_ms );
+					if( outDeque.size() < 10 ) // don't send anything if there is still something in the buffer
+						outDeque.put( "" ); // use empty command as heart beat
+				}
+				catch( Exception ie )
+				{
+					// just repeat
+				}
+			}
+		}	
 	}
 }
 
