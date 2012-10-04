@@ -44,7 +44,7 @@ public class Main {
         }
         try
         {
-        	pi = new PhidgetInterface( "localhost", 4676 );
+        	pi = new PhidgetInterface( "localhost", 4767 );
         }
         catch( Exception e )
         {

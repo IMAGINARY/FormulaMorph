@@ -25,26 +25,37 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	{
 		this.host = host;
 		this.port = port;
+		this.socket = new Socket();
 		reconnect();
 		phidgetReaderClient = new PhidgetReaderClient();
 		phidgetWriterClient = new PhidgetWriterClient();		
-		new Thread( phidgetReaderClient ).start();
-		new Thread( phidgetWriterClient ).start();
 		for( Parameter p : Parameter.values() )
 			p.addActivationStateListener( this );
-		new Thread( new HeartBeat() ).start();
+		new Thread( new HeartBeat(), "PhidgetHeartBeat" ).start();
+		new Thread( phidgetReaderClient, "PhidgetReaderClient" ).start();
+		new Thread( phidgetWriterClient, "PhidgetWriterClient" ).start();
 	}
 	
 	private synchronized void reconnect()
 		throws IOException, UnknownHostException
 	{
 		if( ! shutdown )
-		{
-			if( socket != null )
+		{	
+			try
+			{
 				socket.close();
-			socket = new Socket( host, port );
-			socket.setKeepAlive( true );
-			socket.setSoTimeout( heartbeat_ms * 5 );
+				socket = new Socket( host, port );
+				socket.setKeepAlive( true );
+				socket.setSoTimeout( heartbeat_ms * 5 );
+				if( !socket.isConnected() || socket.isClosed() )
+					throw new IOException( "PhidgetInterface: no connection to " + host + ":" + port );
+			}
+			catch( IOException e )
+			{
+				// block for 1s to avoid calling this method 
+				try { Thread.sleep( 1000 ); } catch( InterruptedException ie ) {}
+				throw e;
+			}
 		}
 	}
 	
@@ -103,14 +114,13 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 			{
 				try
 				{
-					if( !PhidgetInterface.this.socket.isConnected() || PhidgetInterface.this.socket.isClosed() )
-						PhidgetInterface.this.reconnect();
 					BufferedReader in = new BufferedReader( new InputStreamReader( PhidgetInterface.this.socket.getInputStream() ) );
 					String cmd;
 					boolean[] digital_switch = { false, false };
 					while( ( cmd = in.readLine() ) != null )
 					{
-						cmd = cmd.replaceAll( "\\s", "" );
+						cmd = cmd.replaceAll( "#.*$", "" ); // strip comments (everything from # to the end of the command)
+						cmd = cmd.replaceAll( "\\s", "" ); // strip whitespace
 						if( cmd.isEmpty() )
 							continue; // heart beat
 						boolean unknown_command = false;
@@ -202,13 +212,10 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 							System.err.println( "PhidgetReader: Unknown command \"" + cmd + "\"" );	
 					}				
 				}
-				catch( UnknownHostException uhe )
-				{
-					System.err.println( "PhidgetReader: unknown host: " + PhidgetInterface.this.host );
-				}	
 				catch( IOException ioe )
 				{
 					System.err.println( "PhidgetReader: no I/O connection to " + PhidgetInterface.this.host + ":" + PhidgetInterface.this.port );
+					try { Thread.sleep( 1000 ); } catch( InterruptedException ie ) {}
 				}
 			}	
 		}
@@ -218,12 +225,16 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	{
 		public void run()
 		{
+			boolean reconnect = false;
 			while( !PhidgetInterface.this.shutdown )
 			{
 				try
 				{
-					if( !PhidgetInterface.this.socket.isConnected() )
+					if( !PhidgetInterface.this.socket.isConnected() || PhidgetInterface.this.socket.isClosed() || reconnect )
+					{
 						PhidgetInterface.this.reconnect();
+						reconnect = false;
+					}
 					OutputStreamWriter out = new OutputStreamWriter( PhidgetInterface.this.socket.getOutputStream() );
 					String cmd = null;
 					while( true )
@@ -235,7 +246,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 							try
 							{
 								out.write( cmd );
-								out.write( '\n' );
+								out.write( "#FM\n" );
 								out.flush();
 								cmd = null;
 							}
@@ -253,13 +264,10 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 					}
 					
 				}
-				catch( UnknownHostException uhe )
-				{
-					System.err.println( "PhidgetReader: unknown host: " + PhidgetInterface.this.host );
-				}	
 				catch( IOException ioe )
 				{
-					System.err.println( "PhidgetReader: no I/O connection to " + PhidgetInterface.this.host + ":" + PhidgetInterface.this.port );
+					System.err.println( "PhidgetWriter: no I/O connection to " + PhidgetInterface.this.host + ":" + PhidgetInterface.this.port );
+					reconnect = true;
 				}
 			}	
 		}		
