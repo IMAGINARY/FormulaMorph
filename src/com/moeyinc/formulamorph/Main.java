@@ -42,16 +42,7 @@ public class Main {
 			gui.pack();
 			gui.setVisible( true );
         }
-        try
-        {
-        	pi = new PhidgetInterface( "localhost", 4767 );
-        }
-        catch( Exception e )
-        {
-        	System.err.println( "Unable to connect to Phidgets." );
-        	System.err.println( e.getMessage() );
-        	System.exit( -1 );
-        }
+       	pi = new PhidgetInterface( "localhost", 4767 );
     }
     
     public static void main(String[] args) {
