@@ -21,12 +21,11 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	static int heartbeat_ms = 1000;
 		
 	public PhidgetInterface( String host, int port )
-		throws IOException
 	{
 		this.host = host;
 		this.port = port;
 		this.socket = new Socket();
-		reconnect();
+		try { reconnect(); } catch( IOException ioe ) { /* do nothing since PhidgetWriter will try to reconnect broken connections anyway */ }
 		phidgetReaderClient = new PhidgetReaderClient();
 		phidgetWriterClient = new PhidgetWriterClient();		
 		for( Parameter p : Parameter.values() )
