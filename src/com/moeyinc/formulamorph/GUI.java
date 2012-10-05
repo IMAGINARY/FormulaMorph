@@ -97,7 +97,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			
 			this.panel = new JSurferRenderPanel();
 			
-			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\text{\\jlmDynamic{FMTitle" + s.name() + "}}" );
+			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\text{\\fgcolor{white}{\\jlmDynamic{FMTitle" + s.name() + "}}}" );
 			this.title.setHAlignment( LaTeXLabel.HAlignment.CENTER );
 			this.title.setVAlignment( LaTeXLabel.VAlignment.CENTER_BASELINE );
 			
@@ -111,7 +111,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 				p.setOpaque( true );
 				gallery_panels.add( i, p );
 			}
-			gallery_panels.get( gallery_panels.size() / 2 ).setBorder( BorderFactory.createLineBorder( Color.WHITE, 2 ) );		
+			gallery_panels.get( gallery_panels.size() / 2 ).setBorder( BorderFactory.createLineBorder( Color.WHITE, 3 ) );		
 			gallery_panels_unmodifiable = Collections.unmodifiableList( gallery_panels );
 		}		
 		
@@ -163,7 +163,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	ImageScaler triangleGTop = new ImageScaler( triangleFlipped );
 	ImageScaler triangleGBottom = new ImageScaler( triangle );
 	
-	JPanel blackStrip;
+	//JPanel blackStrip;
 
 	RotationAnimation rotationAnimation;
 	
@@ -187,7 +187,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 		// setup the container which has fixed 16:9 aspect ratio
 		content = new JPanel();
-		content.setBackground(Color.white);
+		content.setBackground(Color.BLACK);
 		content.setLayout( null );
 
 		// init components
@@ -195,7 +195,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		surface2guielems.put( Surface.M, new SurfaceGUIElements( Surface.M ) );
 		surface2guielems.put( Surface.G, new SurfaceGUIElements( Surface.G ) );
 		
-		blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
+		//blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
 		
 		final LaTeXLabel eqF = s2g( Surface.F ).equation;
 		final LaTeXLabel eqM = s2g( Surface.M ).equation;
@@ -238,7 +238,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		content.add( triangleGTop );
 		content.add( triangleGBottom );
 		
-		content.add( blackStrip );
+		//content.add( blackStrip );
 
 		// layout components
 		refreshLayout();
@@ -247,10 +247,13 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		    public void componentResized(ComponentEvent e) {
 				// keep aspect ratio
 				Rectangle b = e.getComponent().getBounds();
+				Dimension d;
 				if( b.width * 9 < b.height * 16 )
-					content.setBounds( b.x, b.y, b.width, ( 9 * b.width ) / 16 );
+					d = new Dimension( b.width, ( 9 * b.width ) / 16 );
 				else
-					content.setBounds( b.x, b.y, ( 16 * b.height ) / 9, b.height );
+					d = new Dimension( ( 16 * b.height ) / 9, b.height );
+
+				content.setBounds( b.x, b.y + ( b.height - d.height ) / 2, d.width, d.height );
 
 				// setup the layout again
 				refreshLayout();
@@ -261,7 +264,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		} );
 		getContentPane().setLayout( null );
 		getContentPane().add( content );
-		getContentPane().setBackground( Color.black );		
+		getContentPane().setBackground( Color.DARK_GRAY );		
 
 		try
 		{
@@ -287,14 +290,14 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 	public void refreshLayout()
 	{
-		blackStrip.setBounds( computeBoundsFullHD( content, 0, 84, 1920, 624 ) );
+		//blackStrip.setBounds( computeBoundsFullHD( content, 0, 84, 1920, 624 ) );
 		
 		s2g( Surface.F ).panel.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );		
 		s2g( Surface.M ).panel.setBounds( computeBoundsFullHD( content, 1920 / 2 - 624 / 2, 84, 624, 624  ) );
 		s2g( Surface.G ).panel.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );
 
 		int titlePrefWidth = 550;
-		int titlePrefHeight = 84;
+		int titlePrefHeight = 120;
 		s2g( Surface.F ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
 		s2g( Surface.F ).title.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 0, titlePrefWidth, titlePrefHeight ) );
 		s2g( Surface.G ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
@@ -330,8 +333,15 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	
 	private static Rectangle computeBoundsFullHD( Component p, double x, double y, double w, double h )
 	{
-		x = x / 19.2; y = y / 10.8; w = w / 19.2; h = h / 10.8;
-		return computeBounds( p, x, y, w, h );
+		if( p.getWidth() == 1920 && p.getHeight() == 1080 )
+		{
+			return new Rectangle( (int) x, (int) y, (int) w, (int) h );
+		}
+		else
+		{
+			x = x / 19.2; y = y / 10.8; w = w / 19.2; h = h / 10.8;
+			return computeBounds( p, x, y, w, h );
+		}
 	}
 
 	private static Rectangle computeBounds( Component p, double x, double y, double w, double h )
@@ -469,7 +479,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			sb.append( p.getName() );
 			sb.append( "}{\\fgcolor{" );
 			sb.append( p.getLaTeXColorName() );
-			sb.append( "}\\ovalbox{\\fgcolor{black}{\\vphantom{-}\\jlmDynamic{FMParam" );
+			sb.append( "}\\ovalbox{\\fgcolor{white}{\\vphantom{-}\\jlmDynamic{FMParam" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
 			sb.append( "}\\vphantom{-}}}}\n" );
@@ -481,27 +491,27 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	case M:
         	rem = "" +
     			"\\newcommand{\\nl}{\\\\}\n" +
-    			"\\sf\\begin{array}{c}\n" +
-    				"\\bf\\Large\\fgcolor{Gray}{\\text{Formula Morph}}\\\\\\\\\n" +
+    			"\\sf\\fgcolor{white}{\\begin{array}{c}\n" +
+    				"\\bf\\Large\\text{Formula Morph}\\\\\\\\\n" +
 					"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImageF}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImageG}}}\n" +
-    			"\\end{array}";
+    			"\\end{array}}";
         	break;
     	case F:
         case G:
         	rem = "" +
     			"\\newcommand{\\nl}{\\\\}\n" +
     			"\\sf\\begin{array}{c}\n" +
-    				"\\raisebox{-2em}{\\bf\\Large\\fgcolor{Gray}\\text{Formula for \\title" + s.name() +  "}}\\\\\n" +
-    				"\\fgcolor{Gray}{\n" +
+    				"\\raisebox{-2em}{\\bf\\Large\\fgcolor{white}\\text{Formula for \\title" + s.name() +  "}}\\\\\n" +
+    				"\\fgcolor{white}{\n" +
     					"\\left[\n" +
-    					"\\fgcolor{black}{\n" + 
+//    					"\\fgcolor{white}{\n" + 
     						"\\begin{array}{c}\n" +
     							"\\ \\vspace{1em} \\\\\n" +
     							"{\\Large\\text{\\title" + s.name() + "}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImage" + s.name() + "}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
     							"\\hphantom{MMMMMMMMMMMMMMMMMM}\n" +
     						"\\end{array}\n" +
-    					"}\n" +
+//    					"}\n" +
     					"\\right]\n" +
     				"}\\\\\n" +
         			"\\vspace{1em}\n" +    					
