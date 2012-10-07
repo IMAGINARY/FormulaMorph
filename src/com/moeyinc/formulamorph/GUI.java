@@ -167,8 +167,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 	RotationAnimation rotationAnimation;
 	
-	final ControllerAdapterGUI caGUI = new ControllerAdapterGUI( null );
-	JFrame caGUIFrame = new JFrame();;
+	final GUIController caGUI = new GUIController();
+	JFrame caGUIFrame = new JFrame();
 	JInternalFrame caGUIInternalFrame = new JInternalFrame();
 		
 	public GUI()
@@ -617,6 +617,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		return;
     	}
 
+    	s2g( s ).panel.setScheduleSurfaceRepaintEnabled( false );
+    	s2g( Surface.M ).panel.setScheduleSurfaceRepaintEnabled( false );
+    	
     	try
     	{
     		loadFromProperties( s, galleryItems.get( s2g( s ).id() ).jsurfProperties() );
@@ -628,7 +631,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		return;
     	}
 
-		s2g( s ).panel.scheduleSurfaceRepaint();
 		{	// set content of gallery panels 
 			List< JPanel > galleryPanels = s2g( s ).galleryPanels();
 	    	for( JPanel p : galleryPanels )
@@ -642,7 +644,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	    		int galItemId = s2g( s ).id() - s2g( s ).highlightedGalleryPanel() + panel_id;
 	    		if( galItemId >= 0 && galItemId < galleryItems.size() )
 	    		{
-	    			System.out.println( "setting item " + galItemId + " at panel " + panel_id );
 	    			p.add( galleryItems.get( galItemId ) );
 	    			p.revalidate();
 	    			p.repaint();
@@ -691,7 +692,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	Parameter.M_t.setActive( true );
     	Parameter.M_t.setMin( 0.0 );
     	Parameter.M_t.setMax( 1.0 );
-		s2g( Surface.M ).panel.scheduleSurfaceRepaint();
+
 		for( Parameter p : Surface.F.getParameters() )
 		{
 			p.notifyActivationStateListeners();
@@ -709,6 +710,12 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		}
 		s2g( s ).title.reparseOnRepaint();
 		s2g( s ).equation.reparseOnRepaint();
+		
+    	s2g( s ).panel.setScheduleSurfaceRepaintEnabled( true );
+    	s2g( Surface.M ).panel.setScheduleSurfaceRepaintEnabled( true );
+    	s2g( s ).panel.scheduleSurfaceRepaint();
+    	s2g( Surface.M ).panel.scheduleSurfaceRepaint();
+		
 		repaint();
     }
 

@@ -9,22 +9,14 @@ import javax.swing.border.EmptyBorder;
 import java.util.EnumMap;
 import java.util.Hashtable;
 
-public class ControllerAdapterGUI extends JPanel implements Controller, Parameter.ValueChangeListener, Parameter.ActivationStateListener {
-
-	private Controller c;
+public class GUIController extends JPanel implements Parameter.ValueChangeListener, Parameter.ActivationStateListener {
 	
 	final static int maxSliderValue = 10000;
 	//final static int sliderMajorTicks = 5;
 	private EnumMap< Parameter, JSlider > p2s = new EnumMap< Parameter, JSlider >( Parameter.class );
 		
-	public ControllerAdapterGUI( Controller c )
+	public GUIController()
 	{
-		if( c == null )
-			this.c = new Controller() { // Dummy adapter to ensure that c is not null
-				};
-		else
-			this.c = c;	
-		
 		this.setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
 		this.setBorder( new EmptyBorder( 10, 0, 10, 0 ) );
 		Parameter last_param = null;
@@ -50,7 +42,7 @@ public class ControllerAdapterGUI extends JPanel implements Controller, Paramete
 			s.setPaintTicks(true);
 			s.setPaintLabels( true );
 			p.addActivationStateListener( new Parameter.ActivationStateListener() { public void stateChanged( Parameter p ) { s.setEnabled( p.isActive() ); } });
-			p.addValueChangeListener( new Parameter.ValueChangeListener() { public void valueChanged( Parameter p ) { ControllerAdapterGUI.this.valueChanged( p ); } });
+			p.addValueChangeListener( new Parameter.ValueChangeListener() { public void valueChanged( Parameter p ) { GUIController.this.valueChanged( p ); } });
 			p2s.put( p, s );
 			this.add( slider_panel );
 		}

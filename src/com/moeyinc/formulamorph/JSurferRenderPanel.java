@@ -235,6 +235,7 @@ public class JSurferRenderPanel extends JComponent
     	public void imageUpdated( Image img );
     }
 	private Set< ImageUpdateListener > imgListeners = new HashSet< ImageUpdateListener >();
+	private boolean enableScheduleSurfaceRepaint;
 	public void addImageUpdateListener( ImageUpdateListener iul ) { imgListeners.add( iul ); }
 	public void removeImageUpdateListener( ImageUpdateListener iul ) { imgListeners.remove( iul ); }	
 	void notifyImageUpdateListeners( ImgBuffer imgbuf )
@@ -636,9 +637,20 @@ public class JSurferRenderPanel extends JComponent
         javax.imageio.ImageIO.write( bufferedImage, "png", f );
     }
 
-    protected void scheduleSurfaceRepaint()
+    public void setScheduleSurfaceRepaintEnabled( boolean enabled )
     {
-        rw.scheduleRepaint();
+    	this.enableScheduleSurfaceRepaint = enabled;
+    }
+    
+    public boolean getScheduleSurfaceRepaintEnabled()
+    {
+    	return this.enableScheduleSurfaceRepaint;
+    }
+
+    public void scheduleSurfaceRepaint()
+    {
+    	if( this.enableScheduleSurfaceRepaint )
+    		rw.scheduleRepaint();
     }
 
     protected void componentResized( ComponentEvent ce )
