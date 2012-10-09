@@ -97,9 +97,10 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			
 			this.panel = new JSurferRenderPanel();
 			
-			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\text{\\fgcolor{white}{\\jlmDynamic{FMTitle" + s.name() + "}}}" );
+			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\fgcolor{white}{\\text{\\jlmDynamic{FMTitle" + s.name() + "}}}" );
 			this.title.setHAlignment( LaTeXLabel.HAlignment.CENTER );
 			this.title.setVAlignment( LaTeXLabel.VAlignment.CENTER_BASELINE );
+			//this.title.setBackground( Color.GRAY ); this.title.setOpaque( true ); 
 			
 			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
 			
@@ -296,12 +297,12 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		s2g( Surface.M ).panel.setBounds( computeBoundsFullHD( content, 1920 / 2 - 624 / 2, 84, 624, 624  ) );
 		s2g( Surface.G ).panel.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );
 
-		int titlePrefWidth = 550;
+		int titlePrefWidth = 700;
 		int titlePrefHeight = 120;
 		s2g( Surface.F ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
-		s2g( Surface.F ).title.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 0, titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.F ).title.setBounds( computeBoundsFullHD( content, 373 - titlePrefWidth / 2, 0, titlePrefWidth, titlePrefHeight ) );
 		s2g( Surface.G ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
-		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 0, titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - titlePrefWidth / 2, 0, titlePrefWidth, titlePrefHeight ) );
 
 		int elPrefWidth = 570;
 		int elPrefHeight = 1080 - 708;
@@ -776,13 +777,11 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     			fmp.notifyValueChangeListeners();
     			unsetFormulaMorphParams.remove( fmp );
     		}
-    		else
-    		{
-	        	// disable FormulaMorphParameters that are not set
-	        	for( Parameter p : unsetFormulaMorphParams )
-	        		p.setActive( false );
-        	}
         }
+        
+    	// disable FormulaMorphParameters that are not set
+    	for( Parameter p : unsetFormulaMorphParams )
+    		p.setActive( false );
 
         asr.getFrontMaterial().loadProperties(props, "front_material_", "");
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
