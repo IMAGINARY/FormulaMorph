@@ -115,7 +115,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 				{
 					BufferedReader in = new BufferedReader( new InputStreamReader( PhidgetInterface.this.socket.getInputStream() ) );
 					String cmd;
-					boolean[] digital_switch = { false, false };
+					boolean[] digital_switch = { false, false, false }; // element 0 is invalid
 					while( ( cmd = in.readLine() ) != null )
 					{
 						cmd = cmd.replaceAll( "#.*$", "" ); // strip comments (everything from # to the end of the command)
@@ -205,21 +205,28 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 							}
 							else if( dev.equals( "SW" ) )
 							{ // digital switch
-								boolean on = Integer.parseInt( values[ 0 ] ) == 1;		
-								if( !digital_switch[ id + 1 ] && on )
-								{ // was off, now is on
-									SwingUtilities.invokeLater( new Runnable()
-									{
-										public void run()
+								if( id == 1 || id == 2 )
+								{
+									boolean on = Integer.parseInt( values[ 0 ] ) == 1;		
+									if( !digital_switch[ id ] && on )
+									{ // was off, now is on
+										SwingUtilities.invokeLater( new Runnable()
 										{
-											if( id == 1 )
-												Main.gui().saveScreenShotLeft();
-											else if( id == 2 )
-												Main.gui().saveScreenShotLeft();
-										}
-									} );
+											public void run()
+											{
+												if( id == 1 )
+													Main.gui().saveScreenShotLeft();
+												else if( id == 2 )
+													Main.gui().saveScreenShotRight();
+											}
+										} );
+									}
+									digital_switch[ id ] = on;
 								}
-								digital_switch[ id + 1 ] = on;
+								else
+								{
+									unknown_command = true;
+								}
 							}
 						}
 						catch( ArrayIndexOutOfBoundsException aioobe ) { unknown_command = true; }
