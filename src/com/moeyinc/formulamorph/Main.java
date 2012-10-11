@@ -42,7 +42,20 @@ public class Main {
 			gui.pack();
 			gui.setVisible( true );
         }
-       	pi = new PhidgetInterface( "localhost", 4767 );
+        String host = System.getProperty( "FMPhidgetHost" , "localhost" );
+
+        int port = 4767;
+        String port_string = System.getProperty( "FMPhidgetPort" , "" + port );
+        try
+        {
+        	port = Integer.parseInt( port_string );
+        }
+        catch( NumberFormatException nfe )
+        {
+        	System.err.println( "unable to convert FMPhidgetPort=\"" + port_string + "\" to integer port number");
+        	System.exit(-1);
+        }
+       	pi = new PhidgetInterface( host, port );
     }
     
     public static void main(String[] args) {
