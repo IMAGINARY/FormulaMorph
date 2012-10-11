@@ -475,15 +475,22 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	for( Parameter p : s.getParameters() )
     	{
 			sb.append( p.getLaTeXColorDefinition() );
+			sb.append( "\\newcommand{\\FMC");
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}[1]{\\fgcolor{");
+			sb.append( p.getLaTeXColorName() );
+			sb.append( "}{#1}}\n" );				
 			sb.append( "\\newcommand{\\FMP" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}{\\fgcolor{" );
-			sb.append( p.getLaTeXColorName() );
-			sb.append( "}\\ovalbox{\\fgcolor{white}{\\vphantom{-}\\jlmDynamic{FMParam" );
+			sb.append( "}{\\FMC" ); 
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}\\vphantom{-}}}}\n" );
+			sb.append( "{\\ovalbox{\\fgcolor{white}{\\vphantom{-}\\jlmDynamic{FMParam" );
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}\\vphantom{-}}}}}\n" );
     	}
     	
     	String rem;
@@ -787,7 +794,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
         
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), props.getProperty( "surface_title_latex" ) );
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
     }
 
     public void pauseAnimation() { this.rotationAnimation.pause(); }
