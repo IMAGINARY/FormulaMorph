@@ -807,19 +807,57 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	boolean stop;
     	boolean pause;
     	Object lock;
+    	Quat4d[] rotations;
     	
-    	public RotationAnimation() { stop = false; pause = true; lock = new Object(); }
+    	public RotationAnimation()
+    	{
+    		stop = false;
+    		pause = true;
+    		lock = new Object();
+    		
+    		setupRotationPath1();
+    	}
+
+    	public void setupRotationPath1()
+    	{
+    		Quat4d rotStep = new Quat4d(); rotStep.set( new AxisAngle4d() );
+    		int steps = 3*360-1;
+    		{
+	    		double angleStep = 2 * Math.PI / steps;
+	    		Quat4d rotX = new Quat4d(); rotX.set( new AxisAngle4d( 1, 0, 0, angleStep ) ); rotStep.mul( rotX );
+	    		Quat4d rotY = new Quat4d(); rotY.set( new AxisAngle4d( 0, 1, 0, angleStep ) ); rotStep.mul( rotY );
+	    		Quat4d rotZ = new Quat4d(); rotZ.set( new AxisAngle4d( 0, 0, 1, angleStep ) ); rotStep.mul( rotZ );
+    		}
+    		AxisAngle4d aa = new AxisAngle4d(); aa.set(rotStep);
+    		
+    		Quat4d[] new_rotations = new Quat4d[ steps ];
+    		new_rotations[ 0 ] = new Quat4d(); new_rotations[ 0 ].set( new AxisAngle4d() );
+    		for( int step = 1; step < steps; ++step )
+    		{
+    			new_rotations[ step ] = new Quat4d();
+    			new_rotations[ step ].mul( new_rotations[ step - 1 ], rotStep );
+    		}
+    		rotations = new_rotations;
+    	}
     	
     	public void pause() { this.pause = true; }
     	public void resume() { if( pause ) { synchronized( lock ) { lock.notify(); } } this.pause = false; }
     	public void stop() { this.stop = true; }
     	
-    	double smootherstep( double edge0, double edge1, double x)
+    	public Quat4d lookup( double t )
     	{
-    	    // Scale, and saturate x to 0..1 range
-    	    x = Math.min( 0.0, Math.max( (x - edge0)/(edge1 - edge0), 1.0 ) );
-    	    // Evaluate polynomial
-    	    return x*x*x*(x*(x*6 - 15) + 10);
+     		if( t < 0 ) // ensure 0<=t<=1
+    			t = 1 + t - (int) t;
+    		else
+    			t = t - (int) t;
+    		int index = ( int ) Math.floor( t * rotations.length );
+    		t = t * rotations.length - index;
+    		
+    		System.out.println( index + " of " + rotations.length + ", t=" + t );
+    		
+    		Quat4d result = new Quat4d(); 
+    		result.interpolate( rotations[ index ], rotations[ ( index + 1 ) % rotations.length ], t );
+    		return result;
     	}
     	
     	public void run()
@@ -837,37 +875,27 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		    		Matrix4d rotZ = new Matrix4d(); rotZ.rotZ( angleStep ); rotStep.mul( rotZ );
 	    		}
 	    		//int[] angles = { 0, 90, 180, 270, 360 };
-	    		int iterations = 0;
+	    		int iterations = 3900;
 	    		
 	    		while( !stop )
 	    		{
-	//    			for( int i = 0; i < angles.length - 1; ++i )
+	    			try
 	    			{
-	    				
-		    			try
-		    			{
-		    				Thread.sleep( 20 );
-		    				if( pause )
-		    					lock.wait();
-		    			} catch( Exception e ) {}
-		    			if( iterations == 1000 )
-		    			{
-		    				//try{ Thread.sleep( 10000 ); } catch( Exception e ) {}
-		    				// ensure from time to time that the matrix is still a rotation matrix
-		    				AxisAngle4d aa = new AxisAngle4d();
-		    				aa.set( rotation );
-		    				rotation.set( aa );
-		    				iterations = 0;
-		    			}
-		    			rotation.mul( rotStep );
-		    			Matrix4d newRotation = new Matrix4d( rotation );
-		    			for( Surface s : Surface.values() )
-		    			{
-		    				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
-		    				GUI.this.s2g(s).panel.scheduleSurfaceRepaint();
-		    			}
-		    			++iterations;
+	    				Thread.sleep( 20 );
+	    				if( pause )
+	    					lock.wait();
+	    			} catch( Exception e ) {}
+
+	    			Matrix4d newRotation = new Matrix4d();
+	    			newRotation.setIdentity();
+	    			newRotation.setRotation( lookup( iterations / 4000.0 ) );
+	    			//new Matrix4d( lookup( iterations / 999.0 ), new Vector3d(), 0.0 );
+	    			for( Surface s : Surface.values() )
+	    			{
+	    				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
+	    				GUI.this.s2g(s).panel.scheduleSurfaceRepaint();
 	    			}
+	    			iterations = ( iterations + 1 ) % 4000;
 	    		}
     		}
     	}
