@@ -49,7 +49,7 @@ camera_height=2.0
 surface_title=Cubic 2
 surface_title_latex=Cubic\\ 2
 surface_equation=-x^3-y^2*z-x*z^2+x*z-x*y*a-z^2*b
-surface_equation_latex=-x^3-y^2\\cdot z-x\\cdot z^2+\\\\ x\\cdot z-x\\cdot y\\cdot \\FMPa-z^2\\cdot\\FMPb
+surface_equation_latex=-x^3-y^2 z-x z^2+ x z\\\\-\\;x y\\cdot \\FMPa-z^2\\cdot\\FMPb
 
 surface_parameter_a=0.5
 surface_parametermin_a=-2.0
