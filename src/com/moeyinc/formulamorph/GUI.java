@@ -93,7 +93,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			gallery = FMGallery.get( s, level );
 			id_in_gallery = 0;
 			
-			LaTeXCommands.getDynamicLaTeXMap().put( "FMImage" + s.name(), "\\includejavaimage[width=5ex,interpolation=bicubic]{FMImage" + s.name() + "}" );
+			LaTeXCommands.getDynamicLaTeXMap().put( "FMImage" + s.name(), "\\includejavaimage[interpolation=bicubic]{FMImage" + s.name() + "}" );
 			
 			this.panel = new JSurferRenderPanel();
 			
@@ -103,6 +103,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			//this.title.setBackground( Color.GRAY ); this.title.setOpaque( true ); 
 			
 			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
+			//this.equation.setBackground( Color.GRAY ); this.equation.setOpaque( true );
 			
 			gallery_panels = new ArrayList< JPanel >();
 			for( int i = 0; i < 7; ++i )
@@ -114,7 +115,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			}
 			gallery_panels.get( gallery_panels.size() / 2 ).setBorder( BorderFactory.createLineBorder( Color.WHITE, 3 ) );		
 			gallery_panels_unmodifiable = Collections.unmodifiableList( gallery_panels );
-		}		
+		}
 		
 		public void setGalleryLevel( Level l )
 		{
@@ -304,14 +305,15 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		s2g( Surface.G ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
 		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - titlePrefWidth / 2, 0, titlePrefWidth, titlePrefHeight ) );
 
+		int elTop = (84 + 624 / 2 + 550 / 2);
 		int elPrefWidth = 570;
-		int elPrefHeight = 1080 - 708;
+		int elPrefHeight = 1080 - (84 + 624 / 2 + 550 / 2);
 		s2g( Surface.F ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
-		s2g( Surface.F ).equation.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
-		s2g( Surface.M ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
-		s2g( Surface.M ).equation.setBounds( computeBoundsFullHD( content, 1920 / 2 - elPrefWidth / 2, 708, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.F ).equation.setBounds( computeBoundsFullHD( content, 373 - elPrefWidth / 2, elTop, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.M ).equation.setPreferredSize( new Dimension( elPrefWidth, (int) ( elPrefHeight * 0.75 ) ) );
+		s2g( Surface.M ).equation.setBounds( computeBoundsFullHD( content, 1920 / 2 - elPrefWidth / 2, elTop + (elPrefHeight * 0.125), elPrefWidth, elPrefHeight * 0.75 ) );
 		s2g( Surface.G ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
-		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 708, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - elPrefWidth / 2, elTop, elPrefWidth, elPrefHeight ) );
 		
 		int gal_length = s2g( Surface.F ).galleryPanels().size();
 		int galSize = 62;
@@ -501,7 +503,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     			"\\newcommand{\\nl}{\\\\}\n" +
     			"\\sf\\fgcolor{white}{\\begin{array}{c}\n" +
     				"\\bf\\Large\\text{Formula Morph}\\\\\\\\\n" +
-					"\\sf\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImageF}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImageG}}}\n" +
+					"\\sf\\small\\raisebox{4.1275ex}{\\scalebox{1}[-1]{\\resizebox{7ex}{!}{\\jlmDynamic{FMImageF}}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{4.1275ex}{\\scalebox{1}[-1]{\\resizebox{7ex}{!}{\\jlmDynamic{FMImageG}}}}\n" +
     			"\\end{array}}";
         	break;
     	case F:
@@ -509,15 +511,15 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         	rem = "" +
     			"\\newcommand{\\nl}{\\\\}\n" +
     			"\\sf\\begin{array}{c}\n" +
-    				"\\raisebox{-2em}{\\bf\\Large\\fgcolor{white}\\text{Formula for \\title" + s.name() +  "}}\\\\\n" +
+    				"\\raisebox{-2.5em}{\\bf\\Large\\fgcolor{white}\\text{\\vphantom{pgqy}Formula for \\title" + s.name() +  "}}\\\\\n" +
     				"\\fgcolor{white}{\n" +
     					"\\left[\n" +
 //    					"\\fgcolor{white}{\n" + 
     						"\\begin{array}{c}\n" +
     							"\\ \\vspace{1em} \\\\\n" +
-    							"{\\Large\\text{\\title" + s.name() + "}=}{\\small\\raisebox{3ex}{\\scalebox{1}[-1]{\\jlmDynamic{FMImage" + s.name() + "}}}}\\\\\\\\\n" +
+    							"{\\Large\\text{\\title" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
-    							"\\hphantom{MMMMMMMMMMMMMMMMMM}\n" +
+    							"\\hphantom{MMMMMMMMMMMMMMMMMMMa.}\n" +
     						"\\end{array}\n" +
 //    					"}\n" +
     					"\\right]\n" +
