@@ -44,7 +44,7 @@ public enum Parameter
 	private double value;
 	private double min;
 	private double max;
-	private double speed = 1.0;
+	private double speed = 360.0;
 	private Set<Parameter.ValueChangeListener> valueListeners = new HashSet<Parameter.ValueChangeListener>();
 	private Set<Parameter.ActivationStateListener> stateListeners = new HashSet<Parameter.ActivationStateListener>();
 	
@@ -66,11 +66,20 @@ public enum Parameter
 	public void setActive( boolean active ) { if( this.active != active ) { this.active = active; for( Parameter.ActivationStateListener asl : stateListeners ) asl.stateChanged( this ); } }
 	
 	public double getValue() { return value; }
+	public double getRange() { return max - min; }
 	public double getMin() { return min; }
 	public double getMax() { return max; }
 	public double getSpeed() { return speed; }
 	
-	public void setValue( double value ) { if( this.value != value ) { this.value = value; notifyValueChangeListeners(); } }
+	public void setValue( double value )
+	{
+		value = value < min ? min : ( value > max ? max : value );
+		if( this.value != value )
+		{
+			this.value = value;
+			notifyValueChangeListeners();
+		}
+	}
 	public void setMin( double min ) { if( this.min != min ) { this.min = min; notifyValueChangeListeners(); } }
 	public void setMax( double max ) { if( this.max != max ) { this.max = max; notifyValueChangeListeners(); } }
 	public void setSpeed( double speed ) { if( this.speed != speed ) { this.speed = speed; notifyValueChangeListeners(); } }

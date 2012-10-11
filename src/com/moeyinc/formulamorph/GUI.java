@@ -799,6 +799,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
     }
 
+    public void setTransformationOnPath( double t ) { this.rotationAnimation.setPathPosition( t ); }
+    public double getTransformationOnPath() { return this.rotationAnimation.getPathPosition(); }
     public void pauseAnimation() { this.rotationAnimation.pause(); }
     public void resumeAnimation() { this.rotationAnimation.resume(); }
     
@@ -808,6 +810,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	boolean pause;
     	Object lock;
     	Quat4d[] rotations;
+    	double pathPosition;
     	
     	public RotationAnimation()
     	{
@@ -817,6 +820,23 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		
     		setupRotationPath1();
     	}
+    	
+    	public void setPathPosition( double t )
+    	{
+    		t -= (int) t;
+    		t = t < 0.0 ? t + 1.0 : t;
+    		pathPosition = t;
+    		
+			Matrix4d newRotation = new Matrix4d();
+			newRotation.setIdentity();
+			newRotation.setRotation( lookup( pathPosition ) );
+			for( Surface s : Surface.values() )
+			{
+				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
+				GUI.this.s2g(s).panel.scheduleSurfaceRepaint();
+			}    		
+    	}
+    	public double getPathPosition() { return pathPosition; }
 
     	public void setupRotationPath1()
     	{
@@ -886,15 +906,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	    					lock.wait();
 	    			} catch( Exception e ) {}
 
-	    			Matrix4d newRotation = new Matrix4d();
-	    			newRotation.setIdentity();
-	    			newRotation.setRotation( lookup( iterations / 4000.0 ) );
-	    			//new Matrix4d( lookup( iterations / 999.0 ), new Vector3d(), 0.0 );
-	    			for( Surface s : Surface.values() )
-	    			{
-	    				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
-	    				GUI.this.s2g(s).panel.scheduleSurfaceRepaint();
-	    			}
+	    			setPathPosition( iterations / 4000.0 );
 	    			iterations = ( iterations + 1 ) % 4000;
 	    		}
     		}

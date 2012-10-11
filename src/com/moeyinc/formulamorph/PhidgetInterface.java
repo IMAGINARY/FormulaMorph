@@ -151,7 +151,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 							}
 							else if( dev.equals( "RE" ) )
 							{ // rotary encoder
-								final int angle = Integer.parseInt( values[ 0 ] );
+								final int relative_angle = Integer.parseInt( values[ 0 ] );
 								
 								if( id > 0 && id <= 12 )
 								{
@@ -163,7 +163,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 									{
 										public void run()
 										{
-											param.setValue( param.getMin() + ( angle / param.getSpeed() ) * ( param.getMax() - param.getMin() ) );
+											param.setValue( param.getValue() + ( relative_angle / param.getSpeed() ) * param.getRange() );
 										}
 									} );							
 								}
@@ -172,6 +172,25 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 									unknown_command = true;
 								}
 							}
+							else if( dev.equals( "JW" ) )
+							{ // jog wheel
+								final int relative_angle = Integer.parseInt( values[ 0 ] );
+								
+								if( id > 0 && id <= 1 )
+								{
+									SwingUtilities.invokeLater( new Runnable()
+									{
+										public void run()
+										{
+											Main.gui().setTransformationOnPath( Main.gui().getTransformationOnPath() + relative_angle / 360.0 );
+										}
+									} );							
+								}
+								else
+								{
+									unknown_command = true;
+								}
+							}							
 							else if( dev.equals( "JS" ) )
 							{ // joystick
 								if( id == 1 )
