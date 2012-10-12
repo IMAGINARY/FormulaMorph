@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import java.util.EnumMap;
 import java.util.Hashtable;
+import java.util.Formatter;
 
 public class GUIController extends JPanel implements Parameter.ValueChangeListener, Parameter.ActivationStateListener {
 	
@@ -121,25 +122,21 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 	public void valueChanged( Parameter p )
 	{
 		Hashtable< Integer, JLabel > labelTable = new Hashtable< Integer, JLabel >();
-		labelTable.put( new Integer( 0 ), new JLabel( Double.toString(p.getMin())) );
-		labelTable.put( new Integer( maxSliderValue / 2 ), new JLabel( Double.toString((p.getMin()+p.getMax())/2)) );
-		labelTable.put( new Integer( maxSliderValue ), new JLabel( Double.toString( p.getMax() ) ) );
+		labelTable.put( new Integer( 0 ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMin()))) );
+		labelTable.put( new Integer( maxSliderValue / 2 ), new JLabel( String.format( "%.2f", Double.valueOf((p.getMin()+p.getMax())/2))) );
+		labelTable.put( new Integer( maxSliderValue ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMax() ) ) ) );
 		JSlider s = p2s.get( p );
 		s.setLabelTable( labelTable );
+		ChangeListener[] cls = s.getChangeListeners();
+		for( ChangeListener cl : cls )
+			s.removeChangeListener( cl );
 		s.setValue( (int) ( maxSliderValue * ( p.getValue() - p.getMin() ) / ( p.getMax() - p.getMin() ) ) );
+		for( ChangeListener cl : cls )
+			s.addChangeListener( cl );		
 	}
 
 	public void stateChanged( Parameter p )	
 	{
 		p2s.get( p ).setEnabled( p.isActive() );
-	}
-	
-	public void setVisible( boolean visible )
-	{
-		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		if( device.getFullScreenWindow() == Main.gui() )
-		{
-			
-		}
 	}
 }
