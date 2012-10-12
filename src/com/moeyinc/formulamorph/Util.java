@@ -82,7 +82,7 @@ public class Util
             {
                 String parameterName = name.substring( parameter_prefix.length() );
                 asr.setParameterValue( parameterName, Float.parseFloat( ( String ) entry.getValue() ) );
-                System.out.println("LoadRenderPar: " + parameterName + "=" + entry.getValue() + " (" + Float.parseFloat( (String) entry.getValue()) + ") "+ asr.getParameterValue( parameterName));
+                //System.out.println("LoadRenderPar: " + parameterName + "=" + entry.getValue() + " (" + Float.parseFloat( (String) entry.getValue()) + ") "+ asr.getParameterValue( parameterName));
             }
         }
 

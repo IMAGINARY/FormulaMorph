@@ -120,7 +120,7 @@ public class JSurferRenderPanel extends JComponent
                     long minPixels = JSurferRenderPanel.this.minLowResRenderSize.width * JSurferRenderPanel.this.minLowResRenderSize.height;
                     long maxPixels = JSurferRenderPanel.this.maxLowResRenderSize.width * JSurferRenderPanel.this.maxLowResRenderSize.height;
                     maxPixels = Math.max( 1, Math.min( maxPixels, JSurferRenderPanel.this.getWidth() * JSurferRenderPanel.this.getHeight() ) );
-                    minPixels = Math.min( minPixels, maxPixels );
+                    minPixels = Math.max( 1, Math.min( minPixels, maxPixels ) );
                     long numPixelsAt15FPS = ( long ) ( 1.0 / ( desired_fps * time_per_pixel ) );
                     long pixelsToUse = Math.max( minPixels, Math.min( maxPixels, numPixelsAt15FPS ) );
                     int widthToUse = (int) Math.sqrt( pixelsToUse );
@@ -191,6 +191,10 @@ public class JSurferRenderPanel extends JComponent
 
         public ImgBuffer draw( int width, int height, CPUAlgebraicSurfaceRenderer.AntiAliasingMode aam, AntiAliasingPattern aap, boolean save_fps )
         {
+        	// ensure positive size
+        	width = Math.max( 1, width );
+        	height = Math.max( 1, height );
+        	
             // create color buffer
             ImgBuffer ib = new ImgBuffer( width, height );
 

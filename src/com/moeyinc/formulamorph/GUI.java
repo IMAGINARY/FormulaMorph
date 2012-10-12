@@ -872,9 +872,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     			t = t - (int) t;
     		int index = ( int ) Math.floor( t * rotations.length );
     		t = t * rotations.length - index;
-    		
-    		System.out.println( index + " of " + rotations.length + ", t=" + t );
-    		
+    		    		
     		Quat4d result = new Quat4d(); 
     		result.interpolate( rotations[ index ], rotations[ ( index + 1 ) % rotations.length ], t );
     		return result;

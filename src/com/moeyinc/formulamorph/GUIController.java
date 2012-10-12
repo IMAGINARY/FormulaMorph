@@ -42,8 +42,8 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 			s.setMinorTickSpacing( maxSliderValue / 50 );
 			s.setPaintTicks(true);
 			s.setPaintLabels( true );
-			p.addActivationStateListener( new Parameter.ActivationStateListener() { public void stateChanged( Parameter par ) { System.out.println( par.name() + ": " + par.isActive() ); s.setEnabled( par.isActive() ); } });
-			p.addValueChangeListener( new Parameter.ValueChangeListener() { public void valueChanged( Parameter par ) { GUIController.this.valueChanged( par ); } });
+			p.addActivationStateListener( this );
+			p.addValueChangeListener( this );
 			p2s.put( p, s );
 			this.add( slider_panel );
 		}
