@@ -12,7 +12,8 @@ public class ImageScaler extends JComponent {
 
 	private Image image;
 	private Image scaledImage;
-	private boolean grayscale; 
+	private Image grayScaleScaledImage;
+	private boolean grayscale;
 	
 	public ImageScaler()
 	{
@@ -30,13 +31,22 @@ public class ImageScaler extends JComponent {
 	{
 		this.image = image;
 		this.scaledImage = null;
+		this.grayScaleScaledImage = null;
 		this.setPreferredSize( new Dimension( image.getWidth( null ), image.getHeight( null ) ) );
 		this.repaint();
 	}
 	
 	public Image getImage() { return this.image; }
 	
-	public void setGrayScale( boolean grayscale ) { this.grayscale = grayscale; this.scaledImage = null; this.repaint(); }
+	public void setGrayScale( boolean grayscale )
+	{
+		if( this.grayscale != grayscale )
+		{
+			this.grayscale = grayscale;
+			this.repaint();
+		}
+	}
+
 	public boolean getGrayScale() { return this.grayscale; }
 	
     public void paintComponent(Graphics g)
@@ -52,16 +62,17 @@ public class ImageScaler extends JComponent {
         	if( scaledImage == null || scaledImage.getWidth( null ) != image.getWidth( null ) || scaledImage.getHeight( null ) != image.getHeight( null ) )
         	{
         		scaledImage = image.getScaledInstance( getWidth(), getHeight(), Image.SCALE_SMOOTH );
-        		if( grayscale )
-        		{
-        			BufferedImage bi = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_BYTE_GRAY );
-        			Graphics g_bi = bi.getGraphics();  
-        			g_bi.drawImage( scaledImage, 0, 0, null);  
-        			g_bi.dispose();
-        			scaledImage = bi;
-        		}
+        		grayScaleScaledImage = null;
         	}
-        	g.drawImage( scaledImage, 0, 0, getWidth(), getHeight(), null ); 
+    		if( grayscale && grayScaleScaledImage == null )
+    		{
+    			BufferedImage bi = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_BYTE_GRAY );
+    			Graphics g_bi = bi.getGraphics();  
+    			g_bi.drawImage( scaledImage, 0, 0, null);  
+    			g_bi.dispose();
+    			grayScaleScaledImage = bi;
+    		}
+        	g.drawImage( grayscale ? grayScaleScaledImage : scaledImage, 0, 0, getWidth(), getHeight(), null ); 
         }
     }
 }

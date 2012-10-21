@@ -92,12 +92,12 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			level = Level.BASIC;
 			gallery = FMGallery.get( s, level );
 			id_in_gallery = 0;
-			
+
 			LaTeXCommands.getDynamicLaTeXMap().put( "FMImage" + s.name(), "\\includejavaimage[interpolation=bicubic]{FMImage" + s.name() + "}" );
 			
 			this.panel = new JSurferRenderPanel();
 			
-			this.title = new LaTeXLabel( "\\sf\\bf\\Huge\\fgcolor{white}{\\text{\\jlmDynamic{FMTitle" + s.name() + "}}}" );
+			this.title = new LaTeXLabel( "\\sf\\bf\\LARGE\\fgcolor{white}{\\jlmDynamic{FMTitle" + s.name() + "}}" );
 			this.title.setHAlignment( LaTeXLabel.HAlignment.CENTER );
 			this.title.setVAlignment( LaTeXLabel.VAlignment.CENTER_BASELINE );
 			//this.title.setBackground( Color.GRAY ); this.title.setOpaque( true ); 
@@ -470,9 +470,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	
     	StringBuilder sb = new StringBuilder();
     	
-    	// surface name
-    	sb.append( "\\newcommand{\\title" + s.name() + "}{\\FMDynamic[i]{FMTitle" + s.name() + "}}\n" );
-
+    	sb.append( "\\newcommand{\\fixheight}{\\vphantom{Tpgqy}}" );
+    	
     	// parameters
     	for( Parameter p : s.getParameters() )
     	{
@@ -511,13 +510,13 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         	rem = "" +
     			"\\newcommand{\\nl}{\\\\}\n" +
     			"\\sf\\begin{array}{c}\n" +
-    				"\\raisebox{-2.5em}{\\bf\\Large\\fgcolor{white}\\text{\\vphantom{pgqy}Formula for \\title" + s.name() +  "}}\\\\\n" +
+    				"\\raisebox{-2.5em}{\\bf\\Large\\fgcolor{white}\\FMDynamic[i]{FMTitleFormula" + s.name() + "}}\\\\\n" +
     				"\\fgcolor{white}{\n" +
     					"\\left[\n" +
 //    					"\\fgcolor{white}{\n" + 
     						"\\begin{array}{c}\n" +
     							"\\ \\vspace{1em} \\\\\n" +
-    							"{\\Large\\text{\\title" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
+    							"{\\Large\\FMDynamic[i]{FMTitle" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
     							"\\hphantom{MMMMMMMMMMMMMMMMMMMa.}\n" +
     						"\\end{array}\n" +
@@ -654,10 +653,11 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	    		int galItemId = s2g( s ).id() - s2g( s ).highlightedGalleryPanel() + panel_id;
 	    		if( galItemId >= 0 && galItemId < galleryItems.size() )
 	    		{
-	    			p.add( galleryItems.get( galItemId ) );
+	    			Gallery.GalleryItem item = galleryItems.get( galItemId );
+	    			item.setGrayScale( panel_id != s2g( s ).highlightedGalleryPanel() );
+	    			p.add( item );
 	    			p.revalidate();
 	    			p.repaint();
-	    			
 	    		}
 	    	}
 	    }
@@ -795,7 +795,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         asr.getFrontMaterial().loadProperties(props, "front_material_", "");
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
         
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), props.getProperty( "surface_title_latex" ) );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\text{\\fixheight " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "}\\end{array}" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{\\fixheight Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
     }
 
@@ -843,7 +844,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		Quat4d rotStep = new Quat4d(); rotStep.set( new AxisAngle4d() );
     		int steps = 3*360-1;
     		{
-	    		double angleStep = 2 * Math.PI / steps;
+	    		double angleStep = 6 * Math.PI / steps;
 	    		Quat4d rotX = new Quat4d(); rotX.set( new AxisAngle4d( 1, 0, 0, angleStep ) ); rotStep.mul( rotX );
 	    		Quat4d rotY = new Quat4d(); rotY.set( new AxisAngle4d( 0, 1, 0, angleStep ) ); rotStep.mul( rotY );
 	    		Quat4d rotZ = new Quat4d(); rotZ.set( new AxisAngle4d( 0, 0, 1, angleStep ) ); rotStep.mul( rotZ );

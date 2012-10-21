@@ -13,6 +13,8 @@ import org.scilab.forge.jlatexmath.TeXIcon;
 
 public class LaTeXLabel extends JComponent
 {		
+	//static { TeXFormula.registerExternalFont( Character.UnicodeBlock.BASIC_LATIN, "Arial" ); }
+	
 	public enum HAlignment { LEFT, CENTER, RIGHT };
 	public enum VAlignment { BOTTOM, CENTER, CENTER_BASELINE, TOP };
 	
@@ -92,7 +94,8 @@ public class LaTeXLabel extends JComponent
 		float yScale = this.getPreferredSize() != null ? this.getHeight() / ( float ) this.getPreferredSize().height : 1.0f;
 		float scale = ( xScale < yScale ? xScale : yScale );
 //		System.out.println( scale );
-		TeXIcon texIcon = texFormula.createTeXIcon( TeXConstants.STYLE_TEXT, 30f * scale );
+		TeXIcon texIcon = texFormula.createTeXIcon( TeXConstants.STYLE_TEXT, 30f * scale, TeXFormula.SANSSERIF, TeXConstants.UNIT_PIXEL, 1920f, TeXConstants.ALIGN_CENTER );
+		
 		texIcon.setInsets( this.getInsets() );
 		
 		int x, y;
