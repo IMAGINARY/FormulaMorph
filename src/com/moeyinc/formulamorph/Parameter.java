@@ -7,21 +7,21 @@ import javax.vecmath.Color3f;
 
 public enum Parameter
 {	
-	F_a( Surface.F, 'a', new Color3f( 0.0f / 255.0f, 158.0f / 255.0f, 224.0f / 255.0f ) ),
-	F_b( Surface.F, 'b', new Color3f( 0.0f / 255.0f, 56.0f / 255.0f, 136.0f / 255.0f ) ),
-	F_c( Surface.F, 'c', new Color3f( 243.0f / 255.0f, 153.0f / 255.0f, 17.0f / 255.0f ) ),
-	F_d( Surface.F, 'd', new Color3f( 255.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f ) ), 
-	F_e( Surface.F, 'e', new Color3f( 232.0f / 255.0f, 84.0f / 255.0f, 18.0f / 255.0f ) ),
-	F_f( Surface.F, 'f', new Color3f( 203.0f / 255.0f, 83.0f / 255.0f, 150.0f / 255.0f ) ),
+	F_a( Surface.F, 'a', new Color3f( 0.0f / 255.0f, 173.0f / 255.0f, 239.0f / 255.0f ) ),
+	F_b( Surface.F, 'b', new Color3f( 255.0f / 255.0f, 221.0f / 255.0f, 0.0f / 255.0f ) ),
+	F_c( Surface.F, 'c', new Color3f( 200.0f / 255.0f, 89.0f / 255.0f, 161.0f / 255.0f ) ),
+	F_d( Surface.F, 'd', new Color3f( 241.0f / 255.0f, 92.0f / 255.0f, 34.0f / 255.0f ) ), 
+	F_e( Surface.F, 'e', new Color3f( 247.0f / 255.0f, 151.0f / 255.0f, 39.0f / 255.0f ) ),
+	F_f( Surface.F, 'f', new Color3f( 27.0f / 255.0f, 62.0f / 255.0f, 147.0f / 255.0f ) ),
 	
 	M_t( Surface.M, 't', new Color3f( 101.0f / 255.0f, 105.0f / 255.0f, 109.0f / 255.0f ) ),
 	
-	G_a( Surface.G, 'a', new Color3f( 0.0f / 255.0f, 158.0f / 255.0f, 224.0f / 255.0f ) ),
-	G_b( Surface.G, 'b', new Color3f( 0.0f / 255.0f, 56.0f / 255.0f, 136.0f / 255.0f ) ),
-	G_c( Surface.G, 'c', new Color3f( 243.0f / 255.0f, 153.0f / 255.0f, 17.0f / 255.0f ) ),
-	G_d( Surface.G, 'd', new Color3f( 255.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f ) ), 
-	G_e( Surface.G, 'e', new Color3f( 232.0f / 255.0f, 84.0f / 255.0f, 18.0f / 255.0f ) ),
-	G_f( Surface.G, 'f', new Color3f( 203.0f / 255.0f, 83.0f / 255.0f, 150.0f / 255.0f ) );
+	G_a( Surface.G, 'a', new Color3f( 0.0f / 255.0f, 173.0f / 255.0f, 239.0f / 255.0f ) ),
+	G_b( Surface.G, 'b', new Color3f( 255.0f / 255.0f, 221.0f / 255.0f, 0.0f / 255.0f ) ),
+	G_c( Surface.G, 'c', new Color3f( 200.0f / 255.0f, 89.0f / 255.0f, 161.0f / 255.0f ) ),
+	G_d( Surface.G, 'd', new Color3f( 241.0f / 255.0f, 92.0f / 255.0f, 34.0f / 255.0f ) ), 
+	G_e( Surface.G, 'e', new Color3f( 247.0f / 255.0f, 151.0f / 255.0f, 39.0f / 255.0f ) ),
+	G_f( Surface.G, 'f', new Color3f( 27.0f / 255.0f, 62.0f / 255.0f, 147.0f / 255.0f ) );
 	
 	public static interface ValueChangeListener
 	{
