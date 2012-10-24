@@ -159,13 +159,16 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 										Parameter.F_a, Parameter.F_b, Parameter.F_c, Parameter.F_d, Parameter.F_e, Parameter.F_f,
 										Parameter.G_a, Parameter.G_b, Parameter.G_c, Parameter.G_d, Parameter.G_e, Parameter.G_f };
 									final Parameter param = params[ id - 1 ];
-									SwingUtilities.invokeLater( new Runnable()
+									if( param.isActive() )
 									{
-										public void run()
+										SwingUtilities.invokeLater( new Runnable()
 										{
-											param.setValue( param.getValue() + ( relative_angle / param.getSpeed() ) * param.getRange() );
-										}
-									} );							
+											public void run()
+											{
+												param.setValue( param.getValue() + ( relative_angle / param.getSpeed() ) * param.getRange() );
+											}
+										} );
+									}
 								}
 								else
 								{
