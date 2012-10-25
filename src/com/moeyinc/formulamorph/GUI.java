@@ -481,17 +481,26 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			sb.append( p.getName() );
 			sb.append( "}[1]{\\fgcolor{");
 			sb.append( p.getLaTeXColorName() );
-			sb.append( "}{#1}}\n" );				
+			sb.append( "}{#1}}\n" );		
+			
+			sb.append( "\\newcommand{\\FMB");
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}[1]{\\FMC" ); 
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "{\\FMOvalbox[0.4em]{\\fgcolor{white}{#1}}}}\n" );	
+			
 			sb.append( "\\newcommand{\\FMP" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}{\\FMC" ); 
+			sb.append( "}{\\FMB" ); 
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "{\\FMOvalbox[0.4em]{\\fgcolor{white}{\\vphantom{-}\\jlmDynamic{FMParam" );
+			sb.append( "{\\jlmDynamic{FMParam" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}\\vphantom{-}}}}}\n" );
+			sb.append( "}\\vphantom{-}}}\n" );
     	}
     	
     	String rem;
@@ -797,7 +806,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\text{\\fixheight " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{\\fixheight Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "}\\end{array}" );
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}\n" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "{" + props.getProperty( "surface_equation_latex_size", "" ) + "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMB", "\\\\FMB" + surf.name() ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}}\n" );
     }
 
     public void setTransformationOnPath( double t ) { this.rotationAnimation.setPathPosition( t ); }
