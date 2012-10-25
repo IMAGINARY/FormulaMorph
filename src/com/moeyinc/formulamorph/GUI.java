@@ -488,7 +488,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			sb.append( "}{\\FMC" ); 
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "{\\ovalbox{\\fgcolor{white}{\\vphantom{-}\\jlmDynamic{FMParam" );
+			sb.append( "{\\FMOvalbox[0.4em]{\\fgcolor{white}{\\vphantom{-}\\jlmDynamic{FMParam" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
 			sb.append( "}\\vphantom{-}}}}}\n" );

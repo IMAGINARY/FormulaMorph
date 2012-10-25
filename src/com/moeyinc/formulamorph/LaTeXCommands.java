@@ -1,23 +1,7 @@
 package com.moeyinc.formulamorph;
 
-import org.scilab.forge.jlatexmath.Atom;
-import org.scilab.forge.jlatexmath.EmptyAtom;
-import org.scilab.forge.jlatexmath.ScaleAtom;
-import org.scilab.forge.jlatexmath.ResizeAtom;
-import org.scilab.forge.jlatexmath.RotateAtom;
-import org.scilab.forge.jlatexmath.TeXParser;
-import org.scilab.forge.jlatexmath.ParseException;
-import org.scilab.forge.jlatexmath.ParseOption;
-import org.scilab.forge.jlatexmath.TeXFormula;
-import org.scilab.forge.jlatexmath.TeXEnvironment;
-import org.scilab.forge.jlatexmath.TeXConstants;
-import org.scilab.forge.jlatexmath.SpaceAtom;
-import org.scilab.forge.jlatexmath.Box;
-import org.scilab.forge.jlatexmath.FBoxAtom;
-import org.scilab.forge.jlatexmath.FramedBox;
-import org.scilab.forge.jlatexmath.dynamic.DynamicAtom;
-import org.scilab.forge.jlatexmath.dynamic.ExternalConverter;
-import org.scilab.forge.jlatexmath.dynamic.ExternalConverterFactory;
+import org.scilab.forge.jlatexmath.*;
+import org.scilab.forge.jlatexmath.dynamic.*;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -67,15 +51,17 @@ public class LaTeXCommands {
 			"		</CreateCommand>\n" +
 			"		<Return name=\"f\" />\n" +
 			"	</Command>\n" +
-/*			"	<Command name=\"ovalfcolorbox\" enabled=\"true\">\n" +
+			"	<Command name=\"FMOvalbox\" enabled=\"true\">\n" +
 			"		<CreateCommand name=\"f\">\n" +
-			"			<Argument type=\"String\" value=\"Foo.FooPackage\" />\n" +
-			"			<Argument type=\"String\" value=\"ovalFColorBox_macro\" />\n" +
-			"			<!-- the command ovalcolorfbox has 2 arguments (color and text)-->\n" +
-			"			<Argument type=\"float\" value=\"2\" />\n" +
+			"			<Argument type=\"String\" value=\"com.moeyinc.formulamorph.LaTeXCommands\" />\n" +
+			"			<Argument type=\"String\" value=\"FMOvalbox_macro\" />\n" +
+			"			<!-- the command FMOvalbox has 1 argument (text)-->\n" +
+			"			<Argument type=\"float\" value=\"1\" />\n" +
+			"			<!-- and an optional line width argument placed before the main argument -->\n" +
+			"			<Argument type=\"float\" value=\"1\" />\n" +
 			"		</CreateCommand>\n" +
 			"		<Return name=\"f\" />\n" +
-			"	</Command>\n" +*/
+			"	</Command>\n" +
 			"</PredefinedCommands>\n";
 
         TeXFormula.addPredefinedCommands( new ByteArrayInputStream( xml.getBytes()) );
@@ -274,44 +260,52 @@ public class LaTeXCommands {
 	    }
 	}	
     
-/*
-    public Atom ovalFColorBox_macro(TeXParser tp, String[] args) throws ParseException {
-        return new TeXFormula( args[1] ).root;
+
+    public Atom FMOvalbox_macro(TeXParser tp, String[] args) throws ParseException {
+    	
+    	if( args.length > 2 )
+    	{
+    		float[] length = SpaceAtom.getLength( args[ 2 ] );
+    		return new FMOvalBoxAtom( new TeXFormula( args[1] ).root, (int) length[0], length[1] );
+    	}
+    	else
+    		return new FMOvalBoxAtom( new TeXFormula( args[1] ).root );
     }
 
-	public class OvalColorAtom extends FBoxAtom {
+       
+    
+	public class FMOvalBoxAtom extends FBoxAtom {
+ 
+		int unit;
+    	float thickness;
+    	boolean use_thickness = false;
+    	
+		public FMOvalBoxAtom( Atom base ) {
+			super(base);
+		}
 
-		public OvalColorAtom(Atom base) {
-		super(base);
+		public FMOvalBoxAtom( Atom base, int unit, float thickness ) {
+			super(base);
+			this.unit = unit;
+			this.thickness = thickness;
+			this.use_thickness = true;
 		}
-		
-		public Box createBox(TeXEnvironment env) {
-		return new OvalFColorBox((FramedBox) super.createBox(env));
-		}
+
+	    public Box createBox(TeXEnvironment env) {
+	    	
+	    	Box bbase = base.createBox(env);
+	    	float drt;
+	    	if( use_thickness )
+	    		drt = SpaceAtom.getFactor( unit, env) * thickness;
+	    	else
+	    		drt = env.getTeXFont().getDefaultRuleThickness(env.getStyle());
+	    	float space = INTERSPACE * SpaceAtom.getFactor(TeXConstants.UNIT_EM, env);
+	    	if (bg == null) {
+	    	   return new OvalBox( new FramedBox(bbase, drt, space) );
+	    	} else {
+	    	   env.isColored = true;
+	    	   return new OvalBox( new FramedBox(bbase, drt, space, line, bg) );
+	    	}
+	    }
 	}
-
-	public class OvalFColorBox extends FramedBox {
-		
-		private float shadowRule;
-
-		public OvalFColorBox(FramedBox fbox) {
-		super(fbox.box, fbox.thickness, fbox.space);
-		}
-
-		public void draw(Graphics2D g2, float x, float y) {
-		box.draw(g2, x + space + thickness, y);
-		Stroke st = g2.getStroke();
-		g2.setStroke(new BasicStroke(thickness, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER));
-		float th = thickness / 2;
-		float r = 0.5f * Math.min(width - thickness, height + depth - thickness);
-		g2.draw(new RoundRectangle2D.Float(x + th, y - height + th, width - thickness, height + depth - thickness, r, r));
-		//drawDebug(g2, x, y);
-		g2.setStroke(st);
-		}
-
-		public int getLastFontId() {
-		return box.getLastFontId();
-		}
-	}
-*/
 }
