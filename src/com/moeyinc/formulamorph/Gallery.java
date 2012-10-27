@@ -18,6 +18,8 @@ import de.mfo.jsurfer.util.BasicIO;
 
 public class Gallery
 {
+	public enum Level { BASIC, INTERMEDIATE, ADVANCED };
+	
 	public class GalleryItem extends ImageScaler
 	{
 		private File jsurfFile;
@@ -31,6 +33,7 @@ public class Gallery
 		}
 		
 		public Properties jsurfProperties() { return jsurf; }
+		public Level level() { return Gallery.this.level; }
 		
 		public void reload()
 			throws FileNotFoundException, Exception
@@ -50,11 +53,14 @@ public class Gallery
 	private Properties defaults;
 	private ArrayList< GalleryItem > items;
 	private List< GalleryItem > unmodifiableItems;
+	private Level level;
 	
-	public Gallery( File folder )
+	public Gallery( Level level, File folder )
 		throws IOException, Exception
 	{
-		System.out.println( "loading gallery " + folder.getAbsolutePath() );		
+		System.out.println( "loading " + level.name() + " gallery " + folder.getAbsolutePath() );		
+		
+		this.level = level;
 		
 		File defaultsFile = new File( folder, "defaults.jsurf" );
 		System.out.println( "\tloading defaults " + defaultsFile.getParentFile().getName() + File.separator + defaultsFile.getName() );
@@ -91,6 +97,8 @@ public class Gallery
 	        }
 	    }
 	}
+	
+	public Level level() { return level; }
 	
 	public List< GalleryItem > getItems()
 	{

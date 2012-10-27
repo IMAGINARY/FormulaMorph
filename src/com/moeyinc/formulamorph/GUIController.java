@@ -18,16 +18,18 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		
 	public GUIController()
 	{
-		this.setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
+		this.setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
 		this.setBorder( new EmptyBorder( 10, 0, 10, 0 ) );
+		
+		JPanel panelForAllSliders = new JPanel();
 		Parameter last_param = null;
 		for( Parameter param : Parameter.values() )
 		{
-			if( last_param == null || last_param.getSurface() != param.getSurface() )
+			if( last_param != null && last_param.getSurface() != param.getSurface() )
 			{
 				JSeparator s = new JSeparator( JSeparator.VERTICAL );
 				s.setPreferredSize(new Dimension(5,200));
-				this.add( s );
+				panelForAllSliders.add( s );
 			}
 			last_param = param;
 
@@ -45,61 +47,63 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 			p.addActivationStateListener( this );
 			p.addValueChangeListener( this );
 			p2s.put( p, s );
-			this.add( slider_panel );
+			panelForAllSliders.add( slider_panel );
 		}
-		JSeparator s = new JSeparator( JSeparator.VERTICAL );
-		s.setPreferredSize(new Dimension(5,200));
-		this.add( s );
 
+		this.add( panelForAllSliders, 0 );
 		
-		JPanel buttonPanelLeft = new JPanel();
-		buttonPanelLeft.setLayout( new BoxLayout( buttonPanelLeft, BoxLayout.Y_AXIS ) );
+		
+		JPanel lrButtonPanel = new JPanel();
+		lrButtonPanel.setLayout( new BoxLayout( lrButtonPanel, BoxLayout.X_AXIS ) );
+		
+		String[] levels = { Gallery.Level.BASIC.name(), Gallery.Level.INTERMEDIATE.name(), Gallery.Level.ADVANCED.name() };
+		JComboBox levelsLeft = new JComboBox( levels );
+		levelsLeft.setMaximumSize( levelsLeft.getPreferredSize() );
+		levelsLeft.addActionListener( new ActionListener() { public void actionPerformed(ActionEvent e) { Main.gui().setLevel( Surface.F, Gallery.Level.valueOf( ( String ) ( ( JComboBox ) e.getSource() ).getSelectedItem() ) ); } } );
+		lrButtonPanel.add( levelsLeft );
 		
 		JButton screenshotLeft = new JButton( "Screenshot Left" );
 		screenshotLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
-		buttonPanelLeft.add( screenshotLeft );
+		lrButtonPanel.add( screenshotLeft );
 		
 		JButton reloadLeft = new JButton( "Reload Left" );
 		reloadLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.F ); } catch ( Exception e ) { System.err.println( "Unable to reload left surface." ); e.printStackTrace( System.err ); } } } );
-		buttonPanelLeft.add( reloadLeft );
+		lrButtonPanel.add( reloadLeft );
 
 		JButton prevLeft = new JButton( "Previous Left" );
 		prevLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().previousSurface( Surface.F ); } } );
-		buttonPanelLeft.add( prevLeft );
+		lrButtonPanel.add( prevLeft );
 		
 		JButton nextLeft = new JButton( "Next Left" );
 		nextLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().nextSurface( Surface.F ); } } );
-		buttonPanelLeft.add( nextLeft );
+		lrButtonPanel.add( nextLeft );		
 		
-		this.add( buttonPanelLeft, 0 );
-
-		JPanel buttonPanelRight = new JPanel();
-		buttonPanelRight.setLayout( new BoxLayout( buttonPanelRight, BoxLayout.Y_AXIS ) );
+		lrButtonPanel.add( Box.createHorizontalGlue() );
 		
-		JButton screenshotRight = new JButton( "Screenshot Right" );
-		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
-		buttonPanelRight.add( screenshotRight );
-				
-		JButton reloadRight = new JButton( "Reload Right" );
-		reloadRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.G ); } catch ( Exception e ) { System.err.println( "Unable to reload right surface." ); e.printStackTrace( System.err ); } } } );
-		buttonPanelRight.add( reloadRight );
-
 		JButton prevRight = new JButton( "Previous Right" );
 		prevRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().previousSurface( Surface.G ); } } );
-		buttonPanelRight.add( prevRight );
-		
+		lrButtonPanel.add( prevRight );
+
 		JButton nextRight = new JButton( "Next Right" );
 		nextRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().nextSurface( Surface.G ); } } );
-		buttonPanelRight.add( nextRight );
+		lrButtonPanel.add( nextRight );
+		
+		JButton reloadRight = new JButton( "Reload Right" );
+		reloadRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.G ); } catch ( Exception e ) { System.err.println( "Unable to reload right surface." ); e.printStackTrace( System.err ); } } } );
+		lrButtonPanel.add( reloadRight );
 
-		this.add( buttonPanelRight );
+		JButton screenshotRight = new JButton( "Screenshot Right" );
+		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
+		lrButtonPanel.add( screenshotRight );
 
-		JSeparator s2 = new JSeparator( JSeparator.VERTICAL );
-		s2.setPreferredSize(new Dimension(5,200));
-		this.add( s2 );
+		JComboBox levelsRight = new JComboBox( levels );
+		levelsRight.addActionListener( new ActionListener() { public void actionPerformed(ActionEvent e) { Main.gui().setLevel( Surface.G, Gallery.Level.valueOf( ( String ) ( ( JComboBox ) e.getSource() ).getSelectedItem() ) ); } } );
+		lrButtonPanel.add( levelsRight );				
+		
+		this.add( lrButtonPanel );
 		
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.Y_AXIS ) );
+		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.X_AXIS ) );
 		
 		JButton pauseAnim = new JButton( "Pause" );
 		pauseAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().pauseAnimation(); } } );

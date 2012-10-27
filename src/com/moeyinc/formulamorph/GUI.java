@@ -31,57 +31,15 @@ import de.mfo.jsurfer.rendering.*;
 import de.mfo.jsurfer.util.BasicIO;
 
 public class GUI extends JFrame implements Parameter.ValueChangeListener
-{
-	public enum Level { BASIC, INTERMEDIATE, ADVANCED };
-	
-	public enum FMGallery
-	{
-		BASIC_F( Surface.F, Level.BASIC, new File( "gallery" + File.separator + "basic" ) ),
-		INTERMEDIATE_F( Surface.F, Level.INTERMEDIATE, new File( "gallery" + File.separator + "intermediate" ) ),
-		ADVANCED_F( Surface.F, Level.ADVANCED, new File( "gallery" + File.separator + "advanced" ) ),
-		BASIC_G( Surface.G, Level.BASIC, new File( "gallery" + File.separator + "basic" ) ),
-		INTERMEDIATE_G( Surface.G, Level.INTERMEDIATE, new File( "gallery" + File.separator + "intermediate" ) ),
-		ADVANCED_H( Surface.G, Level.ADVANCED, new File( "gallery" + File.separator + "advanced" ) );
-		
-		private FMGallery( Surface s, Level l, File f )
-		{
-			surface = s;
-			level = l;
-			Gallery tmp_gallery = null;
-			try
-			{
-				tmp_gallery = new Gallery( f );
-			}
-			catch( Exception e )
-			{
-				System.err.println( "Unable to initialize galleries" );
-				e.printStackTrace( System.err );
-				System.exit( -1 );
-			}
-			gallery = tmp_gallery;
-		}
-		
-		public final Surface surface;
-		public final Level level;
-		public final Gallery gallery;
-		
-		public static FMGallery get( Surface s, Level l )
-		{
-			for( FMGallery g : values() )
-				if( g.surface == s && g.level == l )
-					return g;
-			return null;
-		}
-	}	
-	
+{	
 	class SurfaceGUIElements
 	{
 		final public JSurferRenderPanel panel;
 		final public LaTeXLabel title;
 		final public LaTeXLabel equation;
 		final private Surface surface;
-		private Level level;
-		private FMGallery gallery;
+		private List< Gallery.GalleryItem > gallery_items;
+		private List< Gallery.GalleryItem > gallery_items_unmodifyable;
 		private int id_in_gallery;
 		private ArrayList< JPanel > gallery_panels;
 		private List< JPanel > gallery_panels_unmodifiable;
@@ -89,8 +47,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		public SurfaceGUIElements( Surface s )
 		{
 			surface = s;
-			level = Level.BASIC;
-			gallery = FMGallery.get( s, level );
 			id_in_gallery = 0;
 
 			LaTeXCommands.getDynamicLaTeXMap().put( "FMImage" + s.name(), "\\includejavaimage[interpolation=bicubic]{FMImage" + s.name() + "}" );
@@ -115,18 +71,35 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			}
 			gallery_panels.get( gallery_panels.size() / 2 ).setBorder( BorderFactory.createLineBorder( Color.WHITE, 3 ) );		
 			gallery_panels_unmodifiable = Collections.unmodifiableList( gallery_panels );
+			
+			// load galleries
+			gallery_items = new ArrayList< Gallery.GalleryItem >();
+			gallery_items_unmodifyable = Collections.unmodifiableList( gallery_items );
+			try
+			{
+				switch( surface )
+				{
+					case F:
+					case G:
+						this.gallery_items.addAll( new Gallery( Gallery.Level.BASIC, new File( "gallery" + File.separator + "basic" ) ).getItems() );
+						this.gallery_items.addAll( new Gallery( Gallery.Level.INTERMEDIATE, new File( "gallery" + File.separator + "intermediate" ) ).getItems() );
+						this.gallery_items.addAll( new Gallery( Gallery.Level.ADVANCED, new File( "gallery" + File.separator + "advanced" ) ).getItems() );
+						break;
+					default:
+						break;
+				}
+			}
+			catch( Exception e )
+			{
+				System.err.println( "Unable to initialize galleries" );
+				e.printStackTrace( System.err );
+				System.exit( -1 );
+			}
 		}
-		
-		public void setGalleryLevel( Level l )
-		{
-			level = l;
-			gallery = FMGallery.get( surface, level );
-		}
-		
-		public FMGallery gallery() { return gallery; }
 		
 		public int id() { return id_in_gallery; }
 		public void setId( int id ) { id_in_gallery = id; }
+		public List< Gallery.GalleryItem > galleryItems() { return gallery_items_unmodifyable; }
 		
 		public List< JPanel > galleryPanels() { return gallery_panels_unmodifiable; }
 		public int highlightedGalleryPanel() { return 3; }
@@ -618,12 +591,27 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	nextSurface( s, -offset );   	
     }
     
+    public void setLevel( Surface s, Gallery.Level level ) // jump to the middle item in the gallery that has the requested level
+    {
+    	if( s2g( s ).galleryItems().get( s2g( s ).id() ).level() != level )
+    	{
+	    	int id, count;
+	    	List< Gallery.GalleryItem > galleryItems = s2g( s ).galleryItems();
+	    	for( id = 0; id < galleryItems.size() && galleryItems.get( id ).level() != level; ++id )
+	    		; // find first item with requested level
+	    	for( count = 0; count + id < galleryItems.size() && galleryItems.get( id ).level() == level; ++count )
+	    		; // count items which have that level starting from the first one
+	    	s2g( s ).setId( id + count / 2 );
+	    	idChanged( s );
+    	}
+    }
+    
     public void idChanged( Surface s )
     {
     	if( s == Surface.M )
     		return;
     	
-    	List< Gallery.GalleryItem > galleryItems = s2g( s ).gallery().gallery.getItems();
+    	List< Gallery.GalleryItem > galleryItems = s2g( s ).galleryItems();
     	if( s2g( s ).id() < 0 )
     	{
     		s2g( s ).setId( 0 );
@@ -644,7 +632,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	}
     	catch( Exception e )
     	{
-    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + s2g( s ).gallery().level + " gallery of " + s.name() );
+    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + galleryItems.get( s2g( s ).id() ).level().name() + " gallery of " + s.name() );
     		e.printStackTrace();
     		return;
     	}
@@ -741,7 +729,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     public void reload( Surface s )
     	throws IOException, Exception
     {
-    	s2g( s ).gallery().gallery.getItems().get( s2g( s ).id() ).reload();
+    	s2g( s ).galleryItems().get( s2g( s ).id() ).reload();
     	idChanged( s );
     }
     
