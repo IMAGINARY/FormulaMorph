@@ -10,6 +10,7 @@ import javax.swing.border.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.vecmath.*;
+import javax.imageio.ImageIO;
 
 import java.io.*;
 import java.net.*;
@@ -31,21 +32,29 @@ import de.mfo.jsurfer.rendering.*;
 import de.mfo.jsurfer.util.BasicIO;
 
 public class GUI extends JFrame implements Parameter.ValueChangeListener
-{	
+{		
 	class SurfaceGUIElements
 	{
 		final public JSurferRenderPanel panel;
 		final public LaTeXLabel title;
 		final public LaTeXLabel equation;
+		final public JPanel levelIcon;
+		final public LaTeXLabel levelLabel;
 		final private Surface surface;
 		private List< Gallery.GalleryItem > gallery_items;
 		private List< Gallery.GalleryItem > gallery_items_unmodifyable;
 		private int id_in_gallery;
 		private ArrayList< JPanel > gallery_panels;
 		private List< JPanel > gallery_panels_unmodifiable;
+		private Map< Gallery.Level, ImageScaler > levelIcons;
 		
 		public SurfaceGUIElements( Surface s )
 		{
+			levelIcons = new EnumMap< Gallery.Level, ImageScaler >( Gallery.Level.class );
+			levelIcons.put( Gallery.Level.BASIC, new ImageScaler( sierpinskiBASIC ) );
+			levelIcons.put( Gallery.Level.INTERMEDIATE, new ImageScaler( sierpinskiINTERMEDIATE ) );
+			levelIcons.put( Gallery.Level.ADVANCED, new ImageScaler( sierpinskiADVANCED ) );
+			
 			surface = s;
 			id_in_gallery = 0;
 
@@ -60,6 +69,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			
 			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
 			//this.equation.setBackground( Color.GRAY ); this.equation.setOpaque( true );
+			
+			this.levelIcon = new JPanel( new BorderLayout() );
+			this.levelLabel = new LaTeXLabel( "\\tiny\\fgcolor{white}{\\jlmDynamic{FMLevel" + s.name() + "}}" );
 			
 			gallery_panels = new ArrayList< JPanel >();
 			for( int i = 0; i < 7; ++i )
@@ -103,6 +115,13 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		
 		public List< JPanel > galleryPanels() { return gallery_panels_unmodifiable; }
 		public int highlightedGalleryPanel() { return 3; }
+		
+		public void setLevelIcon( Gallery.Level l )
+		{
+		    LaTeXCommands.getDynamicLaTeXMap().put( "FMLevel" + surface.name(), l.name().substring(0,1).toUpperCase() + l.name().substring(1).toLowerCase() );
+			this.levelIcon.removeAll();
+			this.levelIcon.add( this.levelIcons.get( l ) );
+		}
 	}
 	
 	JPanel content; // fixed 16:9 top container
@@ -114,7 +133,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	static BufferedImage triangle;
 	static BufferedImage triangleFlipped;
 	static {
-		triangle = new BufferedImage( 100, 100, BufferedImage.TYPE_INT_ARGB );
+		triangle = new BufferedImage( 100, 100, BufferedImage.TYPE_BYTE_GRAY );
 		Graphics2D g = (Graphics2D) triangle.getGraphics();
 		g.setColor( new Color( 0, 0, 0, 0 ) );
 		g.fillRect( 0, 0, triangle.getWidth(), triangle.getHeight() );
@@ -138,6 +157,25 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	ImageScaler triangleGTop = new ImageScaler( triangleFlipped );
 	ImageScaler triangleGBottom = new ImageScaler( triangle );
 	
+	static BufferedImage sierpinskiBASIC = loadIMGResource( "BASIC.png" );
+	static BufferedImage sierpinskiINTERMEDIATE = loadIMGResource( "INTERMEDIATE.png" );
+	static BufferedImage sierpinskiADVANCED = loadIMGResource( "ADVANCED.png" );
+	
+	public static BufferedImage loadIMGResource( String path )
+	{
+		InputStream stream = GUI.class.getResourceAsStream( path );
+		try
+		{ 
+			return ImageIO.read( stream ); 
+		}
+		catch (IOException e)
+		{
+			System.err.println( "unable to load resource \"" + path + "\"" );
+			e.printStackTrace();
+		}
+		return new BufferedImage( 1,1, BufferedImage.TYPE_BYTE_GRAY );
+	}
+			
 	//JPanel blackStrip;
 
 	RotationAnimation rotationAnimation;
@@ -212,6 +250,11 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		content.add( triangleFBottom );
 		content.add( triangleGTop );
 		content.add( triangleGBottom );
+
+		content.add( s2g( Surface.F ).levelLabel );
+		content.add( s2g( Surface.F ).levelIcon );
+		content.add( s2g( Surface.G ).levelLabel );
+		content.add( s2g( Surface.G ).levelIcon );
 		
 		//content.add( blackStrip );
 
@@ -267,42 +310,58 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	{
 		//blackStrip.setBounds( computeBoundsFullHD( content, 0, 84, 1920, 624 ) );
 		
-		s2g( Surface.F ).panel.setBounds( computeBoundsFullHD( content, 373 - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );		
-		s2g( Surface.M ).panel.setBounds( computeBoundsFullHD( content, 1920 / 2 - 624 / 2, 84, 624, 624  ) );
-		s2g( Surface.G ).panel.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - 550 / 2, 84 + 624 / 2 - 550 / 2, 550, 550 ) );
+		int yCenter = 380; 
+		
+		int surfXStart = 36 + 62 + 1;
+		int surfSize = ( 1920 - 2 * surfXStart ) / 3; 
+		int surfYStart = yCenter - surfSize / 2;
+		s2g( Surface.F ).panel.setBounds( computeBoundsFullHD( content, surfXStart, surfYStart, surfSize, surfSize ) );		
+		s2g( Surface.M ).panel.setBounds( computeBoundsFullHD( content, surfXStart + surfSize, surfYStart, surfSize, surfSize ) );		
+		s2g( Surface.G ).panel.setBounds( computeBoundsFullHD( content, surfXStart + 2 * surfSize, surfYStart, surfSize, surfSize ) );		
 
 		int titlePrefWidth = 700;
-		int titlePrefHeight = 120;
+		int titlePrefHeight = surfYStart;
 		s2g( Surface.F ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
-		s2g( Surface.F ).title.setBounds( computeBoundsFullHD( content, 373 - titlePrefWidth / 2, 0, titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.F ).title.setBounds( computeBoundsFullHD( content, surfXStart + ( surfSize - titlePrefWidth ) / 2.0, 0, titlePrefWidth, titlePrefHeight ) );
 		s2g( Surface.G ).title.setPreferredSize( new Dimension( titlePrefWidth, titlePrefHeight ) );
-		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - titlePrefWidth / 2, 0, titlePrefWidth, titlePrefHeight ) );
+		s2g( Surface.G ).title.setBounds( computeBoundsFullHD( content, surfXStart + 2 * surfSize + ( surfSize - titlePrefWidth ) / 2.0, 0, titlePrefWidth, titlePrefHeight ) );
 
-		int elTop = (84 + 624 / 2 + 550 / 2);
-		int elPrefWidth = 570;
-		int elPrefHeight = 1080 - (84 + 624 / 2 + 550 / 2);
+		int elYStart = surfYStart + surfSize;
+		int elPrefHeight = 1080 - elYStart;
+		int elPrefWidth = 516;
+		double elXStart = surfXStart + ( surfSize - elPrefWidth ) / 2;
 		s2g( Surface.F ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
-		s2g( Surface.F ).equation.setBounds( computeBoundsFullHD( content, 373 - elPrefWidth / 2, elTop, elPrefWidth, elPrefHeight ) );
-		s2g( Surface.M ).equation.setPreferredSize( new Dimension( elPrefWidth, (int) ( elPrefHeight * 0.75 ) ) );
-		s2g( Surface.M ).equation.setBounds( computeBoundsFullHD( content, 1920 / 2 - elPrefWidth / 2, elTop + (elPrefHeight * 0.125), elPrefWidth, elPrefHeight * 0.75 ) );
+		s2g( Surface.F ).equation.setBounds( computeBoundsFullHD( content, elXStart, elYStart, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.M ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
+		s2g( Surface.M ).equation.setBounds( computeBoundsFullHD( content, 1920 / 2 - elPrefWidth / 2.0, elYStart, elPrefWidth, elPrefHeight ) );
 		s2g( Surface.G ).equation.setPreferredSize( new Dimension( elPrefWidth, elPrefHeight ) );
-		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, ( 1920 - 373 ) - elPrefWidth / 2, elTop, elPrefWidth, elPrefHeight ) );
+		s2g( Surface.G ).equation.setBounds( computeBoundsFullHD( content, 1920 - elXStart - elPrefWidth, elYStart, elPrefWidth, elPrefHeight ) );
 		
 		int gal_length = s2g( Surface.F ).galleryPanels().size();
 		int galSize = 62;
 		int spacing = 8;
-		int galYStart = 84 + 624 / 2 - ( gal_length * galSize + ( gal_length - 1 ) * spacing ) / 2;
+		int galXStart = 36;
+		int galYStart = yCenter - ( gal_length * galSize + ( gal_length - 1 ) * spacing ) / 2;
 		for( int i = 0; i < gal_length; ++i )
 		{
-			s2g( Surface.F ).galleryPanels().get( i ).setBounds( computeBoundsFullHD( content, 36, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+			s2g( Surface.F ).galleryPanels().get( i ).setBounds( computeBoundsFullHD( content, galXStart, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
 			s2g( Surface.F ).galleryPanels().get( i ).revalidate();
-			s2g( Surface.G ).galleryPanels().get( i ).setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
+			s2g( Surface.G ).galleryPanels().get( i ).setBounds( computeBoundsFullHD( content, 1920 - galXStart - galSize, galYStart + i * ( galSize + spacing ), galSize, galSize ) );
 			s2g( Surface.G ).galleryPanels().get( i ).revalidate();
 		}
-		triangleFTop.setBounds( computeBoundsFullHD( content, 36, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
-		triangleFBottom.setBounds( computeBoundsFullHD( content, 36, galYStart + gal_length * ( galSize + spacing ), galSize, galSize ) );
-		triangleGTop.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
-		triangleGBottom.setBounds( computeBoundsFullHD( content, 1920 - 36 - galSize, galYStart + gal_length * ( galSize + spacing ), galSize, galSize ) );
+		triangleFTop.setBounds( computeBoundsFullHD( content, galXStart, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
+		triangleFBottom.setBounds( computeBoundsFullHD( content, galXStart, galYStart + gal_length * ( galSize + spacing ), galSize, galSize ) );
+		triangleGTop.setBounds( computeBoundsFullHD( content, 1920 - galXStart - galSize, galYStart + -1 * ( galSize + spacing ), galSize, galSize ) );
+		triangleGBottom.setBounds( computeBoundsFullHD( content, 1920 - galXStart - galSize, galYStart + gal_length * ( galSize + spacing ), galSize, galSize ) );
+		
+		int galYEnd = galYStart + gal_length * ( galSize + spacing ) + galSize;
+		s2g( Surface.F ).levelIcon.setBounds( computeBoundsFullHD( content, galXStart, galYEnd + ( 1080 - galYEnd - galSize ) / 2.0, galSize, galSize ) );
+		s2g( Surface.G ).levelIcon.setBounds( computeBoundsFullHD( content, 1920 - galXStart - galSize, galYEnd + ( 1080 - galYEnd - galSize ) / 2.0, galSize, galSize ) );
+
+		s2g( Surface.F ).levelLabel.setPreferredSize( new Dimension( 2 * galSize, galSize / 2 ) );
+		s2g( Surface.F ).levelLabel.setBounds( computeBoundsFullHD( content, galXStart - galSize / 2.0, galYEnd + ( 1080 - galYEnd ) / 2.0 - galSize, 2 * galSize, galSize / 2 ) );
+		s2g( Surface.G ).levelLabel.setPreferredSize( new Dimension( 2 * galSize, galSize / 2 ) );
+		s2g( Surface.G ).levelLabel.setBounds( computeBoundsFullHD( content, 1920 - galXStart - 3 * galSize / 2.0, galYEnd + ( 1080 - galYEnd ) / 2.0 - galSize, 2 * galSize, galSize / 2 ) );
 		
 		repaint();
 	}
@@ -498,9 +557,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 //    					"\\fgcolor{white}{\n" + 
     						"\\begin{array}{c}\n" +
     							"\\ \\vspace{1em} \\\\\n" +
-    							"{\\Large\\FMDynamic[i]{FMTitle" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
+    							"{\\Large\\FMDynamic[i]{FMTitleWImage" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
-    							"\\hphantom{MMMMMMMMMMMMMMMMMMMa.}\n" +
+    							"\\hphantom{MMMMMMMMMMMMMMMMMa.}\n" +
     						"\\end{array}\n" +
 //    					"}\n" +
     					"\\right]\n" +
@@ -623,16 +682,19 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		return;
     	}
 
+    	Gallery.GalleryItem galleryItem = galleryItems.get( s2g( s ).id() );
+    	s2g( s ).setLevelIcon( galleryItem.level() );
+    	
     	s2g( s ).panel.setScheduleSurfaceRepaintEnabled( false );
     	s2g( Surface.M ).panel.setScheduleSurfaceRepaintEnabled( false );
     	
     	try
     	{
-    		loadFromProperties( s, galleryItems.get( s2g( s ).id() ).jsurfProperties() );
+    		loadFromProperties( s, galleryItem.jsurfProperties() );
     	}
     	catch( Exception e )
     	{
-    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + galleryItems.get( s2g( s ).id() ).level().name() + " gallery of " + s.name() );
+    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + galleryItem.level().name() + " gallery of " + s.name() );
     		e.printStackTrace();
     		return;
     	}
@@ -792,8 +854,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         asr.getFrontMaterial().loadProperties(props, "front_material_", "");
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
         
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\text{\\fixheight " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "}\\end{array}" );
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{\\fixheight Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "}\\end{array}" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\vphantom{T}\\\\\n\\text{\\fixheight " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "" ) + "}\\\\\n\\vphantom{.}\\end{array}" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleWImage" + surf.name(), "\\begin{array}{c}\n\\text{" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "{" + props.getProperty( "surface_equation_latex_size", "" ) + "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMB", "\\\\FMB" + surf.name() ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}}\n" );
     }
 
