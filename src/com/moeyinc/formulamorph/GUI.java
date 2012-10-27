@@ -860,8 +860,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "{" + props.getProperty( "surface_equation_latex_size", "" ) + "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMB", "\\\\FMB" + surf.name() ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}}\n" );
     }
 
-    public void setTransformationOnPath( double t ) { this.rotationAnimation.setPathPosition( t ); }
-    public double getTransformationOnPath() { return this.rotationAnimation.getPathPosition(); }
+    public void stepPath( int steps ) { this.rotationAnimation.stepPath( steps ); }
     public void pauseAnimation() { this.rotationAnimation.pause(); }
     public void resumeAnimation() { this.rotationAnimation.resume(); }
     
@@ -870,8 +869,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	boolean stop;
     	boolean pause;
     	Object lock;
-    	Quat4d[] rotations;
-    	double pathPosition;
+    	Quat4d current;
+    	Quat4d step;
     	
     	public RotationAnimation()
     	{
@@ -879,83 +878,48 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		pause = true;
     		lock = new Object();
     		
-    		setupRotationPath1();
+    		current = new Quat4d();
+    		current.set( new AxisAngle4d() );
+    		
+    		step = new Quat4d();
+    		step.set( new AxisAngle4d() );
+ 
+    		double angleStep = 6 * Math.PI / 1000;
+    		Quat4d rotX = new Quat4d(); rotX.set( new AxisAngle4d( 1, 0, 0, angleStep ) ); step.mul( rotX );
+    		Quat4d rotY = new Quat4d(); rotY.set( new AxisAngle4d( 0, 1, 0, angleStep ) ); step.mul( rotY );
+    		Quat4d rotZ = new Quat4d(); rotZ.set( new AxisAngle4d( 0, 0, 1, angleStep ) ); step.mul( rotZ );
     	}
     	
-    	public void setPathPosition( double t )
+    	public void setPathPosition()
     	{
-    		t -= (int) t;
-    		t = t < 0.0 ? t + 1.0 : t;
-    		pathPosition = t;
-    		
 			Matrix4d newRotation = new Matrix4d();
 			newRotation.setIdentity();
-			newRotation.setRotation( lookup( pathPosition ) );
+			newRotation.setRotation( current );
 			for( Surface s : Surface.values() )
 			{
 				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
 				GUI.this.s2g(s).panel.scheduleSurfaceRepaint();
-			}    		
+			}
     	}
-    	public double getPathPosition() { return pathPosition; }
-
-    	public void setupRotationPath1()
+    	
+    	public void stepPath( int steps )
     	{
-    		Quat4d rotStep = new Quat4d(); rotStep.set( new AxisAngle4d() );
-    		int steps = 3*360-1;
-    		{
-	    		double angleStep = 6 * Math.PI / steps;
-	    		Quat4d rotX = new Quat4d(); rotX.set( new AxisAngle4d( 1, 0, 0, angleStep ) ); rotStep.mul( rotX );
-	    		Quat4d rotY = new Quat4d(); rotY.set( new AxisAngle4d( 0, 1, 0, angleStep ) ); rotStep.mul( rotY );
-	    		Quat4d rotZ = new Quat4d(); rotZ.set( new AxisAngle4d( 0, 0, 1, angleStep ) ); rotStep.mul( rotZ );
-    		}
-    		AxisAngle4d aa = new AxisAngle4d(); aa.set(rotStep);
-    		
-    		Quat4d[] new_rotations = new Quat4d[ steps ];
-    		new_rotations[ 0 ] = new Quat4d(); new_rotations[ 0 ].set( new AxisAngle4d() );
-    		for( int step = 1; step < steps; ++step )
-    		{
-    			new_rotations[ step ] = new Quat4d();
-    			new_rotations[ step ].mul( new_rotations[ step - 1 ], rotStep );
-    		}
-    		rotations = new_rotations;
+    		for( int i = 0; i < steps; ++i )
+    			current.mul( step );
+    		for( int i = 0; i < -steps; ++i )
+    			current.mulInverse( step );
+    		setPathPosition();
     	}
     	
     	public void pause() { this.pause = true; }
     	public void resume() { if( pause ) { synchronized( lock ) { lock.notify(); } } this.pause = false; }
     	public void stop() { this.stop = true; }
     	
-    	public Quat4d lookup( double t )
-    	{
-     		if( t < 0 ) // ensure 0<=t<=1
-    			t = 1 + t - (int) t;
-    		else
-    			t = t - (int) t;
-    		int index = ( int ) Math.floor( t * rotations.length );
-    		t = t * rotations.length - index;
-    		    		
-    		Quat4d result = new Quat4d(); 
-    		result.interpolate( rotations[ index ], rotations[ ( index + 1 ) % rotations.length ], t );
-    		return result;
-    	}
-    	
     	public void run()
     	{
     		synchronized( lock )
     		{
-				try{ Thread.sleep( 500 ); } catch( Exception e ) {}
-	    		Matrix4d rotation = new Matrix4d();
-	    		rotation.setIdentity();
-	    		Matrix4d rotStep = new Matrix4d(); rotStep.setIdentity();
-	    		{
-		    		double angleStep = Math.PI / 1000;
-		    		Matrix4d rotX = new Matrix4d(); rotX.rotX( angleStep ); rotStep.mul( rotX );
-		    		Matrix4d rotY = new Matrix4d(); rotY.rotY( angleStep ); rotStep.mul( rotY );
-		    		Matrix4d rotZ = new Matrix4d(); rotZ.rotZ( angleStep ); rotStep.mul( rotZ );
-	    		}
-	    		//int[] angles = { 0, 90, 180, 270, 360 };
-	    		int iterations = 3900;
-	    		
+				try{ Thread.sleep( 500 ); } catch( Exception e ) {}	    		
 	    		while( !stop )
 	    		{
 	    			try
@@ -964,9 +928,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	    				if( pause )
 	    					lock.wait();
 	    			} catch( Exception e ) {}
-
-	    			setPathPosition( iterations / 4000.0 );
-	    			iterations = ( iterations + 1 ) % 4000;
+	    			stepPath( 1 );
+	    			setPathPosition();
 	    		}
     		}
     	}

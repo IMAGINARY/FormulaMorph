@@ -185,7 +185,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 									{
 										public void run()
 										{
-											Main.gui().setTransformationOnPath( Main.gui().getTransformationOnPath() + relative_angle / 360.0 );
+											Main.gui().stepPath( relative_angle );
 										}
 									} );							
 								}
