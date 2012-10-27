@@ -3,6 +3,7 @@ package com.moeyinc.formulamorph;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.EnumMap;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -107,8 +108,13 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 
 	class PhidgetReaderClient implements Runnable
 	{		
+		final int[] easterEggSequence = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5, -8)
+		private EnumMap< Surface, Integer > easterEggIndex = new EnumMap< Surface, Integer >( Surface.class );
+		
 		public void run()
 		{
+			easterEggIndex.put( Surface.F, 0 );
+			easterEggIndex.put( Surface.G, 0 );
 			while( !PhidgetInterface.this.shutdown )
 			{
 				try
@@ -136,13 +142,35 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 								{
 									final int offset = Integer.parseInt( values[ 0 ] );
 									final Surface surface = id == 1 ? Surface.F : Surface.G;
-									SwingUtilities.invokeLater( new Runnable()
+									
+									int eei = easterEggIndex.get( surface );
+									if( easterEggSequence[ eei ] * offset > 0 ) // offset has same direction as needed for easter egg
+										++eei;
+									else
+										eei = 0;
+									System.err.println(eei);
+									if( eei == easterEggSequence.length )
 									{
-										public void run()
+										// launch easter egg
+										SwingUtilities.invokeLater( new Runnable()
 										{
-											Main.gui().nextSurface( surface, offset );
-										}
-									} );
+											public void run()
+											{
+												Main.gui().selectEasterEggSurface( surface );
+											}
+										} );
+									}
+									else
+									{
+										SwingUtilities.invokeLater( new Runnable()
+										{
+											public void run()
+											{
+												Main.gui().nextSurface( surface, offset );
+											}
+										} );
+									}
+									easterEggIndex.put( surface, eei % easterEggSequence.length );
 								}
 								else
 								{

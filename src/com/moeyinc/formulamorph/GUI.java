@@ -665,6 +665,14 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	}
     }
     
+    private Gallery easterEggGallery = new Gallery( Gallery.Level.BASIC, new File( "gallery" + File.separator + "easter" ) );
+    private java.util.Random easterEggSelector = new java.util.Random();
+    public void selectEasterEggSurface( Surface s )
+    {
+    	List< Gallery.GalleryItem > items = easterEggGallery.getItems();
+    	setSurface(s, items.get( easterEggSelector.nextInt( items.size() ) ) );
+    }
+
     public void idChanged( Surface s )
     {
     	if( s == Surface.M )
@@ -684,21 +692,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
     	Gallery.GalleryItem galleryItem = galleryItems.get( s2g( s ).id() );
     	s2g( s ).setLevelIcon( galleryItem.level() );
-    	
-    	s2g( s ).panel.setScheduleSurfaceRepaintEnabled( false );
-    	s2g( Surface.M ).panel.setScheduleSurfaceRepaintEnabled( false );
-    	
-    	try
-    	{
-    		loadFromProperties( s, galleryItem.jsurfProperties() );
-    	}
-    	catch( Exception e )
-    	{
-    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + galleryItem.level().name() + " gallery of " + s.name() );
-    		e.printStackTrace();
-    		return;
-    	}
-
+    	    	
 		{	// set content of gallery panels 
 			List< JPanel > galleryPanels = s2g( s ).galleryPanels();
 	    	for( JPanel p : galleryPanels )
@@ -720,6 +714,25 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	    		}
 	    	}
 	    }
+		
+		setSurface( s, galleryItem );
+    }
+    
+    public void setSurface( Surface s, Gallery.GalleryItem galleryItem )
+    {
+    	s2g( s ).panel.setScheduleSurfaceRepaintEnabled( false );
+    	s2g( Surface.M ).panel.setScheduleSurfaceRepaintEnabled( false );
+
+    	try
+    	{
+    		loadFromProperties( s, galleryItem.jsurfProperties() );
+    	}
+    	catch( Exception e )
+    	{
+    		System.err.println( "Could not load item " + s2g( s ).id() + " of " + galleryItem.level().name() + " gallery of " + s.name() );
+    		e.printStackTrace();
+    		return;
+    	}
 
     	// set the morphed surface
     	AlgebraicSurfaceRenderer asr_F = s2g( Surface.F ).panel.getAlgebraicSurfaceRenderer();
@@ -785,7 +798,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	s2g( s ).panel.scheduleSurfaceRepaint();
     	s2g( Surface.M ).panel.scheduleSurfaceRepaint();
 		
-		repaint();
+		repaint();    	
     }
 
     public void reload( Surface s )
@@ -854,7 +867,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         asr.getFrontMaterial().loadProperties(props, "front_material_", "");
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
         
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\vphantom{T}\\\\\n\\text{\\fixheight " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "" ) + "}\\\\\n\\vphantom{.}\\end{array}" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\vphantom{T}\\\\\n\\text{\\fixheight{}" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "\\ " ) + "}\\\\\n\\vphantom{.}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleWImage" + surf.name(), "\\begin{array}{c}\n\\text{" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "{" + props.getProperty( "surface_equation_latex_size", "" ) + "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMB", "\\\\FMB" + surf.name() ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}}\n" );
