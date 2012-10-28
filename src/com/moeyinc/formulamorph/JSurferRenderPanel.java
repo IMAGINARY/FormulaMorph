@@ -136,7 +136,7 @@ public class JSurferRenderPanel extends JComponent
                             notiftyImageUpdateListeners( ib );
                         }
                     }
-
+                    
                     if( semaphore.tryAcquire( 100, TimeUnit.MILLISECONDS ) ) // wait some time, then start with high res drawing
                     {
                         semaphore.release();
@@ -196,7 +196,11 @@ public class JSurferRenderPanel extends JComponent
         	height = Math.max( 1, height );
         	
             // create color buffer
+        	int bg = new Color3f( 1.0f, 0, 0 ).get().getRGB();	
             ImgBuffer ib = new ImgBuffer( width, height );
+            for( int i = 0; i < height; i++ )
+            	for( int j = 0; j < width; j++ )
+            		ib.rgbBuffer[ i * width + j ] = bg;
 
             // do rendering
             /*
@@ -225,6 +229,7 @@ public class JSurferRenderPanel extends JComponent
             }
             catch( RenderingInterruptedException rie )
             {
+            	System.err.println("\t# interrupted");
                 return null;
             }
             catch( Throwable t )
