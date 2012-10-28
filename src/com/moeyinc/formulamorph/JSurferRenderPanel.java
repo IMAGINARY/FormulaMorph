@@ -196,11 +196,7 @@ public class JSurferRenderPanel extends JComponent
         	height = Math.max( 1, height );
         	
             // create color buffer
-        	int bg = new Color3f( 1.0f, 0, 0 ).get().getRGB();	
             ImgBuffer ib = new ImgBuffer( width, height );
-            for( int i = 0; i < height; i++ )
-            	for( int j = 0; j < width; j++ )
-            		ib.rgbBuffer[ i * width + j ] = bg;
 
             // do rendering
             /*
