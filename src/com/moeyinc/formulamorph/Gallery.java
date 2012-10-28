@@ -127,9 +127,8 @@ public class Gallery
         }
         asr.setBackgroundColor( BasicIO.fromColor3fString( defaults.getProperty( "background_color" ) ) );
 
-        Matrix4d identity = new Matrix4d();
-        identity.setIdentity();
-        asr.setTransform( BasicIO.fromMatrix4dString( defaults.getProperty( "rotation_matrix" ) ) );
+//        identity.setIdentity();
+//        asr.setTransform( BasicIO.fromMatrix4dString( defaults.getProperty( "rotation_matrix" ) ) );
         Matrix4d scaleMatrix = new Matrix4d();
         scaleMatrix.setIdentity();
         scaleMatrix.setScale( 1.0 / Double.parseDouble( defaults.getProperty( "scale_factor" ) ) );
