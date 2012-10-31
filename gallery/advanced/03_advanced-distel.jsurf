@@ -60,11 +60,11 @@ surface_parametermax_a=2.0
 surface_parameter_b=1.0
 surface_parametermin_b=0.0
 surface_parametermax_b=2.0
-surface_parameter_c=1.0
+surface_parameter_c=0.5
 surface_parametermin_c=0.0
 surface_parametermax_c=2.0
-surface_parameter_d=2.0
-surface_parametermin_d=-0.0
+surface_parameter_d=4.0
+surface_parametermin_d=0.0
 surface_parametermax_d=5.0
 
 
