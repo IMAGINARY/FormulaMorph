@@ -68,7 +68,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			//this.title.setBackground( Color.GRAY ); this.title.setOpaque( true ); 
 			
 			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
-			this.equation.setBackground( Color.GRAY ); this.equation.setOpaque( true );
+			//this.equation.setBackground( Color.GRAY ); this.equation.setOpaque( true );
 			
 			this.levelIcon = new JPanel( new BorderLayout() );
 			this.levelLabel = new LaTeXLabel( "\\tiny\\fgcolor{white}{\\jlmDynamic{FMLevel" + s.name() + "}}" );
@@ -658,7 +658,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 	    	List< Gallery.GalleryItem > galleryItems = s2g( s ).galleryItems();
 	    	for( id = 0; id < galleryItems.size() && galleryItems.get( id ).level() != level; ++id )
 	    		; // find first item with requested level
-	    	for( count = 0; count + id < galleryItems.size() && galleryItems.get( id ).level() == level; ++count )
+	    	for( count = 0; count + id < galleryItems.size() && galleryItems.get( id + count ).level() == level; ++count )
 	    		; // count items which have that level starting from the first one
 	    	s2g( s ).setId( id + count / 2 );
 	    	idChanged( s );
