@@ -15,7 +15,7 @@ light_position_2=0.0 -100.0 100.0
 camera_fov_y=60.0
 light_position_1=100.0 100.0 100.0
 light_position_0=-100.0 100.0 100.0
-front_material_color=0.231372549019608 0.831372549019608 0.180392156862745
+front_material_color=0.0 0.458823529411765 0.392156862745098
 background_color=1.0 1.0 1.0
 light_intensity_7=1.0
 front_material_ambient_intensity=0.4
@@ -68,6 +68,7 @@ surface_parametermax_d=2.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
-back_material_color=0.556862745098039 0.494117647058824 0.2
+back_material_color=0.341176470588235 0.752941176470588 0.909803921568628
+
 back_material_shininess=30.0
 back_material_diffuse_intensity=0.8

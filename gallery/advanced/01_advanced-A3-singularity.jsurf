@@ -48,21 +48,16 @@ light_status_0=ON
 camera_height=2.0
 surface_title=Singularity
 surface_title_latex=Singularity
-surface_equation=a*x^4+b*y^2-c*z^2+d
-surface_equation_latex=\\FMPa \\cdot x^4 +\\FMPb \\cdot y^2\\\\ - \\FMPc \\cdot z^2 + \\FMPd
+surface_equation=(x-b-a^2)*(x-b+a^2)*(x+b-a^2)*(x+b+a^2)+y^2-z^2
+surface_equation_latex=(x-\\FMPb-\\FMPa^2)\\cdot (x-\\FMPb\\\\+\\FMPa^2) \\cdot (x+\\FMPb-\\FMPa^2)\\\\ \\cdot (x+\\FMPb+\\FMPa^2)\\\\ +y^2-z^2
 
-surface_parameter_a=1.0
+
+surface_parameter_a=0.0
 surface_parametermin_a=0.0
-surface_parametermax_a=2.0
-surface_parameter_b=1.0
+surface_parametermax_a=1.0
+surface_parameter_b=0.0
 surface_parametermin_b=0.0
-surface_parametermax_b=2.0
-surface_parameter_c=0.0
-surface_parametermin_c=0.0
-surface_parametermax_c=2.0
-surface_parameter_d=0.0
-surface_parametermin_d=-2.0
-surface_parametermax_d=2.0
+surface_parametermax_b=1.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
