@@ -49,11 +49,11 @@ light_status_1=ON
 light_status_0=ON
 camera_height=2.0
 surface_title=Kummer Quartic
-surface_title_latex=Kummer Quartic
-surface_equation=(a*x^2+b*y^2+z^2-(0.5+2*c)^2)^2-(3.0*((0.5+2*c)^2)-1.0)/(3.0-((0.5+2*a)^2))*(1-z-d*x)*(1-z+d*x)*(1+z+d*y)*(1+z-d*y)
+surface_title_latex=Kummer\\\\Quartic
+surface_equation=(a*x^2+b*y^2+z^2-c^2)^2-(6*c^2-2)/(6-((1+4*a)^2))*(1-z-d*x)*(1-z+d*x)*(1+z+d*y)*(1+z-d*y)
 
-surface_equation_latex=(\\FMPa\\cdot x^2+ \\FMPb \\cdot y^2+z^2-(0.5+2\\cdot \\FMPc)^2)^2- \\\\ (3.0\\cdot((0.5+2\\cdot \\FMPc)^2)-1.0)/(3.0-((0.5+2\\cdot\\FMPa)^2))\\cdot (1-z-\\FMPd\\cdot x)\\\\\\cdot(1-z+\\FMPd\\cdot x)\\cdot(1+z+\\FMPd\\cdot y)\\cdot(1+z-\\FMPd\\cdot y)
-
+surface_equation_latex_size=\\footnotesize
+surface_equation_latex=(\\FMPa\\cdot x^2+\\FMPb\\cdot y^2+z^2-\\FMPc^2)^2\\\\-\\frac{6\\cdot \\FMPc^2-2}{6-((1+4\\cdot \\FMPa)^2)}\\cdot (1-z-\\FMPd\\cdot x)\\\\\\cdot (1-z+\\FMPd\\cdot x)\\cdot (1+z+\\FMPd\\cdot y)\\\\\\cdot (1+z-\\FMPd\\cdot y)
 
 
 
@@ -64,9 +64,9 @@ surface_parametermax_a=2.0
 surface_parameter_b=1.0
 surface_parametermin_b=0.0
 surface_parametermax_b=2.0
-surface_parameter_c=0.0
+surface_parameter_c=0.5
 surface_parametermin_c=0.0
-surface_parametermax_c=2.0
+surface_parametermax_c=4.0
 surface_parameter_d=1.414213562
 surface_parametermin_d=0.0
 surface_parametermax_d=2.0
