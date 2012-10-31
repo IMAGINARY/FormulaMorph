@@ -50,22 +50,21 @@ camera_height=2.0
 
 surface_title=Cayley Cubic
 surface_title_latex=Cayley Cubic 
-surface_equation=a*x^2+b*y^2+c*z^2+d*x*y*z-1
+surface_equation=a*(4/3)^2*x^2+b*(4/3)^2*y^2+c*(4/3)^2*z^2+d*(4/3)^3*x*y*z-1
 surface_equation_latex=\\FMPa\\cdot x^2+\\FMPb\\cdot y^2+\\FMPc\\cdot z^2\\\\+\\FMPd\\cdot xyz -1
 
-﻿﻿
-surface_parameter_a=1.0
+surface_parameter_a=1.777777777
 surface_parametermin_a=0.0
-surface_parametermax_a=2.0
-surface_parameter_b=1.0
+surface_parametermax_a=3.0
+surface_parameter_b=1.7777777777
 surface_parametermin_b=0.0
-surface_parametermax_b=2.0
-surface_parameter_c=1.0
+surface_parametermax_b=3.0
+surface_parameter_c=1.7777777777
 surface_parametermin_c=0.0
-surface_parametermax_c=1.0
-surface_parameter_d=2.0
+surface_parametermax_c=3.0
+surface_parameter_d=4.74074074074074
 surface_parametermin_d=0.0
-surface_parametermax_d=4.0
+surface_parametermax_d=9.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
