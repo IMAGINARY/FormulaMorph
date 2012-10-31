@@ -68,7 +68,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			//this.title.setBackground( Color.GRAY ); this.title.setOpaque( true ); 
 			
 			this.equation = new LaTeXLabel( staticLaTeXSrc( s ) );
-			//this.equation.setBackground( Color.GRAY ); this.equation.setOpaque( true );
+			this.equation.setBackground( Color.GRAY ); this.equation.setOpaque( true );
 			
 			this.levelIcon = new JPanel( new BorderLayout() );
 			this.levelLabel = new LaTeXLabel( "\\tiny\\fgcolor{white}{\\jlmDynamic{FMLevel" + s.name() + "}}" );
@@ -559,7 +559,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     							"\\ \\vspace{1em} \\\\\n" +
     							"{\\Large\\FMDynamic[i]{FMTitleWImage" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
-    							"\\hphantom{MMMMMMMMMMMMMMMMMa.}\n" +
+    							"\\hphantom{MMMMMMMMMMMMMMMMMMMaj\\,}\n" +
     						"\\end{array}\n" +
 //    					"}\n" +
     					"\\right]\n" +
