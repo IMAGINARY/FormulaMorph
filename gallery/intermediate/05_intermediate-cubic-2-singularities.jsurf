@@ -47,7 +47,7 @@ light_status_1=ON
 light_status_0=ON
 camera_height=2.0
 surface_title=Cubic with 2 Singularities
-surface_title_latex=Cubic with\\\\ 2 Singularities
+surface_title_latex=Cubic with\\\\Two Singularities
 surface_equation=-x^3-y^2*z-x*z^2+x*z-x*y*a-z^2*b
 surface_equation_latex=-x^3-y^2 z-x z^2+ x z\\\\-x y\\cdot \\FMPa-z^2\\cdot\\FMPb
 

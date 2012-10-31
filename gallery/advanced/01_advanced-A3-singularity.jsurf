@@ -46,10 +46,10 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-surface_title=An A3+- singularity
-surface_title_latex=An A_3^{+-} singularity
+surface_title=Singularity
+surface_title_latex=Singularity
 surface_equation=a*x^4+b*y^2-c*z^2+d
-surface_equation_latex=\\FMPa \\cdot x^4 +\\FMPb \\cdot y^2 - \\FMPc \\cdot z^2 + \\FMPd
+surface_equation_latex=\\FMPa \\cdot x^4 +\\FMPb \\cdot y^2\\\\ - \\FMPc \\cdot z^2 + \\FMPd
 
 surface_parameter_a=1.0
 surface_parametermin_a=0.0

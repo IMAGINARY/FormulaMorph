@@ -52,11 +52,7 @@ surface_title=Kummer Quartic
 surface_title_latex=Kummer Quartic
 surface_equation=(a*x^2+b*y^2+z^2-(0.5+2*c)^2)^2-(3.0*((0.5+2*c)^2)-1.0)/(3.0-((0.5+2*a)^2))*(1-z-d*x)*(1-z+d*x)*(1+z+d*y)*(1+z-d*y)
 
-surface_equation_latex=(\\FMPa\\cdot x^2+ \\FMPb \\cdoty^2+z^2-(0.5+2\\cdot \\FMPc)^2)^2- 
-\\\\
-(3.0\\cdot((0.5+2\\cdot \\FMPc)^2)-1.0)/(3.0-((0.5+2\\cdot\\FMPa)^2))\\cdot (1-z-\\FMPd\\cdot x)\\cdot(1-z+\\FMPd\cdot x)
-\\
-\\cdot(1+z+\\FMPd\\cdoty)\\cdot(1+z-\\FMPd\\cdot y)
+surface_equation_latex=(\\FMPa\\cdot x^2+ \\FMPb \\cdot y^2+z^2-(0.5+2\\cdot \\FMPc)^2)^2- \\\\ (3.0\\cdot((0.5+2\\cdot \\FMPc)^2)-1.0)/(3.0-((0.5+2\\cdot\\FMPa)^2))\\cdot (1-z-\\FMPd\\cdot x)\\\\\\cdot(1-z+\\FMPd\\cdot x)\\cdot(1+z+\\FMPd\\cdot y)\\cdot(1+z-\\FMPd\\cdot y)
 
 
 

@@ -51,7 +51,7 @@ camera_height=2.0
 surface_title=Clover
 surface_title_latex=Clover
 surface_equation=(a*x^2+b*y^2)^3-c*x^2*y^2+(d*z)^3*(1+d*z)^3
-surface_equation_latex=(\\FMPa \\cdot x^2+\\FMPb \\cdot y^2)^3 \\\\ -\\FMPc \\cdot x^2y^2 \\\\  +(\\FMPd \\cdot z)^3 \\cdot (1+\\FMPd \\cdot z)^3
+surface_equation_latex=(\\FMPa \\cdot x^2+\\FMPb \\cdot y^2)^3\\\\ -\\FMPc \\cdot x^2y^2+(\\FMPd \\cdot z)^3\\\\ \\cdot (1+\\FMPd \\cdot z)^3
 surface_parameter_a=0.5
 surface_parametermin_a=0.0
 surface_parametermax_a=2.0
@@ -61,9 +61,9 @@ surface_parametermax_b=2.0
 surface_parameter_c=1.5
 surface_parametermin_c=0.0
 surface_parametermax_c=2.0
-surface_parameter_d=1.0
+surface_parameter_d=5.0
 surface_parametermin_d=0.0
-surface_parametermax_d=2.0
+surface_parametermax_d=10.0
 
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
