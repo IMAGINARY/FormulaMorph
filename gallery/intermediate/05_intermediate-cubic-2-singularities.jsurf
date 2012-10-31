@@ -1,0 +1,69 @@
+#jSurfer surface description
+#Wed Oct 10 22:56:21 CEST 2012
+back_material_specular_intensity=0.5
+camera_type=ORTHOGRAPHIC_CAMERA
+surface_parameter_b=0.5627140998840332
+surface_parameter_a=0.0
+light_position_7=0.0 0.0 0.0
+light_position_6=0.0 0.0 0.0
+light_position_5=0.0 0.0 0.0
+light_position_4=0.0 0.0 0.0
+light_position_3=0.0 0.0 0.0
+light_position_2=0.0 -100.0 100.0
+camera_fov_y=60.0
+light_position_1=100.0 100.0 100.0
+light_position_0=-100.0 100.0 100.0
+front_material_color=0.262745098039216 0.0 0.596078431372549
+background_color=1.0 1.0 1.0
+light_intensity_7=1.0
+front_material_ambient_intensity=0.4
+light_intensity_6=1.0
+scale_factor=0.11388255655765538
+light_intensity_5=1.0
+light_intensity_4=1.0
+light_intensity_3=1.0
+front_material_specular_intensity=0.5
+light_intensity_2=0.3
+light_intensity_1=0.7
+light_intensity_0=0.5
+rotation_matrix=-0.7815078708944388 0.5250208962724172 0.3370634410808675 0.0 0.3069019354320916 -0.14687153039687084 0.940346226619192 0.0 0.543203283779222 0.8383252965583639 -0.04634703895731849 0.0 0.0 0.0 0.0 1.0
+light_color_7=1.0 1.0 1.0
+light_color_6=1.0 1.0 1.0
+front_material_diffuse_intensity=0.8
+light_color_5=1.0 1.0 1.0
+light_color_4=1.0 1.0 1.0
+light_color_3=1.0 1.0 1.0
+light_color_2=1.0 1.0 1.0
+light_color_1=1.0 1.0 1.0
+light_color_0=1.0 1.0 1.0
+light_status_7=OFF
+light_status_6=OFF
+light_status_5=OFF
+light_status_4=OFF
+front_material_shininess=30.0
+light_status_3=OFF
+light_status_2=ON
+light_status_1=ON
+light_status_0=ON
+camera_height=2.0
+surface_title=Cubic with 2 Singularities
+surface_title_latex=Cubic with\\\\ 2 Singularities
+surface_equation=-x^3-y^2*z-x*z^2+x*z-x*y*a-z^2*b
+surface_equation_latex=-x^3-y^2 z-x z^2+ x z\\\\-x y\\cdot \\FMPa-z^2\\cdot\\FMPb
+
+surface_parameter_a=0.5
+surface_parametermin_a=-2.0
+surface_parametermax_a=2.0
+surface_parameter_b=0.5
+surface_parametermin_b=-2.0
+surface_parametermax_b=2.0
+
+
+
+camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
+back_material_ambient_intensity=0.4
+
+back_material_color=0.698039215686274 0.305882352941176 0.768627450980392
+
+back_material_shininess=30.0
+back_material_diffuse_intensity=0.8

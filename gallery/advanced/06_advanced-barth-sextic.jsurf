@@ -1,0 +1,63 @@
+#jSurfer surface description
+#Wed Oct 10 22:58:10 CEST 2012
+back_material_specular_intensity=0.5
+camera_type=ORTHOGRAPHIC_CAMERA
+surface_parameter_a=1.0
+light_position_7=0.0 0.0 0.0
+light_position_6=0.0 0.0 0.0
+light_position_5=0.0 0.0 0.0
+light_position_4=0.0 0.0 0.0
+light_position_3=0.0 0.0 0.0
+light_position_2=0.0 -100.0 100.0
+camera_fov_y=60.0
+light_position_1=100.0 100.0 100.0
+light_position_0=-100.0 100.0 100.0
+front_material_color=1.0 0.6666667 0.5529412
+background_color=1.0 1.0 1.0
+light_intensity_7=1.0
+front_material_ambient_intensity=0.4
+light_intensity_6=1.0
+scale_factor=0.340000182390213
+light_intensity_5=1.0
+light_intensity_4=1.0
+light_intensity_3=1.0
+front_material_specular_intensity=0.5
+light_intensity_2=0.3
+light_intensity_1=0.7
+light_intensity_0=0.5
+rotation_matrix=0.50119334 0.2850557 0.8170455 0.0 -0.79794276 -0.21308568 0.5638187 0.0 0.3348199 -0.93452984 0.12065979 0.0 0.0 0.0 0.0 1.0
+light_color_7=1.0 1.0 1.0
+light_color_6=1.0 1.0 1.0
+front_material_diffuse_intensity=0.8
+light_color_5=1.0 1.0 1.0
+light_color_4=1.0 1.0 1.0
+light_color_3=1.0 1.0 1.0
+light_color_2=1.0 1.0 1.0
+light_color_1=1.0 1.0 1.0
+light_color_0=1.0 1.0 1.0
+light_status_7=OFF
+light_status_6=OFF
+light_status_5=OFF
+light_status_4=OFF
+front_material_shininess=30.0
+light_status_3=OFF
+light_status_2=ON
+light_status_1=ON
+light_status_0=ON
+camera_height=2.0
+surface_title=Barth Sextic
+surface_title_latex=Barth\\ Sextic
+surface_equation=4*((a*(1+sqrt(5))/2)^2*x^2-1*y^2)*((a*(1+sqrt(5))/2)^2*y^2-1*z^2)*((a*(1+sqrt(5))/2)^2*z^2-1*x^2)-1*(1+2*(a*(1+sqrt(5))/2))*(x^2+y^2+z^2-1*1)^2
+surface_equation_latex=4 \\newcommand{\\fphi}{\\FMBa{\\varphi}}(\\fphi^2  x^2- y^2)\\\\ \\cdot \\;(\\fphi^2 y^2- z^2)\\cdot  (\\fphi^2 z^2- x^2)\\\\- (1+2 \\fphi (x^2+y^2+z^2-1)^2\\\\ \\fphi=\\FMPa\\cdot  \\frac{1+\\sqrt{5}}{2}
+
+
+surface_parameter_a=1.0
+surface_parametermin_a=0.0
+surface_parametermax_a=2.0
+
+
+camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
+back_material_ambient_intensity=0.4
+back_material_color=0.16470589 0.6313726 1.0
+back_material_shininess=30.0
+back_material_diffuse_intensity=0.8
