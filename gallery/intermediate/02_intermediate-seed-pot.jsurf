@@ -55,8 +55,8 @@ surface_equation_latex=(x^2+y^2+z^2-\\FMPa^2)\\cdot xyz-\\FMPb
 surface_parameter_a=1.5
 surface_parametermin_a=0.0
 surface_parametermax_a=2.0
-surface_parameter_b=0.0
-surface_parametermin_b=0.1
+surface_parameter_b=0.01
+surface_parametermin_b=0.0
 surface_parametermax_b=2.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0

@@ -51,7 +51,7 @@ camera_height=2.0
 surface_title=Fermat Surface
 surface_title_latex=Fermat Surface
 surface_equation=a*x^5+b*y^5-c*z^5-d
-surface_equation_latex=\\FMPa\\cdot x^5 + \\FMPb \\cdot y^5 - \\FMPc\\cdot z^5 - \\FMPd
+surface_equation_latex=\\FMPa\\cdot x^5 + \\FMPb \\cdot y^5\\\\ - \\FMPc\\cdot z^5 - \\FMPd
 
 surface_parameter_a=1.0
 surface_parametermin_a=0.0
