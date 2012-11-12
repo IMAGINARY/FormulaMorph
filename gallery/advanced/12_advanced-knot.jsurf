@@ -26,7 +26,7 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.7
 light_intensity_0=0.5
-rotation_matrix=0.50119334 0.2850557 0.8170455 0.0 -0.79794276 -0.21308568 0.5638187 0.0 0.3348199 -0.93452984 0.12065979 0.0 0.0 0.0 0.0 1.0
+rotation_matrix=1.0 0.0 0.0 0.0  0.0 1.0 0.0 0.0  0.0 0.0 1.0 0.0  0.0 0.0 0.0 1.0
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -52,11 +52,11 @@ surface_equation_latex_size=\\tiny
 surface_equation=(-8*(x^2+y^2)^2*(x^2+y^2+1+z^2+a^2-b^2)+4*a^2*(2*(x^2+y^2)^2-(x^3-3*x*y^2)*(x^2+y^2+1))+8*a^2*(3*x^2*y-y^3)*z+4*a^2*(x^3-3*x*y^2)*z^2)^2-(x^2+y^2)*(2*(x^2+y^2)*(x^2+y^2+1+z^2+a^2-b^2)^2+8*(x^2+y^2)^2+4*a^2*(2*(x^3-3*x*y^2)-(x^2+y^2)*(x^2+y^2+1))-8*a^2*(3*x^2*y-y^3)*z-4*(x^2+y^2)*a^2*z^2)^2
 surface_equation_latex=(-8 A^2 B+4\\cdot\\FMPa^2\\cdot (2 A^2-C D)+8\\cdot \\FMPa^2\\cdot E z+4\\cdot \\FMPa^2\\cdot C z^2)^2\\\\ \\\\ -A (2 A B^2+8 A^2+4\\cdot \\FMPa^2\\cdot (2 C-A D)-8\\cdot \\FMPa^2\\cdot E z-4 A\\cdot \\FMPa^2\\cdot z^2)^2\\\\\\\\  A=x^2+y^2\\qquad\\qquad B=x^2+y^2+1+z^2+\\FMPa^2-\\FMPb^2\\\\  C=x^3-3*x*y^2\\qquad\\qquad D=x^2+y^2+1 \\qquad\\qquad E=3*x^2*y-y^3
 
-surface_parameter_a=0.5
+surface_parameter_a=0.58
 surface_parametermin_a=0.0
 surface_parametermax_a=2.0
 
-surface_parameter_b=0.5
+surface_parameter_b=0.41
 surface_parametermin_b=0.0
 surface_parametermax_b=2.0
 
