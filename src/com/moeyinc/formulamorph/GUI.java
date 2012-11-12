@@ -195,6 +195,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	Parameter.M_t.setMin( 0.0 );
     	Parameter.M_t.setMax( 1.0 );
 		Parameter.M_t.setValue( 0.5 );
+		LaTeXCommands.getDynamicLaTeXMap().put( "OneMinusT", "0.00" );
 		for( Parameter p : Parameter.values() )
 			p.addValueChangeListener( this );
 
@@ -543,7 +544,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     			"\\newcommand{\\nl}{\\\\}\n" +
     			"\\sf\\fgcolor{white}{\\begin{array}{c}\n" +
     				"\\bf\\Large\\text{Formula Morph}\\\\\\\\\n" +
-					"\\sf\\small\\raisebox{4.1275ex}{\\scalebox{1}[-1]{\\resizebox{7ex}{!}{\\jlmDynamic{FMImageF}}}}\\cdot\\:(1-\\FMPMt)+\\FMPMt\\:\\cdot\\raisebox{4.1275ex}{\\scalebox{1}[-1]{\\resizebox{7ex}{!}{\\jlmDynamic{FMImageG}}}}\n" +
+					"\\sf\\FMBMt{\\jlmDynamic{OneMinusT}}\\:\\cdot\\raisebox{4.1275ex}{\\scalebox{1}[-1]{\\resizebox{7ex}{!}{\\jlmDynamic{FMImageF}}}}\\qquad{\\bf +}\\qquad\\:\\FMPMt\\:\\cdot\\raisebox{4.1275ex}{\\scalebox{1}[-1]{\\resizebox{7ex}{!}{\\jlmDynamic{FMImageG}}}}\n" +
     			"\\end{array}}";
         	break;
     	case F:
@@ -618,12 +619,16 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		
     		asr_M.setFrontMaterial( Material.lerp( asr_F.getFrontMaterial(), asr_G.getFrontMaterial(), t ) );
     		asr_M.setBackMaterial( Material.lerp( asr_F.getBackMaterial(), asr_G.getBackMaterial(), t ) );
-    	}
+
+    		// update OneMinusT global LaTeX variable
+        	LaTeXCommands.getDynamicLaTeXMap().put( "OneMinusT", decimalFormatter.format( Math.max( 0.0, 1.0 - p.getValue() ) ) );
+       	}
     	else
     	{
     		// the parameter at morph, too
     		asr_M.setParameterValue( p.name(), p.getValue() );
     	}
+    	
 		s2g( p.getSurface() ).equation.repaint();
 		s2g( Surface.M ).panel.scheduleSurfaceRepaint();
 //		System.out.println(LaTeXCommands.getDynamicLaTeXMap().toString() );
