@@ -1,7 +1,8 @@
 #jSurfer surface description
-#Wed Oct 31 09:52:38 CET 2012
+#Wed Oct 31 10:10:57 CET 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
+surface_parameter_a=0.3059000074863434
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -11,7 +12,7 @@ light_position_2=0.0 -100.0 100.0
 camera_fov_y=60.0
 light_position_1=100.0 100.0 100.0
 light_position_0=-100.0 100.0 100.0
-front_material_color=0.262745098039216 0.0 0.596078431372549
+front_material_color=0.6392157 0.16470589 0.2784314
 background_color=1.0 1.0 1.0
 light_intensity_7=1.0
 front_material_ambient_intensity=0.4
@@ -24,7 +25,7 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.5
 light_intensity_0=0.7
-rotation_matrix=0.975439935818845 -0.04277356867064253 0.21607256520182078 0.0 0.19673322594601644 0.6103549950360327 -0.7673088151738048 0.0 -0.09906043316375185 0.7909723142169617 0.603779619334459 0.0 0.0 0.0 0.0 1.0
+rotation_matrix=0.16019989434809323 0.6697818938971396 0.725071174753493 0.0 0.9162405524199024 -0.3741637207147131 0.14319483301496763 0.0 0.36720463498180966 0.641399816579701 -0.6736223209925519 0.0 0.0 0.0 0.0 1.0
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -44,36 +45,18 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-
-surface_title=Quintic with 15 Cusps
-surface_title_latex=Quintic with\\\\ 15 Cusps
-
-surface_equation=((((((((((((a*(x^5))-((b*(x^3))*(y^2)))+((c*x)*(y^4)))-(d*(z^5)))-(5.0*(x^4)))-((10.0*(x^2))*(y^2)))-(5.0*(y^4)))+(10.0*(z^3)))+(e*(x^2)))+(e*(y^2)))-(15.0*z))-f)
-
-surface_equation_latex=\\FMPa\\cdot x^5-\\FMPb\\cdot x^3\\cdot y^2+\\FMPc\\cdot x\\cdot y^4-\\FMPd\\cdot z^5-5.0\\cdot x^4-10.0\\cdot x^2\\cdot y^2-5.0\\cdot y^4+10.0\\cdot z^3+\\FMPe\\cdot x^2+\\FMPe\\cdot y^2-15.0\\cdot z-\\FMPf
-
-surface_parameter_a=1.0
-surface_parametermin_a=0.0
+surface_title=Platonic Shift
+surface_title_latex=Platonic\\\\Shift
+surface_equation=x^4+y^4+z^4+20*a*(x^2*y^2+x^2*z^2+y^2*z^2)-2
+surface_equation_latex=x^4+y^4+z^4+20\\cdot\\FMPa \\\\ \\cdot (x^2y^2 + x^2z^2 + y^2z^2)-2
+surface_parameter_a=0.0
+surface_parametermin_a=-2.0
 surface_parametermax_a=2.0
-surface_parameter_b=1.0
-surface_parametermin_b=0.0
-surface_parametermax_b=2.0
-surface_parameter_c=1.0
-surface_parametermin_c=0.0
-surface_parametermax_c=2.0
-surface_parameter_d=1.0
-surface_parametermin_d=-2.0
-surface_parametermax_d=2.0
-surface_parameter_e=1.0
-surface_parametermin_e=-2.0
-surface_parametermax_e=2.0
-surface_parameter_f=24.0
-surface_parametermin_f=-24.0
-surface_parametermax_f=24.0
+
 
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
-back_material_color=0.0 0.454901960784314 0.784313725490196
+back_material_color=0.9019608 0.3137255 0.25490198
 back_material_shininess=30.0
 back_material_diffuse_intensity=0.8
