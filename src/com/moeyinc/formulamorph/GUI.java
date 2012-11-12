@@ -77,7 +77,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			for( int i = 0; i < 7; ++i )
 			{
 				JPanel p = new JPanel( new BorderLayout() );
-				p.setBackground( Color.lightGray );
+				p.setBackground( new Color( 0.1f, 0.1f, 0.1f ) );
 				p.setOpaque( true );
 				gallery_panels.add( i, p );
 			}
