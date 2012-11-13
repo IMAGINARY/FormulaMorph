@@ -1,0 +1,72 @@
+#jSurfer surface description
+#Wed Oct 31 08:51:43 CET 2012
+back_material_specular_intensity=0.5
+camera_type=ORTHOGRAPHIC_CAMERA
+surface_parameter_c=0.2513140141963959
+surface_parameter_b=1.0
+surface_parameter_a=1.0
+light_position_7=0.0 0.0 0.0
+light_position_6=0.0 0.0 0.0
+light_position_5=0.0 0.0 0.0
+light_position_4=0.0 0.0 0.0
+light_position_3=0.0 0.0 0.0
+light_position_2=0.0 -100.0 100.0
+camera_fov_y=60.0
+light_position_1=100.0 100.0 100.0
+light_position_0=-100.0 100.0 100.0
+front_material_color=0.47843137254902 0.870588235294118 0.831372549019608
+background_color=1.0 1.0 1.0
+light_intensity_7=1.0
+front_material_ambient_intensity=0.4
+light_intensity_6=1.0
+scale_factor=0.6079628467559814
+light_intensity_5=1.0
+light_intensity_4=1.0
+light_intensity_3=1.0
+front_material_specular_intensity=0.5
+light_intensity_2=0.3
+light_intensity_1=0.5
+light_intensity_0=0.7
+rotation_matrix=0.4347005694015922 0.29669516145613145 -0.8502984159284553 0.0 0.003368250810875964 0.9436305128543216 0.3309835495863154 0.0 0.9005687479856234 -0.14674275579666657 0.4091973775243302 0.0 0.0 0.0 0.0 1.0
+light_color_7=1.0 1.0 1.0
+light_color_6=1.0 1.0 1.0
+front_material_diffuse_intensity=0.8
+light_color_5=1.0 1.0 1.0
+light_color_4=1.0 1.0 1.0
+light_color_3=1.0 1.0 1.0
+light_color_2=1.0 1.0 1.0
+light_color_1=1.0 1.0 1.0
+light_color_0=1.0 1.0 1.0
+light_status_7=OFF
+light_status_6=OFF
+light_status_5=OFF
+light_status_4=OFF
+front_material_shininess=30.0
+light_status_3=OFF
+light_status_2=ON
+light_status_1=ON
+light_status_0=ON
+camera_height=2.0
+
+surface_title=Table
+surface_title_latex=Table
+surface_equation=x^16+a*(y+b*z)^16+z^16-c^2-(x^18+(y+b*z)^18+z^18)+(1-a)*(y+b*z)^15
+surface_equation_latex=x^{16}+\\FMPa\\cdot(y+\\FMPb\\cdot z)^{16}+z^{16}-\\FMPc^2-(x^{18}+(y+\\FMPb\\cdot z)^{18}+z^{18})+(1-\\FMPa)\\cdot(y+\\FMPb\\cdot z)^{15}
+
+surface_parameter_a=0.0
+surface_parametermin_a=0.0
+surface_parametermax_a=1.0
+
+surface_parameter_b=0
+surface_parametermin_b=-0.3
+surface_parametermax_b=0.3
+
+surface_parameter_c=0.23286905884742737
+surface_parametermin_c=0
+surface_parametermax_c=0.35
+
+camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
+back_material_ambient_intensity=0.4
+back_material_color=0.709803921568628 0.498039215686274 0.0
+back_material_shininess=30.0
+back_material_diffuse_intensity=0.8
