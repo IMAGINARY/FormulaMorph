@@ -11,15 +11,7 @@ public class Main {
 	private static Robot robot = null;
 	public static GUI gui() { return gui; }
 	public static PhidgetInterface phidgetInterface() { return pi; }
-	public static Robot robot()
-	{
-		if( robot == null )
-		{
-			robot = new Robot();
-			new Thread( robot ).start();
-		}
-		return robot;
-	}
+	public static Robot robot() { return robot; }
 	
     /**
      * Create the GUI and show it.  For thread safety,
@@ -67,6 +59,8 @@ public class Main {
         	System.exit(-1);
         }
        	pi = new PhidgetInterface( host, port );
+       	robot = new Robot();
+		new Thread( robot ).start();
     }
     
     public static void main(String[] args) {

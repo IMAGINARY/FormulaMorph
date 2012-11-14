@@ -50,8 +50,7 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 			panelForAllSliders.add( slider_panel );
 		}
 
-		this.add( panelForAllSliders, 0 );
-		
+		this.add( panelForAllSliders, 0 );		
 		
 		JPanel lrButtonPanel = new JPanel();
 		lrButtonPanel.setLayout( new BoxLayout( lrButtonPanel, BoxLayout.X_AXIS ) );
@@ -123,7 +122,7 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		this.add( buttonPanel );
 	}
 	
-	public void valueChanged( Parameter p )
+	public synchronized void valueChanged( Parameter p )
 	{
 		Hashtable< Integer, JLabel > labelTable = new Hashtable< Integer, JLabel >();
 		labelTable.put( new Integer( 0 ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMin()))) );
@@ -139,7 +138,7 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 			s.addChangeListener( cl );		
 	}
 
-	public void stateChanged( Parameter p )	
+	public synchronized void stateChanged( Parameter p )	
 	{
 		p2s.get( p ).setEnabled( p.isActive() );
 	}

@@ -20,6 +20,7 @@ public class Robot implements Runnable
 	
 	public void run()
 	{
+		holdBack();
 		int waitTimeS = 2;
 		while( true )
 		{
@@ -84,8 +85,7 @@ public class Robot implements Runnable
 	}
 	
 	public void holdBack()
-	{
-		
+	{	
 		enableTime = System.currentTimeMillis() + 10 * 1000;
 		Main.gui().pauseAnimation();
 	}
