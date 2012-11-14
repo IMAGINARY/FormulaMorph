@@ -37,7 +37,7 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 			JPanel slider_panel = new JPanel();
 			slider_panel.setLayout( new BoxLayout( slider_panel, BoxLayout.Y_AXIS ) );
 			final JSlider s = new JSlider( JSlider.VERTICAL, 0, maxSliderValue, maxSliderValue / 2 );
-			s.addChangeListener( new ChangeListener() { public void stateChanged( ChangeEvent e ) { p.setInterpolatedValue( s.getValue() / (double) maxSliderValue ); } } );
+			s.addChangeListener( new ChangeListener() { public void stateChanged( ChangeEvent e ) { Main.robot().holdBack(); p.setInterpolatedValue( s.getValue() / (double) maxSliderValue ); } } );
 			slider_panel.add( s );
 			slider_panel.add( new JLabel( p.name() ) );
 			s.setMajorTickSpacing( maxSliderValue / 5 );
@@ -59,45 +59,45 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		String[] levels = { Gallery.Level.BASIC.name(), Gallery.Level.INTERMEDIATE.name(), Gallery.Level.ADVANCED.name() };
 		JComboBox levelsLeft = new JComboBox( levels );
 		levelsLeft.setMaximumSize( levelsLeft.getPreferredSize() );
-		levelsLeft.addActionListener( new ActionListener() { public void actionPerformed(ActionEvent e) { Main.gui().setLevel( Surface.F, Gallery.Level.valueOf( ( String ) ( ( JComboBox ) e.getSource() ).getSelectedItem() ) ); } } );
+		levelsLeft.addActionListener( new ActionListener() { public void actionPerformed(ActionEvent e) { Main.robot().holdBack(); Main.gui().setLevel( Surface.F, Gallery.Level.valueOf( ( String ) ( ( JComboBox ) e.getSource() ).getSelectedItem() ) ); } } );
 		lrButtonPanel.add( levelsLeft );
 		
 		JButton screenshotLeft = new JButton( "Screenshot Left" );
-		screenshotLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotLeft(); } } );
+		screenshotLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().saveScreenShotLeft(); } } );
 		lrButtonPanel.add( screenshotLeft );
 		
 		JButton reloadLeft = new JButton( "Reload Left" );
-		reloadLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.F ); } catch ( Exception e ) { System.err.println( "Unable to reload left surface." ); e.printStackTrace( System.err ); } } } );
+		reloadLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); try { Main.gui().reload( Surface.F ); } catch ( Exception e ) { System.err.println( "Unable to reload left surface." ); e.printStackTrace( System.err ); } } } );
 		lrButtonPanel.add( reloadLeft );
 
 		JButton prevLeft = new JButton( "Previous Left" );
-		prevLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().previousSurface( Surface.F ); } } );
+		prevLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().previousSurface( Surface.F ); } } );
 		lrButtonPanel.add( prevLeft );
 		
 		JButton nextLeft = new JButton( "Next Left" );
-		nextLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().nextSurface( Surface.F ); } } );
+		nextLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().nextSurface( Surface.F ); } } );
 		lrButtonPanel.add( nextLeft );		
 		
 		lrButtonPanel.add( Box.createHorizontalGlue() );
 		
 		JButton prevRight = new JButton( "Previous Right" );
-		prevRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().previousSurface( Surface.G ); } } );
+		prevRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().previousSurface( Surface.G ); } } );
 		lrButtonPanel.add( prevRight );
 
 		JButton nextRight = new JButton( "Next Right" );
-		nextRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().nextSurface( Surface.G ); } } );
+		nextRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().nextSurface( Surface.G ); } } );
 		lrButtonPanel.add( nextRight );
 		
 		JButton reloadRight = new JButton( "Reload Right" );
-		reloadRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { try { Main.gui().reload( Surface.G ); } catch ( Exception e ) { System.err.println( "Unable to reload right surface." ); e.printStackTrace( System.err ); } } } );
+		reloadRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); try { Main.gui().reload( Surface.G ); } catch ( Exception e ) { System.err.println( "Unable to reload right surface." ); e.printStackTrace( System.err ); } } } );
 		lrButtonPanel.add( reloadRight );
 
 		JButton screenshotRight = new JButton( "Screenshot Right" );
-		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().saveScreenShotRight(); } } );
+		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().saveScreenShotRight(); } } );
 		lrButtonPanel.add( screenshotRight );
 
 		JComboBox levelsRight = new JComboBox( levels );
-		levelsRight.addActionListener( new ActionListener() { public void actionPerformed(ActionEvent e) { Main.gui().setLevel( Surface.G, Gallery.Level.valueOf( ( String ) ( ( JComboBox ) e.getSource() ).getSelectedItem() ) ); } } );
+		levelsRight.addActionListener( new ActionListener() { public void actionPerformed(ActionEvent e) { Main.robot().holdBack(); Main.gui().setLevel( Surface.G, Gallery.Level.valueOf( ( String ) ( ( JComboBox ) e.getSource() ).getSelectedItem() ) ); } } );
 		lrButtonPanel.add( levelsRight );				
 		
 		this.add( lrButtonPanel );
@@ -106,17 +106,17 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		buttonPanel.setLayout( new BoxLayout( buttonPanel, BoxLayout.X_AXIS ) );
 		
 		JButton pauseAnim = new JButton( "Pause" );
-		pauseAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().pauseAnimation(); } } );
+		pauseAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().pauseAnimation(); } } );
 		buttonPanel.add( pauseAnim );
 		JButton resumeAnim = new JButton( "Resume" );
-		resumeAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().resumeAnimation(); } } );
+		resumeAnim.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().resumeAnimation(); } } );
 		buttonPanel.add( resumeAnim );
 		
 		JButton fullscreenOn = new JButton( "Fullscreen ON" ); 
-		fullscreenOn.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryFullScreen(); } } );
+		fullscreenOn.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().tryFullScreen(); } } );
 		buttonPanel.add( fullscreenOn );
 		JButton fullscreenOff = new JButton( "Fullscreen OFF" );
-		fullscreenOff.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.gui().tryWindowed(); } } );
+		fullscreenOff.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().tryWindowed(); } } );
 		buttonPanel.add( fullscreenOff );
 
 		

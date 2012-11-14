@@ -8,8 +8,18 @@ public class Main {
 
 	private static GUI gui;
 	private static PhidgetInterface pi;
+	private static Robot robot = null;
 	public static GUI gui() { return gui; }
 	public static PhidgetInterface phidgetInterface() { return pi; }
+	public static Robot robot()
+	{
+		if( robot == null )
+		{
+			robot = new Robot();
+			new Thread( robot ).start();
+		}
+		return robot;
+	}
 	
     /**
      * Create the GUI and show it.  For thread safety,

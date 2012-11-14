@@ -303,8 +303,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 		idChanged( Surface.F );
 		idChanged( Surface.G );
-		
-		//new Thread( new Robot() ).start();
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }

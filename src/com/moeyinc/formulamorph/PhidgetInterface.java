@@ -128,6 +128,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 						cmd = cmd.replaceAll( "\\s", "" ); // strip whitespace
 						if( cmd.isEmpty() )
 							continue; // heart beat
+						Main.robot().holdBack();
 						boolean unknown_command = false;
 						try
 						{
