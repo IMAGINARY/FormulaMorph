@@ -46,7 +46,7 @@ public class Gallery
     		CPUAlgebraicSurfaceRenderer asr = Util.loadJSurfFromProperties( jsurf );
     		Gallery.this.setDefaults( asr );
     		
-    		this.setImage( Util.render( asr, 100, 100 ) );
+    		this.setImage( Util.render( asr, 101, 101 ) );
 		}
 	}
 	
