@@ -303,6 +303,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 		idChanged( Surface.F );
 		idChanged( Surface.G );
+		
+		new Thread( new Robot() ).start();
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
@@ -678,6 +680,13 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	setSurface(s, items.get( easterEggSelector.nextInt( items.size() ) ) );
     }
 
+    public void selectRandomSurface( Surface s ) { selectRandomSurface( s, new java.util.Random() ); }
+    public void selectRandomSurface( Surface s, java.util.Random r )
+    {
+    	s2g( s ).setId( r.nextInt( s2g( s ).galleryItems().size() ) );
+    	idChanged( s );
+    }
+    
     public void idChanged( Surface s )
     {
     	if( s == Surface.M )

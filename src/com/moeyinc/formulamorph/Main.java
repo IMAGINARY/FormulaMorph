@@ -9,6 +9,7 @@ public class Main {
 	private static GUI gui;
 	private static PhidgetInterface pi;
 	public static GUI gui() { return gui; }
+	public static PhidgetInterface phidgetInterface() { return pi; }
 	
     /**
      * Create the GUI and show it.  For thread safety,
