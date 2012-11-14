@@ -53,10 +53,10 @@ surface_title_latex=Block
 surface_equation=a*x^6 + b*y^6 + z^6- 1
 surface_equation_latex=\\FMPa\\cdot x^6 +\\FMPb\\cdot y^6 + z^6 - 1
 surface_parameter_a=1.0
-surface_parametermin_a=0.0
+surface_parametermin_a=0.01
 surface_parametermax_a=5.0
 surface_parameter_b=1.0
-surface_parametermin_b=0.0
+surface_parametermin_b=0.01
 surface_parametermax_b=5.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
