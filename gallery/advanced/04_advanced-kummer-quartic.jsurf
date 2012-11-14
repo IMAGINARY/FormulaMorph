@@ -49,7 +49,7 @@ light_status_1=ON
 light_status_0=ON
 camera_height=2.0
 surface_title=Kummer Quartic
-surface_title_latex=Kummer\\\\Quartic
+surface_title_latex=Kummer Quartic
 surface_equation=(a*x^2+b*y^2+z^2-c^2)^2-(6*c^2-2)/(6-((1+4*a)^2))*(1-z-d*x)*(1-z+d*x)*(1+z+d*y)*(1+z-d*y)
 
 surface_equation_latex_size=\\footnotesize

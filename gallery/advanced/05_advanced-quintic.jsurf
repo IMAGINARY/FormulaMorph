@@ -45,8 +45,8 @@ light_status_1=ON
 light_status_0=ON
 camera_height=2.0
 
-surface_title=Quintic with 15 Cusps
-surface_title_latex=Quintic with\\\\ 15 Cusps
+surface_title=Fifteen Cusps
+surface_title_latex=Fifteen Cusps
 
 surface_equation=((((((((((((a*(x^5))-((b*(x^3))*(y^2)))+((c*x)*(y^4)))-(d*(z^5)))-(5.0*(x^4)))-((10.0*(x^2))*(y^2)))-(5.0*(y^4)))+(10.0*(z^3)))+(e*(x^2)))+(e*(y^2)))-(15.0*z))-f)
 

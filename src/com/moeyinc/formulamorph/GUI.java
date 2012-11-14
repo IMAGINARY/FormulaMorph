@@ -304,7 +304,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		idChanged( Surface.F );
 		idChanged( Surface.G );
 		
-		new Thread( new Robot() ).start();
+		//new Thread( new Robot() ).start();
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
@@ -525,6 +525,14 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
 			sb.append( "{\\FMOvalbox[0.4em]{\\fgcolor{white}{#1}}}}\n" );	
+
+			sb.append( "\\newcommand{\\FMV" );
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}{\\jlmDynamic{FMParam" );
+			sb.append( p.getSurface().name() );
+			sb.append( p.getName() );
+			sb.append( "}}\n" );		
 			
 			sb.append( "\\newcommand{\\FMP" );
 			sb.append( p.getSurface().name() );
@@ -532,10 +540,10 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			sb.append( "}{\\FMB" ); 
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "{\\jlmDynamic{FMParam" );
+			sb.append( "{\\FMV" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}\\vphantom{-}}}\n" );
+			sb.append( "}\\vphantom{-}}\n" );
     	}
     	
     	String rem;
@@ -554,12 +562,12 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         	rem = "" +
     			"\\newcommand{\\nl}{\\\\}\n" +
     			"\\sf\\begin{array}{c}\n" +
-    				"\\raisebox{-2.5em}{\\bf\\Large\\fgcolor{white}\\FMDynamic[i]{FMTitleFormula" + s.name() + "}}\\\\\n" +
+    				//"\\raisebox{-2.5em}{\\bf\\Large\\fgcolor{white}\\FMDynamic[i]{FMTitleFormula" + s.name() + "}}\\\\\n" +
+    				"{\\bf\\Large\\fgcolor{white}\\FMDynamic[i]{FMTitleFormula" + s.name() + "}}\\\\\n" +
     				"\\fgcolor{white}{\n" +
     					"\\left[\n" +
 //    					"\\fgcolor{white}{\n" + 
     						"\\begin{array}{c}\n" +
-    							"\\ \\vspace{1em} \\\\\n" +
     							"{\\Large\\FMDynamic[i]{FMTitleWImage" + s.name() + "}=}{\\small\\raisebox{3.4ex}{\\scalebox{1}[-1]{\\resizebox{5ex}{!}{\\jlmDynamic{FMImage" + s.name() + "}}}}}\\\\\\\\\n" +
     							"\\FMDynamic[i]{FMEquation" + s.name() + "}\\\\\n" +
     							"\\hphantom{MMMMMMMMMMMMMMMMMMMaj\\,}\n" +
@@ -567,7 +575,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 //    					"}\n" +
     					"\\right]\n" +
     				"}\\\\\n" +
-        			"\\vspace{1em}\n" +    					
+        			"\\vspace{0em}\n" +    					
     			"\\end{array}";
         	break;
         default:
@@ -888,7 +896,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\vphantom{T}\\\\\n\\text{\\fixheight{}" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "\\ " ) + "}\\\\\n\\vphantom{.}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleWImage" + surf.name(), "\\begin{array}{c}\n\\text{" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
-        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "{" + props.getProperty( "surface_equation_latex_size", "" ) + "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMB", "\\\\FMB" + surf.name() ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}}\n" );
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMEquation" + surf.name(), "{" + props.getProperty( "surface_equation_latex_size", "" ) + "\\begin{array}{c}\n" + props.getProperty( "surface_equation_latex" ).replaceAll( "\\\\FMB", "\\\\FMB" + surf.name() ).replaceAll( "\\\\FMC", "\\\\FMC" + surf.name() ).replaceAll( "\\\\FMV", "\\\\FMV" + surf.name() ).replaceAll( "\\\\FMP", "\\\\FMP" + surf.name() ).replaceAll( "\\\\\\\\", "\\\\nl" ) + "\n\\end{array}}\n" );
     }
 
     public void stepPath( int steps ) { this.rotationAnimation.stepPath( steps ); }
