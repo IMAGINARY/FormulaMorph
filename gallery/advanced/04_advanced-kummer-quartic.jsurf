@@ -15,7 +15,7 @@ light_position_2=0.0 -100.0 100.0
 camera_fov_y=60.0
 light_position_1=100.0 100.0 100.0
 light_position_0=-100.0 100.0 100.0
-front_material_color=0.588235294117647 0.470588235294118 0.823529411764706
+front_material_color=0.807843137254902 0.870588235294118 0.0
 background_color=1.0 1.0 1.0
 light_intensity_7=1.0
 front_material_ambient_intensity=0.4
@@ -28,7 +28,8 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.5
 light_intensity_0=0.7
-rotation_matrix=0.9668532791127205 0.2514295291119819 0.044473908749924435 0.0 0.003943796234906322 -0.1888649870347269 0.9819951441548072 0.0 0.25530214088453723 -0.9492698291649692 -0.18359631885436015 0.0 0.0 0.0 0.0 1.0
+rotation_matrix=0.8922664365821062 -0.45146148722090756 0.006567473284045182 0.0 -0.18870602452899926 -0.3596645471395601 0.9138005525481703 0.0 -0.41018366917213295 -0.8165928845435537 -0.40611010632253863 0.0 0.0 0.0 0.0 1.0
+
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -50,22 +51,21 @@ light_status_0=ON
 camera_height=2.0
 surface_title=Kummer Quartic
 surface_title_latex=Kummer Quartic
-surface_equation=(x^2+y^2+z^2-(0.5+2*a)^2)^2-(3.0*((0.5+2*a)^2)-1.0)/(3.0-((0.5+2*a)^2))*(1-z-b*x)*(1-z+b*x)*(1+z+b*y)*(1+z-b*y) 
+surface_equation=(x^2+y^2+z^2-a)^2+(3*a-1.0)/(a-3)*(1-z-b*x)*(1-z+b*x)*(1+z+b*y)*(1+z-b*y) 
 
-surface_equation_latex_size=\\footnotesize
-surface_equation_latex=\\FMPa \\FMPb
+surface_equation_latex_size=\\small
+surface_equation_latex=(x^2+y^2+z^2-\\FMPa)^2+\\frac{3\\cdot \\FMPa-1.0}{\\FMPa-3}\\\\ \\cdot (1-z-\\FMPb\\cdot x)\\cdot (1-z+\\FMPb\\cdot x)\\\\ \\cdot (1+z+\\FMPb\\cdot y)\\cdot (1+z-\\FMPb\\cdot y) 
 
-surface_parameter_a=1.0
-surface_parametermin_a=0.0
-surface_parametermax_a=2.0
+surface_parameter_a=1.5
+surface_parametermin_a=0.05
+surface_parametermax_a=3.0
 surface_parameter_b=1.4142
 surface_parametermin_b=0.0
 surface_parametermax_b=2.0
 
 
-
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
-back_material_color=0.807843137254902 0.870588235294118 0.0
+back_material_color=0.698039215686274 0.305882352941176 0.768627450980392
 back_material_shininess=30.0
 back_material_diffuse_intensity=0.8
