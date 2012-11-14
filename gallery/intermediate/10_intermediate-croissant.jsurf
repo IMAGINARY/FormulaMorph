@@ -47,17 +47,17 @@ light_status_0=ON
 camera_height=2.0
 surface_title=Croissant
 surface_title_latex=Croissant
-surface_equation=((1.34*x)^2+(1.34*y)^2+1.5*(1.34*z)^2+a)^2-(3.2*1.34*x-b)^2-10.2*(1.34*y)^2+c 
-surface_equation_latex=(x^2+y^2+z^2+\\FMPa)^2\\\\ -(3.23\\cdot x- \\FMPb )^2\\\\-(3.23)^2\\cdot y^2+\\FMPc
+surface_equation=256/81*(x^2+y^2+1.5*z^2+a)^2-(4.26*x-b)^2-18*y^2+c 
 
+surface_equation_latex=\\frac{256}{81}\\cdot (x^2+y^2+1.5\\cdot z^2+\\FMPa)^2\\\\ -(4.26\\cdot x- \\FMPb )^2\\\\-18\\cdot y^2+\\FMPc
 
-surface_parameter_a=2.0
+surface_parameter_a=1.125
 surface_parametermin_a=0.0
-surface_parametermax_a=3.0
+surface_parametermax_a=1.6
 
 surface_parameter_b=0.55
 surface_parametermin_b=0.0
-surface_parametermax_b=3.0
+surface_parametermax_b=2.0
 
 
 surface_parameter_c=1.20
