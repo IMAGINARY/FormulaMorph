@@ -122,24 +122,30 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		this.add( buttonPanel );
 	}
 	
-	public synchronized void valueChanged( Parameter p )
+	public void valueChanged( final Parameter p )
 	{
-		Hashtable< Integer, JLabel > labelTable = new Hashtable< Integer, JLabel >();
-		labelTable.put( new Integer( 0 ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMin()))) );
-		labelTable.put( new Integer( maxSliderValue / 2 ), new JLabel( String.format( "%.2f", Double.valueOf((p.getMin()+p.getMax())/2))) );
-		labelTable.put( new Integer( maxSliderValue ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMax() ) ) ) );
-		JSlider s = p2s.get( p );
-		s.setLabelTable( labelTable );
-		ChangeListener[] cls = s.getChangeListeners();
-		for( ChangeListener cl : cls )
-			s.removeChangeListener( cl );
-		s.setValue( (int) ( maxSliderValue * ( p.getValue() - p.getMin() ) / ( p.getMax() - p.getMin() ) ) );
-		for( ChangeListener cl : cls )
-			s.addChangeListener( cl );		
+		SwingUtilities.invokeLater( new Runnable() 
+		{
+			public void run()
+			{
+				Hashtable< Integer, JLabel > labelTable = new Hashtable< Integer, JLabel >();
+				labelTable.put( new Integer( 0 ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMin()))) );
+				labelTable.put( new Integer( maxSliderValue / 2 ), new JLabel( String.format( "%.2f", Double.valueOf((p.getMin()+p.getMax())/2))) );
+				labelTable.put( new Integer( maxSliderValue ), new JLabel( String.format( "%.2f", Double.valueOf( p.getMax() ) ) ) );
+				JSlider s = p2s.get( p );
+				s.setLabelTable( labelTable );
+				ChangeListener[] cls = s.getChangeListeners();
+				for( ChangeListener cl : cls )
+					s.removeChangeListener( cl );
+				s.setValue( (int) ( maxSliderValue * ( p.getValue() - p.getMin() ) / ( p.getMax() - p.getMin() ) ) );
+				for( ChangeListener cl : cls )
+					s.addChangeListener( cl );				
+			}
+		});
 	}
 
-	public synchronized void stateChanged( Parameter p )	
+	public void stateChanged( final Parameter p )	
 	{
-		p2s.get( p ).setEnabled( p.isActive() );
+		SwingUtilities.invokeLater( new Runnable() { public void run() { p2s.get( p ).setEnabled( p.isActive() ); } } );
 	}
 }
