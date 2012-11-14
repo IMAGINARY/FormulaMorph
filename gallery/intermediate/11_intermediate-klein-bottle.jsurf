@@ -1,0 +1,69 @@
+#jSurfer surface description
+#Wed Nov 14 11:55:34 EST 2012
+back_material_specular_intensity=0.5
+camera_type=ORTHOGRAPHIC_CAMERA
+light_position_7=0.0 0.0 0.0
+light_position_6=0.0 0.0 0.0
+light_position_5=0.0 0.0 0.0
+light_position_4=0.0 0.0 0.0
+light_position_3=0.0 0.0 0.0
+light_position_2=0.0 -100.0 100.0
+camera_fov_y=60.0
+light_position_1=100.0 100.0 100.0
+light_position_0=-100.0 100.0 100.0
+front_material_color=0.70588 0.22745 0.14117
+background_color=1.0 1.0 1.0
+light_intensity_7=1.0
+front_material_ambient_intensity=0.4
+light_intensity_6=1.0
+scale_factor=0.4769566059112548
+light_intensity_5=1.0
+light_intensity_4=1.0
+light_intensity_3=1.0
+front_material_specular_intensity=0.5
+light_intensity_2=0.3
+light_intensity_1=0.5
+light_intensity_0=0.7
+rotation_matrix=0.2640595358737774 0.7231512183914414 0.6382200849652786 0.0 0.9577121716666049 -0.27499016490102274 -0.08466289298941959 0.0 0.1142801721899043 0.6335871878018583 -0.765184499122637 0.0 0.0 0.0 0.0 1.0
+light_color_7=1.0 1.0 1.0
+light_color_6=1.0 1.0 1.0
+front_material_diffuse_intensity=0.8
+light_color_5=1.0 1.0 1.0
+light_color_4=1.0 1.0 1.0
+light_color_3=1.0 1.0 1.0
+light_color_2=1.0 1.0 1.0
+light_color_1=1.0 1.0 1.0
+light_color_0=1.0 1.0 1.0
+light_status_7=OFF
+light_status_6=OFF
+light_status_5=OFF
+light_status_4=OFF
+front_material_shininess=30.0
+light_status_3=OFF
+light_status_2=ON
+light_status_1=ON
+light_status_0=ON
+camera_height=2.0
+
+surface_title=Klein Bottle
+surface_title_latex=Klein Bottle
+surface_equation_latex_size=\\footnotesize
+surface_equation=((c*x)^2+(c*y)^2+(c*z)^2+2*(c*y)-1)*(((c*x)^2+(c*y)^2+(c*z)^2-2*(c*y)-1)^2-8*a*(c*z)^2)+16*b*(c*x)*(c*z)*((c*x)^2+(c*y)^2+(c*z)^2-2*(c*y)-1)
+surface_equation_latex=(x^2+y^2+z^2+2\\cdot y-1)\\\\ \\cdot ((x^2+y^2+z^2-2\\cdot y-1)^2-8\\cdot \\FMPa\\cdot z^2)\\\\+16\\cdot \\FMPb\\cdot x\\cdot z\\cdot (x^2+y^2+z^2-2\\cdot y-1)\\\\ (\\tilde x, \\tilde y, \\tilde z)=\\FMPc \\cdot(x,y,z)
+
+surface_parameter_a=1.0
+surface_parametermin_a=0.01
+surface_parametermax_a=2.0
+surface_parameter_b=1.0
+surface_parametermin_b=0.01
+surface_parametermax_b=2.0
+
+surface_parameter_c=1.0
+surface_parametermin_c=0.11
+surface_parametermax_c=2.0
+
+camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
+back_material_ambient_intensity=0.4
+back_material_color=1.0 0.8 0.4
+back_material_shininess=30.0
+back_material_diffuse_intensity=0.8
