@@ -1,11 +1,10 @@
 #jSurfer surface description
-#Wed Oct 31 10:06:54 CET 2012
+#Tue Nov 13 21:36:08 EST 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
-surface_parameter_d=0.6193796396255493
-surface_parameter_c=0.7888560891151428
-surface_parameter_b=0.37088337540626526
-surface_parameter_a=0.6994390487670898
+surface_parameter_c=1.0
+surface_parameter_b=0.7665018439292908
+surface_parameter_a=0.18685056269168854
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -15,12 +14,12 @@ light_position_2=0.0 -100.0 100.0
 camera_fov_y=60.0
 light_position_1=100.0 100.0 100.0
 light_position_0=-100.0 100.0 100.0
-front_material_color=0.7 0.7 0.7
+front_material_color=0.88235294117647 0.345098039215686 0.16078431372549
 background_color=1.0 1.0 1.0
 light_intensity_7=1.0
 front_material_ambient_intensity=0.4
 light_intensity_6=1.0
-scale_factor=0.6786649227142334
+scale_factor=0.22038771629333498
 light_intensity_5=1.0
 light_intensity_4=1.0
 light_intensity_3=1.0
@@ -28,7 +27,7 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.5
 light_intensity_0=0.7
-rotation_matrix=1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1
+rotation_matrix=0.8827412894262002 0.36210896634329504 -0.29940760250194043 0.0 -0.22508117352797144 0.8852484537494699 0.40703026970661954 0.0 0.4124394273895755 -0.2919114105819821 0.8629492726149065 0.0 0.0 0.0 0.0 1.0
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -48,33 +47,28 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-surface_title=Snowman
-surface_title_latex=Snowman
-surface_equation_latex_size=\\small
-surface_equation=(x^2+(y-a)^2+z^2-b)*(x^2+(y-0.2)^2+z^2-c)*(x^2+(y-d)^2+z^2-e)-f
-surface_equation_latex=(x^2+(y-\\FMPa)^2+z^2-\\FMPb)\\\\ \\cdot (x^2+(y-0.2)^2+z^2-\\FMPc)\\\\ \\cdot (x^2+(y-\\FMPd)^2+z^2-\\FMPe)-\\FMPf
+surface_title=Chmutov
+surface_title_latex=Chmutov
+surface_equation_latex_size=\\scriptsize
+surface_equation= 1 -a*(27*(d*x)^2*(4*(d*x)^2*((d*x)^2-1)+1)-1)^2  -b*(27*(d*y)^2*(4*(d*y)^2*((d*y)^2-1)+1)-1)^2 -c*(27*(d*z)^2*(4*(d*z)^2*((d*z)^2-1)+1)-1)^2
+surface_equation_latex= 1 -\\FMPa\\cdot (27\\cdot \\tilde x^2\\cdot (4\\cdot \\tilde x^2\\cdot (\\tilde x^2-1)+1)-1)^2 \\\\ -\\FMPb\\cdot (27\\cdot \\tilde y^2\\cdot (4\\cdot \\tilde y^2\\cdot (\\tilde y^2-1)+1)-1)^2\\\\ -\\FMPc\\cdot (27\\cdot \\tilde z^2\\cdot (4\\cdot \\tilde z^2\\cdot (\\tilde y^2-1)+1)-1)^2\\\\ (\\tilde x, \\tilde y, \\tilde z)=\\FMPd \\cdot(x,y,z)
 
-surface_parameter_a=-1.2
-surface_parametermin_a=-2.0
+surface_parameter_a=1.0
+surface_parametermin_a=0.1
 surface_parametermax_a=2.0
-surface_parameter_b=1.6
-surface_parametermin_b=0.01
+surface_parameter_b=1.0
+surface_parametermin_b=0.1
 surface_parametermax_b=2.0
 surface_parameter_c=1.0
-surface_parametermin_c=0.01
+surface_parametermin_c=0.1
 surface_parametermax_c=2.0
-surface_parameter_d=1.5
-surface_parametermin_d=-2.0
+surface_parameter_d=0.63
+surface_parametermin_d=0.1
 surface_parametermax_d=2.0
-surface_parameter_e=0.5
-surface_parametermin_e=0.01
-surface_parametermax_e=2.0
-surface_parameter_f=0.01
-surface_parametermin_f=0.0
-surface_parametermax_f=1.0
+
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
-back_material_color=0.3 0.3 0.3
+back_material_color=0.898039215686274 0.098039215686274 0.572549019607843
 back_material_shininess=30.0
 back_material_diffuse_intensity=0.8
