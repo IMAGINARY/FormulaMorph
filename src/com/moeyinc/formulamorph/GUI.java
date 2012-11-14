@@ -541,7 +541,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			sb.append( "{\\FMV" );
 			sb.append( p.getSurface().name() );
 			sb.append( p.getName() );
-			sb.append( "}\\vphantom{-}}\n" );
+			sb.append( "\\vphantom{-}}}\n" );
     	}
     	
     	String rem;
