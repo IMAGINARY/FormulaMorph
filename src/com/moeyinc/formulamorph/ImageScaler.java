@@ -5,8 +5,10 @@ import javax.swing.ImageIcon;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.AlphaComposite;
 
 public class ImageScaler extends JComponent {
 
@@ -66,11 +68,22 @@ public class ImageScaler extends JComponent {
         	}
     		if( grayscale && grayScaleScaledImage == null )
     		{
-    			BufferedImage bi = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_BYTE_GRAY );
-    			Graphics g_bi = bi.getGraphics();  
-    			g_bi.drawImage( scaledImage, 0, 0, null);  
-    			g_bi.dispose();
-    			grayScaleScaledImage = bi;
+    			BufferedImage bi_rgb = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB );
+    			BufferedImage bi_gray = new BufferedImage( getWidth(), getHeight(), BufferedImage.TYPE_BYTE_GRAY );
+
+    			Graphics2D g_bi_gray = (Graphics2D) bi_gray.getGraphics();  
+    			g_bi_gray.drawImage( scaledImage, 0, 0, null );
+
+    			Graphics2D g_bi_rgb = (Graphics2D) bi_rgb.getGraphics();
+    			g_bi_rgb.drawImage( scaledImage, 0, 0, null );
+    			
+    			AlphaComposite ac = AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.85F );
+    			g_bi_rgb.setComposite( ac );
+    			g_bi_rgb.drawImage( bi_gray, 0, 0, null);
+    		
+    			g_bi_gray.dispose();
+    			g_bi_rgb.dispose();
+    			grayScaleScaledImage = bi_rgb;
     		}
         	g.drawImage( grayscale ? grayScaleScaledImage : scaledImage, 0, 0, getWidth(), getHeight(), null ); 
         }
