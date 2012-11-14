@@ -48,23 +48,23 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-surface_title=Distel
-surface_title_latex=Distel
+surface_title=Thistle
+surface_title_latex=Thistle
 surface_equation=a*x^2+b*y^2+z^2+c^6*(x^2+y^2)*(x^2+z^2)*(y^2+z^2)-d
 
 surface_equation_latex=\\FMPa \\cdot x^2 +\\FMPb \\cdot y^2 \\\\ + \\FMPc^6 \\cdot (x^2 + y^2) \\cdot (x^2 + z^2) \\\\ \\cdot (y^2 + z^2) - \\FMPd
 
 surface_parameter_a=1.0
 surface_parametermin_a=0.0
-surface_parametermax_a=2.0
+surface_parametermax_a=5.0
 surface_parameter_b=1.0
 surface_parametermin_b=0.0
-surface_parametermax_b=2.0
+surface_parametermax_b=5.0
 surface_parameter_c=3
 surface_parametermin_c=0.0
 surface_parametermax_c=8.0
 surface_parameter_d=4.0
-surface_parametermin_d=0.0
+surface_parametermin_d=0.01
 surface_parametermax_d=5.0
 
 
