@@ -46,8 +46,8 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-surface_title=Seed Pot
-surface_title_latex=Seed Pot
+surface_title=Seed Pod
+surface_title_latex=Seed Pod
 
 surface_equation=(x^2+y^2+z^2-a^2)*x*y*z-b
 surface_equation_latex=(x^2+y^2+z^2-\\FMPa^2)\\cdot xyz-\\FMPb
