@@ -77,7 +77,7 @@ public class ImageScaler extends JComponent {
     			Graphics2D g_bi_rgb = (Graphics2D) bi_rgb.getGraphics();
     			g_bi_rgb.drawImage( scaledImage, 0, 0, null );
     			
-    			AlphaComposite ac = AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 0.85F );
+    			AlphaComposite ac = AlphaComposite.getInstance( AlphaComposite.SRC_OVER, 1.0F );
     			g_bi_rgb.setComposite( ac );
     			g_bi_rgb.drawImage( bi_gray, 0, 0, null);
     		
