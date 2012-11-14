@@ -128,7 +128,6 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 						cmd = cmd.replaceAll( "\\s", "" ); // strip whitespace
 						if( cmd.isEmpty() )
 							continue; // heart beat
-						Main.robot().holdBack();
 						boolean unknown_command = false;
 						try
 						{
@@ -259,15 +258,21 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 								{
 									unknown_command = true;
 								}
-							}
+                            }
+                            else
+                            {
+                                unknown_command = true;
+                            }
 						}
 						catch( ArrayIndexOutOfBoundsException aioobe ) { unknown_command = true; }
 						catch( NullPointerException npe ) { unknown_command = true; }
 						catch( NumberFormatException nfe ) { unknown_command = true; }
 						
 						if( unknown_command )
-							System.err.println( "PhidgetReader: Unknown command \"" + cmd + "\"" );	
-					}				
+							System.err.println( "PhidgetReader: Unknown command \"" + cmd + "\"" );
+                        else
+                            Main.robot().holdBack();
+					}
 				}
 				catch( IOException ioe )
 				{

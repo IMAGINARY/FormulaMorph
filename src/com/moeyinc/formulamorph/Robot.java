@@ -48,7 +48,7 @@ public class Robot implements Runnable
 			{
 				System.out.println( "parameter animation");
 				// start animation of parameter
-				List< Parameter > freeParmeterList = Arrays.asList( freeParameters.toArray( new Parameter[ 1 ] ) );
+				List< Parameter > freeParmeterList = Arrays.asList( freeParameters.toArray( new Parameter[ 0 ] ) );
 				Collections.shuffle( freeParmeterList, rand );
 				Parameter p_to_use = null;
 				for( Parameter p : freeParmeterList )
@@ -69,9 +69,10 @@ public class Robot implements Runnable
 						new Thread( new ParameterAnimation( p_to_use, target, current, animTime ) ).start();
 					else
 						new Thread( new ParameterAnimation( p_to_use, current, target, animTime ) ).start();
-					new Thread( new ParameterLEDAnimation( p_to_use, animTime ) ).start();
 					waitTimeS = 3;
 				}
+                else
+                    waitTimeS = 1;
 			}
 			else
 			{
@@ -96,6 +97,7 @@ public class Robot implements Runnable
 		double min;
 		double max;
 		int s;
+        boolean done;
 		
 		public ParameterAnimation( Parameter p, double min, double max, int secondsToAnimate ) // min and max in [0,1]
 		{
@@ -104,8 +106,27 @@ public class Robot implements Runnable
 			this.min = min;
 			this.max = max;
 			this.s = secondsToAnimate;
+            done = false;
+            final ParameterAnimation pa = this;
+            new Thread( new Runnable()
+            {
+                // let LED blink
+                public void run()
+                {
+                    boolean on = false;
+                    while( !pa.done )
+                    {
+                        try{ Thread.sleep( 250 ); } catch( Exception e ) {}
+                        if( !pa.p.isActive() )
+                            break;
+                        on = !on;
+                        Main.phidgetInterface().setLEDEnabled( pa.p, on );
+                    }
+                    Main.phidgetInterface().setLEDEnabled( pa.p, pa.p.isActive() );
+                }
+            } ).start();
 		}
-		
+
 		public void run()
 		{
 			double t = min;
@@ -113,47 +134,16 @@ public class Robot implements Runnable
 			while( t < max )
 			{
 				try{ Thread.sleep( ( int ) ( 1000 / fps ) ); } catch( Exception e ) {}
-				if( System.currentTimeMillis() < enableTime )
-					break;
-				if( !p.isActive() )
+				if( System.currentTimeMillis() < enableTime || !p.isActive() )
 					break;
 				p.setInterpolatedValue( t );
 				t += ( min + max ) / ( s * fps );
 			}
 			Robot.this.freeParameters.add( p );
+            done = true;
 		}
 	}
 	
-
-	class ParameterLEDAnimation implements Runnable
-	{
-		Parameter p;
-		long finishAt_ms;
-		boolean on = true;
-		
-		public ParameterLEDAnimation( Parameter p, int secondsToAnimate )
-		{
-			this.p = p;
-			this.finishAt_ms = System.currentTimeMillis() + secondsToAnimate * 1000;
-		}
-		
-		public void run()
-		{
-			double fps = 25;
-			while( System.currentTimeMillis() < finishAt_ms )
-			{
-				try{ Thread.sleep( 250 ); } catch( Exception e ) {}
-				if( System.currentTimeMillis() < enableTime )
-					break;
-				on = !on;
-				if( !p.isActive() )
-					break;
-				Main.phidgetInterface().setLEDEnabled( p, on );
-			}
-			Main.phidgetInterface().setLEDEnabled( p, p.isActive() );
-		}
-	}
-		
 	class StopAnimation implements Runnable
 	{
 		int s;

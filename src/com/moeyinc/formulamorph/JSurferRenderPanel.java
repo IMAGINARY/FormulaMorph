@@ -218,7 +218,7 @@ public class JSurferRenderPanel extends JComponent
                 asr.draw( ib.rgbBuffer, width, height );
                 long t_end = System.nanoTime();
                 double fps = 1000000000.0 / ( t_end - t_start );
-                System.err.println( fps + "fps at " + width +"x" + height );
+                //System.err.println( fps + "fps at " + width +"x" + height );
                 if( save_fps )
                     time_per_pixel = ( ( t_end - t_start ) / 1000000000.0 ) / ( width * height );
                 return ib;
