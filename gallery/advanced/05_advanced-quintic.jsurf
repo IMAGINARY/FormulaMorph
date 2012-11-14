@@ -48,28 +48,29 @@ camera_height=2.0
 surface_title=Fifteen Cusps
 surface_title_latex=Fifteen Cusps
 
-surface_equation=((((((((((((a*(x^5))-((b*(x^3))*(y^2)))+((c*x)*(y^4)))-(d*(z^5)))-(5.0*(x^4)))-((10.0*(x^2))*(y^2)))-(5.0*(y^4)))+(10.0*(z^3)))+(e*(x^2)))+(e*(y^2)))-(15.0*z))-f)
+surface_equation=16*(x^5-a*x^3*y^2+c*x*y^4-b*z^5)-8*(c*x^4+a*x^2*y^2+c*y^4)+4*a*z^3+2*(d*x^2+d*y^2)-e*z-f
 
-surface_equation_latex=\\FMPa\\cdot x^5-\\FMPb\\cdot x^3\\cdot y^2+\\FMPc\\cdot x\\cdot y^4-\\FMPd\\cdot z^5-5.0\\cdot x^4-10.0\\cdot x^2\\cdot y^2-5.0\\cdot y^4+10.0\\cdot z^3+\\FMPe\\cdot x^2+\\FMPe\\cdot y^2-15.0\\cdot z-\\FMPf
+surface_equation_latex_size=\\scriptsize
+surface_equation_latex=16(x^5-\\FMPa\\cdot x^3y^2+\\FMPc\\cdot xy^4-\\FMPb\\cdot z^5)\\\\-8(\\FMPc\\cdot x^4+\\FMPa\\cdot x^2*y^2+\\FMPc\\cdot y^4)\\\\+4\\FMPa\\cdot z^3+2(\\FMPd\\cdot x^2+\\FMPd\\cdot y^2)\\\\-\\FMPe\\cdot z-\\FMPf
 
-surface_parameter_a=1.0
-surface_parametermin_a=0.0
-surface_parametermax_a=2.0
-surface_parameter_b=1.0
+surface_parameter_a=10.0
+surface_parametermin_a=-20.0
+surface_parametermax_a=20.0
+surface_parameter_b=3.0
 surface_parametermin_b=0.0
-surface_parametermax_b=2.0
-surface_parameter_c=1.0
+surface_parametermax_b=6.0
+surface_parameter_c=5.0
 surface_parametermin_c=0.0
-surface_parametermax_c=2.0
-surface_parameter_d=1.0
-surface_parametermin_d=-2.0
-surface_parametermax_d=2.0
-surface_parameter_e=1.0
-surface_parametermin_e=-2.0
-surface_parametermax_e=2.0
-surface_parameter_f=24.0
-surface_parametermin_f=-24.0
-surface_parametermax_f=24.0
+surface_parametermax_c=10.0
+surface_parameter_d=20.0
+surface_parametermin_d=-20.0
+surface_parametermax_d=20.0
+surface_parameter_e=15.0
+surface_parametermin_e=-20.0
+surface_parametermax_e=20.0
+surface_parameter_f=12.0
+surface_parametermin_f=12.0
+surface_parametermax_f=20.0
 
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
