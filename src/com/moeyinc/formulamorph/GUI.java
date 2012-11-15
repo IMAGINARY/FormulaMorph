@@ -301,8 +301,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		rotationAnimation.pause();
 		new Thread( rotationAnimation ).start();
 
-		idChanged( Surface.F );
-		idChanged( Surface.G );
+        selectRandomSurface( Surface.F );
+        selectRandomSurface( Surface.G );
         
         this.addKeyListener( new KeyAdapter() {
             public void keyTyped( KeyEvent ke )
