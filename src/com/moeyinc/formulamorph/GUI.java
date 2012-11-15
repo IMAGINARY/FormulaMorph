@@ -386,7 +386,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		return new Rectangle( (int) ( p.getWidth() * x ), (int) ( p.getHeight() * y ), (int) ( p.getWidth() * w ), (int) ( p.getHeight() * h ) );
 	}
 
-	protected void hideCursor()
+	protected void hideCursor( boolean hide )
 	{
 		// Transparent 16 x 16 pixel boolean fullscreen cursor image.
 		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -396,16 +396,14 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			cursorImg, new Point(0, 0), "blank cursor");
 
 		// Set the blank cursor to the JFrame.
-		getContentPane().setCursor(blankCursor);
+		getContentPane().setCursor( hide ? blankCursor : null );
 	}
 
     public void tryFullScreen() {
 		GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         boolean isFullScreen = device.isFullScreenSupported();
-        if (isFullScreen)
-			hideCursor();
-		else
-			System.err.println( "Fullscreen mode not supported on this plattform! We try it anyway ..." );
+        if( !isFullScreen )
+        	System.err.println( "Fullscreen mode not supported on this plattform! We try it anyway ..." );
 
         boolean visible = isVisible();
         setVisible(false);
@@ -415,6 +413,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         validate();
         device.setFullScreenWindow( this );
         setVisible(visible);
+        hideCursor( true );
         setupControllerGUI( caGUIFrame.isVisible() || caGUIInternalFrame.isVisible() );
     }
     
@@ -430,6 +429,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         if( device.getFullScreenWindow() == this )
         	device.setFullScreenWindow( null );
         setVisible( visible );
+        hideCursor( false );
         setupControllerGUI( caGUIFrame.isVisible() || caGUIInternalFrame.isVisible() );
     }
 

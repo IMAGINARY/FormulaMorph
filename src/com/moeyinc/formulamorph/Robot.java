@@ -87,7 +87,7 @@ public class Robot implements Runnable
 	
 	public void holdBack()
 	{	
-		enableTime = System.currentTimeMillis() + 10 * 1000;
+		enableTime = System.currentTimeMillis() + Constants.screensaver_after_seconds * 1000;
 		Main.gui().pauseAnimation();
 	}
 	

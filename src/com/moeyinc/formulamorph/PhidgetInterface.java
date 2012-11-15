@@ -144,7 +144,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 									final Surface surface = id == 1 ? Surface.F : Surface.G;
 									
 									int eei = easterEggIndex.get( surface );
-									if( easterEggSequence[ eei ] * offset > 0 ) // offset has same direction as needed for easter egg
+									if( Constants.enable_easter_egg && easterEggSequence[ eei ] * offset > 0 ) // offset has same direction as needed for easter egg
 										++eei;
 									else
 										eei = 0;
