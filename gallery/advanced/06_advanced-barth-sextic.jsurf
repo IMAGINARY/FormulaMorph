@@ -53,7 +53,7 @@ surface_equation_latex=4 (\\FMBa{\\FMVa\\cdot\\varphi}^2 x^2-y^2)\\\\ \\cdot (\\
 
 
 surface_parameter_a=1.0
-surface_parametermin_a=0.0
+surface_parametermin_a=0.01
 surface_parametermax_a=2.0
 
 

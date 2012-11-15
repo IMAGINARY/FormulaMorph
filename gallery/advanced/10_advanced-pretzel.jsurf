@@ -52,7 +52,7 @@ camera_height=2.0
 surface_title=Pretzel
 surface_title_latex=Pretzel
 surface_equation=(((x+y-a)^2+b*(y)^2-c^2)*((x-y-0.79)^2+d*(y)^2-e^2))^2+z^2-f
-surface_equation_latex=(((x-\\FMPa)^2+\\FMPb\\cdot y^2\\\\ -\\FMPc^2) \\cdot ((x+1)^2+\\FMPd\\cdot y^2\\\\ -\\FMPe^2))^2+z^2-\\FMPf
+surface_equation_latex=(((x+y-\\FMPa)^2+\\FMPb\\cdot y^2 \\\\ -\\FMPc^2)\\cdot((x-y-0.79)^2+\\FMPd\\cdot y^2\\\\-\\FMPe^2))^2+z^2-\\FMPf
 
 surface_parameter_a=-0.43
 surface_parametermin_a=-5.0

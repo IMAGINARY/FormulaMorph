@@ -51,7 +51,7 @@ surface_title=Chmutov
 surface_title_latex=Chmutov
 surface_equation_latex_size=\\scriptsize
 surface_equation= 1 -a*(27*(d*x)^2*(4*(d*x)^2*((d*x)^2-1)+1)-1)^2  -b*(27*(d*y)^2*(4*(d*y)^2*((d*y)^2-1)+1)-1)^2 -c*(27*(d*z)^2*(4*(d*z)^2*((d*z)^2-1)+1)-1)^2
-surface_equation_latex= 1 -\\FMPa\\cdot (27\\cdot \\tilde x^2\\cdot (4\\cdot \\tilde x^2\\cdot (\\tilde x^2-1)+1)-1)^2 \\\\ -\\FMPb\\cdot (27\\cdot \\tilde y^2\\cdot (4\\cdot \\tilde y^2\\cdot (\\tilde y^2-1)+1)-1)^2\\\\ -\\FMPc\\cdot (27\\cdot \\tilde z^2\\cdot (4\\cdot \\tilde z^2\\cdot (\\tilde y^2-1)+1)-1)^2\\\\ (\\tilde x, \\tilde y, \\tilde z)=\\FMPd \\cdot(x,y,z)
+surface_equation_latex= 1 -\\FMPa\\cdot (27\\cdot \\tilde x^2\\cdot (4\\cdot \\tilde x^2\\cdot (\\tilde x^2-1)+1)-1)^2 \\\\ \\hphantom{1} -\\FMPb\\cdot (27\\cdot \\tilde y^2\\cdot (4\\cdot \\tilde y^2\\cdot (\\tilde y^2-1)+1)-1)^2\\\\  \\hphantom{1}-\\FMPc\\cdot (27\\cdot \\tilde z^2\\cdot (4\\cdot \\tilde z^2\\cdot (\\tilde y^2-1)+1)-1)^2\\\\ (\\tilde x, \\tilde y, \\tilde z)=\\FMPd \\cdot(x,y,z)
 
 surface_parameter_a=1.0
 surface_parametermin_a=0.1
@@ -63,7 +63,7 @@ surface_parameter_c=1.0
 surface_parametermin_c=0.1
 surface_parametermax_c=2.0
 surface_parameter_d=0.63
-surface_parametermin_d=0.1
+surface_parametermin_d=0.14
 surface_parametermax_d=2.0
 
 

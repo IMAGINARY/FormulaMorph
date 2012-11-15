@@ -26,7 +26,7 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.5
 light_intensity_0=0.7
-rotation_matrix=0.9226276262381823 0.3457798789400658 0.1708640940112501 0.0 -0.22556338630554085 0.12439372511756694 0.9662542936048217 0.0 0.3128568715250971 -0.9300335888942719 0.19276436773418817 0.0 0.0 0.0 0.0 1.0
+rotation_matrix=-0.4891050425953132 -0.6442118037973453 0.5880199054079476 0.0 -0.3043174792424661 0.7578348897248021 0.5771283667809743 0.0 -0.8174149063574233 0.10333165905924127 -0.5667057782489185 0.0 0.0 0.0 0.0 1.0
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -52,10 +52,10 @@ surface_title_latex=Seed Pod
 surface_equation=(x^2+y^2+z^2-a^2)*x*y*z-b
 surface_equation_latex=(x^2+y^2+z^2-\\FMPa^2)\\cdot xyz-\\FMPb
 
-surface_parameter_a=1.5
+surface_parameter_a=1.43
 surface_parametermin_a=0.0
 surface_parametermax_a=2.0
-surface_parameter_b=0.01
+surface_parameter_b=0.07
 surface_parametermin_b=0.0
 surface_parametermax_b=2.0
 

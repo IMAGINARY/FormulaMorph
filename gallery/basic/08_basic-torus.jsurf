@@ -1,11 +1,7 @@
 #jSurfer surface description
-#Wed Oct 31 10:06:54 CET 2012
+#Wed Oct 10 21:54:12 CEST 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
-surface_parameter_d=0.6193796396255493
-surface_parameter_c=0.7888560891151428
-surface_parameter_b=0.37088337540626526
-surface_parameter_a=0.6994390487670898
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -15,20 +11,20 @@ light_position_2=0.0 -100.0 100.0
 camera_fov_y=60.0
 light_position_1=100.0 100.0 100.0
 light_position_0=-100.0 100.0 100.0
-front_material_color=0.6392157 0.16470589 0.2784314
+front_material_color=1.0 0.682352941176471 0.729411764705882
 background_color=1.0 1.0 1.0
 light_intensity_7=1.0
 front_material_ambient_intensity=0.4
 light_intensity_6=1.0
-scale_factor=0.6786649227142334
+scale_factor=0.11388255655765538
 light_intensity_5=1.0
 light_intensity_4=1.0
 light_intensity_3=1.0
 front_material_specular_intensity=0.5
 light_intensity_2=0.3
-light_intensity_1=0.5
-light_intensity_0=0.7
-rotation_matrix=0.16019989434809323 0.6697818938971396 0.725071174753493 0.0 0.9162405524199024 -0.3741637207147131 0.14319483301496763 0.0 0.36720463498180966 0.641399816579701 -0.6736223209925519 0.0 0.0 0.0 0.0 1.0
+light_intensity_1=0.7
+light_intensity_0=0.5
+rotation_matrix=-0.9972216303971686 0.07457985514802573 -3.4954261261556624E-4 0.0 -0.06355543870879514 -0.8473485797437037 0.527230652510736 0.0 0.03902538679676372 0.5257819320038986 0.8497279197142592 0.0 0.0 0.0 0.0 1.0
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -48,26 +44,21 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-surface_title=Fermat Surface
-surface_title_latex=Fermat Surface
-surface_equation=a*x^5+b*y^5-c*z^5-d
-surface_equation_latex=\\FMPa\\cdot x^5 + \\FMPb \\cdot y^5\\\\ - \\FMPc\\cdot z^5 - \\FMPd
+surface_title=Torus
+surface_title_latex=Torus
+surface_equation=(x^2+y^2+z^2+a^2-b^2)^2-4*a^2*(x^2+y^2)
+surface_equation_latex=\\left(x^2+y^2+z^2+\\FMPa^2-\\FMPb^2\\right)^2\\\\-\\;  4\\cdot \\FMPa^2\\cdot (x^2+y^2)
 
-surface_parameter_a=1.0
-surface_parametermin_a=0.0
+
+surface_parameter_a=1.5
+surface_parametermin_a=0.03
 surface_parametermax_a=2.0
-surface_parameter_b=1.0
-surface_parametermin_b=0.0
+surface_parameter_b=0.5
+surface_parametermin_b=0.01
 surface_parametermax_b=2.0
-surface_parameter_c=1.0
-surface_parametermin_c=0.0
-surface_parametermax_c=2.0
-surface_parameter_d=1.0
-surface_parametermin_d=0.0
-surface_parametermax_d=2.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
-back_material_color=0.9019608 0.3137255 0.25490198
+back_material_color=0.717647058823529 0.862745098039216 0.470588235294118
 back_material_shininess=30.0
 back_material_diffuse_intensity=0.8

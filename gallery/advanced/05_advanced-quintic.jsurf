@@ -51,7 +51,7 @@ surface_title_latex=Fifteen Cusps
 surface_equation=16*(x^5-a*x^3*y^2+c*x*y^4-b*z^5)-8*(c*x^4+a*x^2*y^2+c*y^4)+4*a*z^3+2*(d*x^2+d*y^2)-e*z-f
 
 surface_equation_latex_size=\\scriptsize
-surface_equation_latex=16(x^5-\\FMPa\\cdot x^3y^2+\\FMPc\\cdot xy^4-\\FMPb\\cdot z^5)\\\\-8(\\FMPc\\cdot x^4+\\FMPa\\cdot x^2*y^2+\\FMPc\\cdot y^4)\\\\+4\\FMPa\\cdot z^3+2(\\FMPd\\cdot x^2+\\FMPd\\cdot y^2)\\\\-\\FMPe\\cdot z-\\FMPf
+surface_equation_latex=16(x^5-\\FMPa\\cdot x^3y^2+\\FMPc\\cdot xy^4-\\FMPb\\cdot z^5)\\\\-8(\\FMPc\\cdot x^4+\\FMPa\\cdot x^2y^2+\\FMPc\\cdot y^4)\\\\+4\\FMPa\\cdot z^3+2(\\FMPd\\cdot x^2+\\FMPd\\cdot y^2)\\\\-\\FMPe\\cdot z-\\FMPf
 
 surface_parameter_a=10.0
 surface_parametermin_a=-20.0
@@ -69,7 +69,7 @@ surface_parameter_e=15.0
 surface_parametermin_e=-20.0
 surface_parametermax_e=20.0
 surface_parameter_f=12.0
-surface_parametermin_f=12.0
+surface_parametermin_f=0.0
 surface_parametermax_f=20.0
 
 

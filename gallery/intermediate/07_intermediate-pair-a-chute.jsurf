@@ -28,7 +28,7 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.5
 light_intensity_0=0.7
-rotation_matrix=0.9913528644872203 0.10416547716540064 -0.079806337090994 0.0 0.08786576941961119 -0.07521956869185349 0.993288287985975 0.0 0.09746335022600347 -0.9917114347695636 -0.0837217146862602 0.0 0.0 0.0 0.0 1.0
+rotation_matrix=0.3220575416852373 0.043814253607077844 -0.9457056894322211 0.0 0.9462838111583926 -0.04522106652593949 0.32015934139387536 0.0 -0.02873827731726099 -0.9980157144669987 -0.05602450440409137 0.0 0.0 0.0 0.0 1.0
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -63,7 +63,7 @@ surface_parameter_c=1.0
 surface_parametermin_c=0.0
 surface_parametermax_c=1.0
 surface_parameter_d=1.0
-surface_parametermin_d=0.0
+surface_parametermin_d=0.5
 surface_parametermax_d=2.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0

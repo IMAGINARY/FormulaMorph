@@ -26,7 +26,7 @@ front_material_specular_intensity=0.5
 light_intensity_2=0.3
 light_intensity_1=0.5
 light_intensity_0=0.7
-rotation_matrix=0.2872809461578704 -0.09765056519855686 0.9528557210255051 0.0 -0.9516443512679197 -0.14211946112342816 0.2723510372108834 0.0 0.10882410888446392 -0.9850210281442621 -0.13375682202831182 0.0 0.0 0.0 0.0 1.0
+rotation_matrix=1 0 0 0  0 0 -1 0  0 1 0 0  0 0 0 1
 light_color_7=1.0 1.0 1.0
 light_color_6=1.0 1.0 1.0
 front_material_diffuse_intensity=0.8
@@ -51,11 +51,11 @@ surface_title_latex=Hyperboloid\\\\of One Sheet
 surface_equation=x^2/(a^2)+y^2/(b^2)-z^2-1
 surface_equation_latex=\\frac{x^2}{\\FMPa^2}+\\frac{y^2}{\\FMPb^2 } - z^2 - 1
 surface_parameter_a=1.0
-surface_parametermin_a=0.0
-surface_parametermax_a=2.0
+surface_parametermin_a=0.5
+surface_parametermax_a=10.0
 surface_parameter_b=1.0
-surface_parametermin_b=0.0
-surface_parametermax_b=2.0
+surface_parametermin_b=0.5
+surface_parametermax_b=10.0
 
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0

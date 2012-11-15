@@ -51,11 +51,11 @@ surface_title_latex=Cubic with\\\\Two Singularities
 surface_equation=-x^3-y^2*z-x*z^2+x*z-x*y*a-z^2*b
 surface_equation_latex=-x^3-y^2 z-x z^2+ x z\\\\-x y\\cdot \\FMPa-z^2\\cdot\\FMPb
 
-surface_parameter_a=0.5
-surface_parametermin_a=-2.0
+surface_parameter_a=0.0
+surface_parametermin_a=0.0
 surface_parametermax_a=2.0
-surface_parameter_b=0.5
-surface_parametermin_b=-2.0
+surface_parameter_b=0.0
+surface_parametermin_b=0.0
 surface_parametermax_b=2.0
 
 

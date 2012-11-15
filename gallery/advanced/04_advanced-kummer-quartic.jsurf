@@ -51,16 +51,16 @@ light_status_0=ON
 camera_height=2.0
 surface_title=Kummer Quartic
 surface_title_latex=Kummer Quartic
-surface_equation=(x^2+y^2+z^2-a)^2+(3*a-1.0)/(a-3)*(1-z-b*x)*(1-z+b*x)*(1+z+b*y)*(1+z-b*y) 
+surface_equation=((a-0.0000)-3)*(x^2+y^2+z^2-(a-0.0000))^2+(3*(a-0.0000)-1.0)*(1-z-b*x)*(1-z+b*x)*(1+z+b*y)*(1+z-b*y) 
 
-surface_equation_latex_size=\\small
-surface_equation_latex=(x^2+y^2+z^2-\\FMPa)^2+\\frac{3\\cdot \\FMPa-1.0}{\\FMPa-3}\\\\ \\cdot (1-z-\\FMPb\\cdot x)\\cdot (1-z+\\FMPb\\cdot x)\\\\ \\cdot (1+z+\\FMPb\\cdot y)\\cdot (1+z-\\FMPb\\cdot y) 
+surface_equation_latex_size=\\footnotesize
+surface_equation_latex=(3\\cdot \\FMPa-1)\\\\ \\cdot (1-z-\\FMPb\\cdot x)\\cdot (1-z+\\FMPb\\cdot x)\\\\ \\cdot (1+z+\\FMPb\\cdot y)\\cdot (1+z-\\FMPb\\cdot y) \\\\ +(\\FMPa-3)\\cdot (x^2+y^2+z^2-\\FMPa)^2
 
 surface_parameter_a=1.5
-surface_parametermin_a=0.05
+surface_parametermin_a=0.3333333334
 surface_parametermax_a=3.0
 surface_parameter_b=1.4142
-surface_parametermin_b=0.0
+surface_parametermin_b=0.00001
 surface_parametermax_b=2.0
 
 

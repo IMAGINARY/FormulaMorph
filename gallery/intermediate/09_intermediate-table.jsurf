@@ -52,7 +52,7 @@ surface_title=Table
 surface_title_latex=Table
 surface_equation=x^16+a*(y+b*z)^16+z^16-c^2-(x^18+(y+b*z)^18+z^18)+(1-a)*(y+b*z)^15
 surface_equation_latex_size=\\small
-surface_equation_latex=x^{16}+\\FMPa\\cdot(y+\\FMPb\\cdot z)^{16}+z^{16}\\\\-(x^{18}+(y+\\FMPb\\cdot z)^{18}+z^{18})\\\\+(1-\\FMPa)\\cdot(y+\\FMPb\\cdot z)^{15}-\\FMPc^2
+surface_equation_latex=x^{16}+\\FMPa\\cdot(y+\\FMPb\\cdot z)^{16}+z^{16}\\\\-(x^{18}+(y+\\FMPb\\cdot z)^{18}+z^{18})-\\FMPc^2\\\\+(1-\\FMPa)\\cdot(y+\\FMPb\\cdot z)^{15}
 
 surface_parameter_a=0.0
 surface_parametermin_a=0.0

@@ -1,8 +1,8 @@
 #jSurfer surface description
-#Mon Nov 12 11:44:58 EST 2012
+#Wed Oct 31 10:10:57 CET 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
-surface_parameter_b=0.0012581022456288338
+surface_parameter_a=0.3059000074863434
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -12,12 +12,12 @@ light_position_2=0.0 -100.0 100.0
 camera_fov_y=60.0
 light_position_1=100.0 100.0 100.0
 light_position_0=-100.0 100.0 100.0
-front_material_color=0.88235294117647 0.345098039215686 0.16078431372549
+front_material_color=0.6392157 0.16470589 0.2784314
 background_color=1.0 1.0 1.0
 light_intensity_7=1.0
 front_material_ambient_intensity=0.4
 light_intensity_6=1.0
-scale_factor=0.6400001049041748
+scale_factor=0.6786649227142334
 light_intensity_5=1.0
 light_intensity_4=1.0
 light_intensity_3=1.0
@@ -45,19 +45,22 @@ light_status_2=ON
 light_status_1=ON
 light_status_0=ON
 camera_height=2.0
-surface_title=Whitney Umbrella
-surface_title_latex=Whitney Umbrella
-surface_equation=(a*z^2-x^2*y+b*y)*(x^2+z^2-0.00005+b)
-surface_equation_latex=\\FMPa\\cdot z^2- x^2 \\cdot y + \\FMPb \\cdot y
-surface_parameter_a=1.0
-surface_parametermin_a=-1.0
-surface_parametermax_a=1.0
-surface_parameter_b=0.000
-surface_parametermin_b=0.0000
-surface_parametermax_b=1.0
+surface_title=Platonic Shift
+surface_title_latex=Platonic Shift
+surface_equation=x^4+y^4+z^4-a+b*(x^2*y^2+x^2*z^2+y^2*z^2)
+surface_equation_latex=x^4+y^4+z^4-\\FMPa\\\\ +\\FMPb \\cdot (x^2y^2 + x^2z^2 + y^2z^2)
+surface_parameter_a=5.0
+surface_parametermin_a=0.01
+surface_parametermax_a=10.0
+surface_parameter_b=7.0
+surface_parametermin_b=-20.0
+surface_parametermax_b=20.0
+
+
+
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
-back_material_color=1.0 0.666666666666667 0.298039215686274
+back_material_color=0.9019608 0.3137255 0.25490198
 back_material_shininess=30.0
 back_material_diffuse_intensity=0.8

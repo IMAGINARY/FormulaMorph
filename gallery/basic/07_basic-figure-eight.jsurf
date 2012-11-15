@@ -2,9 +2,6 @@
 #Wed Oct 10 21:41:29 CEST 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
-surface_parameter_c=0.22012197971343994
-surface_parameter_b=0.0
-surface_parameter_a=1.0
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -54,7 +51,7 @@ surface_equation_latex=\\FMPa\\cdot x^2 + y^2 + \\FMPb\\cdot z^4 - z^2
 surface_parameter_a=1.0
 surface_parametermin_a=0.0
 surface_parametermax_a=2.0
-surface_parameter_b=0.5
+surface_parameter_b=0.23
 surface_parametermin_b=0.0
 surface_parametermax_b=2.0
 

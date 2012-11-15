@@ -2,9 +2,6 @@
 #Mon Oct 08 23:00:58 CEST 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
-surface_parameter_c=0.5580353736877441
-surface_parameter_b=0.3729628324508667
-surface_parameter_a=0.43378713726997375
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -50,10 +47,10 @@ camera_height=2.0
 surface_title=Elliptical Paraboloid
 surface_title_latex=Elliptical\\\\Paraboloid
 surface_equation=a*x^2+y^2+b*z
-surface_equation_latex=\\FMPa\\cdot x^2 + y^2 +\\FMPb\\cdot x
+surface_equation_latex=\\FMPa\\cdot x^2 + y^2 +\\FMPb\\cdot z
 surface_parameter_a=1.0
-surface_parametermin_a=-5.0
-surface_parametermax_a=5.0
+surface_parametermin_a=0.4
+surface_parametermax_a=15.0
 surface_parameter_b=1.0
 surface_parametermin_b=-2.0
 surface_parametermax_b=2.0

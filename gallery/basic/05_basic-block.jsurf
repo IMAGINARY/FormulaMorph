@@ -2,10 +2,6 @@
 #Wed Oct 10 21:33:53 CEST 2012
 back_material_specular_intensity=0.5
 camera_type=ORTHOGRAPHIC_CAMERA
-surface_parameter_d=1.0
-surface_parameter_c=0.36724433302879333
-surface_parameter_b=0.5143665671348572
-surface_parameter_a=0.43378713726997375
 light_position_7=0.0 0.0 0.0
 light_position_6=0.0 0.0 0.0
 light_position_5=0.0 0.0 0.0
@@ -50,14 +46,14 @@ light_status_0=ON
 camera_height=2.0
 surface_title=Block
 surface_title_latex=Block
-surface_equation=a*x^6 + b*y^6 + z^6- 1
-surface_equation_latex=\\FMPa\\cdot x^6 +\\FMPb\\cdot y^6 + z^6 - 1
+surface_equation=a^6*x^6 + b^6*y^6 + z^6- 1
+surface_equation_latex=\\FMPa^6\\cdot x^6 +\\FMPb^6\\cdot y^6 + z^6 - 1
 surface_parameter_a=1.0
-surface_parametermin_a=0.01
-surface_parametermax_a=5.0
+surface_parametermin_a=0.58
+surface_parametermax_a=10.0
 surface_parameter_b=1.0
-surface_parametermin_b=0.01
-surface_parametermax_b=5.0
+surface_parametermin_b=0.58
+surface_parametermax_b=10.0
 
 camera_transform=1.0 0.0 0.0 -0.0 0.0 1.0 0.0 -0.0 0.0 0.0 1.0 -1.0 0.0 0.0 0.0 1.0
 back_material_ambient_intensity=0.4
