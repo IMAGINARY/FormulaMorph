@@ -1,9 +1,6 @@
 package com.moeyinc.formulamorph;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.EnumMap;
+import java.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -107,15 +104,22 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	}
 
 	class PhidgetReaderClient implements Runnable
-	{		
-		//final int[] easterEggSequence = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5, -8)
-		final int[] easterEggSequence = { 1, -1, 1, 1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3)
-		private EnumMap< Surface, Integer > easterEggIndex = new EnumMap< Surface, Integer >( Surface.class );
-		
+	{				
 		public void run()
 		{
-			easterEggIndex.put( Surface.F, 0 );
-			easterEggIndex.put( Surface.G, 0 );
+			//final Integer[] easterEggSequence_tmp = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5, -8)
+			Integer[] easterEggSequence_tmp = { 1, -1, 1, 1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3)
+			List< Integer > easterEggSequencePos = new ArrayList< Integer >( Arrays.asList( easterEggSequence_tmp ) );
+
+			// second sequence is the negative version of the first one
+			for( int i = 0; i < easterEggSequence_tmp.length; ++i )
+				easterEggSequence_tmp[ i ] = -easterEggSequence_tmp[ i ];
+			List< Integer > easterEggSequenceNeg = new ArrayList< Integer >( Arrays.asList( easterEggSequence_tmp ) );
+			final EnumMap< Surface, LinkedList< Integer > > currentEasterEggSequences = new EnumMap< Surface, LinkedList< Integer > >( Surface.class );
+			currentEasterEggSequences.put( Surface.F, new LinkedList< Integer >( Arrays.asList( easterEggSequence_tmp ) ) );
+			currentEasterEggSequences.put( Surface.G, new LinkedList< Integer >( Arrays.asList( easterEggSequence_tmp ) ) );
+			
+			// receive input
 			while( !PhidgetInterface.this.shutdown )
 			{
 				try
@@ -144,13 +148,16 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 									final int offset = Integer.parseInt( values[ 0 ] );
 									final Surface surface = id == 1 ? Surface.F : Surface.G;
 									
-									int eei = easterEggIndex.get( surface );
-									if( Constants.enable_easter_egg && easterEggSequence[ eei ] * offset > 0 ) // offset has same direction as needed for easter egg
-										++eei;
-									else
-										eei = 0;
-									System.err.println(eei);
-									if( eei == easterEggSequence.length )
+									// insert offset into easter egg sequence
+									for( int i = 0; i < Math.abs( offset ); ++i )
+									{
+										currentEasterEggSequences.get( surface ).poll();
+										currentEasterEggSequences.get( surface ).offer( offset > 0 ? +1 : -1 );
+                                        System.out.println(currentEasterEggSequences.toString());
+									}
+									
+									// test if easter egg sequences is complete							
+									if( currentEasterEggSequences.get( surface ).equals( easterEggSequencePos ) || currentEasterEggSequences.get( surface ).equals( easterEggSequenceNeg ) )
 									{
 										// launch easter egg
 										SwingUtilities.invokeLater( new Runnable()
@@ -171,7 +178,6 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 											}
 										} );
 									}
-									easterEggIndex.put( surface, eei % easterEggSequence.length );
 								}
 								else
 								{
@@ -270,7 +276,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 						catch( NumberFormatException nfe ) { unknown_command = true; }
 						
 						if( unknown_command )
-							System.err.println( "PhidgetReader: Unknown command \"" + cmd + "\"" );
+							;//System.err.println( "PhidgetReader: Unknown command \"" + cmd + "\"" );
                         else
                             Main.robot().holdBack();
 					}
