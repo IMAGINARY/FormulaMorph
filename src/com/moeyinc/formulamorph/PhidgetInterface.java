@@ -108,7 +108,8 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 
 	class PhidgetReaderClient implements Runnable
 	{		
-		final int[] easterEggSequence = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5, -8)
+		//final int[] easterEggSequence = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5, -8)
+		final int[] easterEggSequence = { 1, -1, 1, 1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3)
 		private EnumMap< Surface, Integer > easterEggIndex = new EnumMap< Surface, Integer >( Surface.class );
 		
 		public void run()
