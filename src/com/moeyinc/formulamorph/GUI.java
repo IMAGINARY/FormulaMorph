@@ -190,7 +190,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		super( "FormulaMorph Main Window" );
 		
 		this.getLayeredPane().add( caGUIInternalFrame );
-		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { setupControllerGUI( true ); } } );
+		this.addMouseListener( new MouseAdapter() { public void mouseClicked( MouseEvent e ) { if( e.getButton() == MouseEvent.BUTTON2 || e.isMetaDown() ) setupControllerGUI( true ); else requestFocus(); } } );
 		
     	Parameter.M_t.setMin( 0.0 );
     	Parameter.M_t.setMax( 1.0 );
@@ -303,6 +303,17 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 		idChanged( Surface.F );
 		idChanged( Surface.G );
+        
+        this.addKeyListener( new KeyAdapter() {
+            public void keyTyped( KeyEvent ke )
+            {
+                if( ke.getKeyChar() == 'r' )
+                {
+                    try { GUI.this.reload( Surface.F ); GUI.this.reload( Surface.G ); } catch( Exception e ) {}
+                }
+            }
+        }
+        );
 	}
 	
 	SurfaceGUIElements s2g( Surface s ) { return this.surface2guielems.get( s ); }
