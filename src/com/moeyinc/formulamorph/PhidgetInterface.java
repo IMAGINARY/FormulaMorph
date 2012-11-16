@@ -107,8 +107,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 	{				
 		public void run()
 		{
-			//final Integer[] easterEggSequence_tmp = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5, -8)
-			Integer[] easterEggSequence_tmp = { 1, -1, 1, 1, -1, -1, -1 }; // alternating Fibonacci sequence code (1, -1, 2, -3)
+			Integer[] easterEggSequence_tmp = { 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1 }; // alternating Fibonacci sequence code (1, -1, 2, -3, 5)
 			List< Integer > easterEggSequencePos = new ArrayList< Integer >( Arrays.asList( easterEggSequence_tmp ) );
 
 			// second sequence is the negative version of the first one
