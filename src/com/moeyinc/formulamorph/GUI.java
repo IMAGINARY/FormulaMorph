@@ -300,6 +300,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		rotationAnimation = new RotationAnimation(); 
 		rotationAnimation.pause();
 		new Thread( rotationAnimation ).start();
+        stepPath( -4 );
 
         selectRandomSurface( Surface.F );
         selectRandomSurface( Surface.G );
