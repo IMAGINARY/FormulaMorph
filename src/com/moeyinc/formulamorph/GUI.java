@@ -477,8 +477,28 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		}    	
     }
     
-    public void saveScreenShotLeft() { try { saveScreenShotToFile( new File( "left.png" ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
-    public void saveScreenShotRight() { try { saveScreenShotToFile( new File( "right.png" ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
+    public void setGalleryVisible( boolean visible )
+    {
+        for( int i = 0; i < 7; ++i )
+		{
+			s2g( Surface.F ).galleryPanels().get( i ).setVisible( visible );
+			s2g( Surface.G ).galleryPanels().get( i ).setVisible( visible );
+		}
+		triangleFTop.setVisible( visible );
+		triangleGTop.setVisible( visible );
+		triangleFBottom.setVisible( visible );
+		triangleGBottom.setVisible( visible );
+    }
+    
+    public String createScreenShotFilename()
+    {
+    	String s = LaTeXCommands.getDynamicLaTeXMap().get( "FMTitlePlainF" ).replaceAll( " ", "_" ) + "_vs_" + LaTeXCommands.getDynamicLaTeXMap().get( "FMTitlePlainG" ).replaceAll( " ", "_" );
+    	s = s + "_" + new java.text.SimpleDateFormat( "yyyy-MM-dd_HH-mm-ss" ).format( new java.util.Date() ) + ".png";
+    	return s;
+    }
+    
+    public void saveScreenShotLeft() { try { saveScreenShotToFile( new File( createScreenShotFilename() ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
+    public void saveScreenShotRight() { try { saveScreenShotToFile( new File( createScreenShotFilename() ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
     
     public void saveScreenShotToFile( File f )
     		throws IOException
@@ -504,7 +524,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     {
     	BufferedImage image = new BufferedImage( content.getWidth(), content.getHeight(), BufferedImage.TYPE_INT_RGB );
         Graphics2D graphics2D = image.createGraphics();
+        setGalleryVisible( false );
         content.paint( graphics2D );
+        setGalleryVisible( true );
         javax.imageio.ImageIO.write( image, "png", out );    	
     }
 
@@ -902,6 +924,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
         asr.getFrontMaterial().loadProperties(props, "front_material_", "");
         asr.getBackMaterial().loadProperties(props, "back_material_", "");
         
+        LaTeXCommands.getDynamicLaTeXMap().put( "FMTitlePlain" + surf.name(), props.getProperty( "surface_title" ) );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitle" + surf.name(), "\\begin{array}{c}\n\\vphantom{T}\\\\\n\\text{\\fixheight{}" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "\\ " ) + "}\\\\\n\\vphantom{.}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleFormula" + surf.name(), "\\begin{array}{c}\n\\text{Formula for " + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
         LaTeXCommands.getDynamicLaTeXMap().put( "FMTitleWImage" + surf.name(), "\\begin{array}{c}\n\\text{" + props.getProperty( "surface_title_latex" ).replaceAll( "\\\\\\\\", "}\\\\\\\\\\\\text{" ) + "\\fixheight}\\end{array}" );
