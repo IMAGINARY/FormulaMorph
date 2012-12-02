@@ -38,7 +38,7 @@ public class Main {
 		gui.pack();
 		gui.setVisible( true );
         
-       	pi = new PhidgetInterface( Constants.host, Constants.port );
+       	pi = new PhidgetInterface( Constants.phidget_host, Constants.phidget_port );
        	robot = new Robot();
 		new Thread( robot ).start();
 
