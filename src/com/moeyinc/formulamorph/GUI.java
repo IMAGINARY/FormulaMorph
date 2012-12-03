@@ -12,6 +12,8 @@ import javax.swing.event.InternalFrameEvent;
 import javax.vecmath.*;
 import javax.imageio.ImageIO;
 
+import com.moeyinc.formulamorph.UserVerification.Visitor;
+
 import java.io.*;
 import java.net.*;
 
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.EnumSet;
+import java.util.TimerTask;
+import java.util.Timer;
 import java.text.DecimalFormat;
 
 //import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
@@ -40,6 +44,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		final public LaTeXLabel equation;
 		final public JPanel levelIcon;
 		final public LaTeXLabel levelLabel;
+		final public UserVerification userVerification;
+		final public JPanel overlay;
+		
 		final private Surface surface;
 		private List< Gallery.GalleryItem > gallery_items;
 		private List< Gallery.GalleryItem > gallery_items_unmodifyable;
@@ -47,7 +54,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		private ArrayList< JPanel > gallery_panels;
 		private List< JPanel > gallery_panels_unmodifiable;
 		private Map< Gallery.Level, ImageScaler > levelIcons;
-		
+			
 		public SurfaceGUIElements( Surface s )
 		{
 			levelIcons = new EnumMap< Gallery.Level, ImageScaler >( Gallery.Level.class );
@@ -107,6 +114,13 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 				e.printStackTrace( System.err );
 				System.exit( -1 );
 			}
+			
+			overlay = new JPanel();
+			overlay.setBackground( new Color( 0, 0, 0, 170 ) );
+			overlay.setOpaque( true );
+			overlay.setVisible( false );
+			userVerification = new UserVerification( surface == Surface.F ? UserVerification.LocationID.LEFT : UserVerification.LocationID.RIGHT, null );
+			userVerification.setVisible( false );
 		}
 		
 		public int id() { return id_in_gallery; }
@@ -175,8 +189,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		}
 		return new BufferedImage( 1,1, BufferedImage.TYPE_BYTE_GRAY );
 	}
-			
-	//JPanel blackStrip;
 
 	RotationAnimation rotationAnimation;
 	
@@ -208,8 +220,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		surface2guielems.put( Surface.F, new SurfaceGUIElements( Surface.F ) );
 		surface2guielems.put( Surface.M, new SurfaceGUIElements( Surface.M ) );
 		surface2guielems.put( Surface.G, new SurfaceGUIElements( Surface.G ) );
-		
-		//blackStrip = new JPanel(); blackStrip.setBackground( Color.black );
 		
 		final LaTeXLabel eqF = s2g( Surface.F ).equation;
 		final LaTeXLabel eqM = s2g( Surface.M ).equation;
@@ -257,7 +267,12 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		content.add( s2g( Surface.G ).levelLabel );
 		content.add( s2g( Surface.G ).levelIcon );
 		
-		//content.add( blackStrip );
+		JLayeredPane layeredContent = this.getLayeredPane();
+		
+		layeredContent.add( s2g( Surface.F ).overlay, JLayeredPane.MODAL_LAYER );
+		layeredContent.add( s2g( Surface.F ).userVerification, JLayeredPane.POPUP_LAYER );
+		layeredContent.add( s2g( Surface.G ).overlay, JLayeredPane.MODAL_LAYER );
+		layeredContent.add( s2g( Surface.G ).userVerification, JLayeredPane.POPUP_LAYER );
 
 		// layout components
 		refreshLayout();
@@ -321,8 +336,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 	public void refreshLayout()
 	{
-		//blackStrip.setBounds( computeBoundsFullHD( content, 0, 84, 1920, 624 ) );
-		
 		int yCenter = 380; 
 		
 		int surfXStart = 36 + 62 + 1;
@@ -375,6 +388,29 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		s2g( Surface.F ).levelLabel.setBounds( computeBoundsFullHD( content, galXStart - galSize / 2.0, galYEnd + ( 1080 - galYEnd ) / 2.0 - galSize, 2 * galSize, galSize / 2 ) );
 		s2g( Surface.G ).levelLabel.setPreferredSize( new Dimension( 2 * galSize, galSize / 2 ) );
 		s2g( Surface.G ).levelLabel.setBounds( computeBoundsFullHD( content, 1920 - galXStart - 3 * galSize / 2.0, galYEnd + ( 1080 - galYEnd ) / 2.0 - galSize, 2 * galSize, galSize / 2 ) );
+		
+		int overlayWidth = Math.max( surfXStart + surfSize, 1 + (int) elXStart + elPrefWidth );
+		Rectangle contentRect = this.content.getBounds();
+
+		Rectangle overlayLeftBounds = computeBoundsFullHD( content, 0, 0, overlayWidth, 1080 );
+		overlayLeftBounds.translate( contentRect.x, contentRect.y );
+		
+		Rectangle overlayRightBounds = computeBoundsFullHD( content, 1920 - overlayWidth, 0, overlayWidth, 1080 );
+		overlayRightBounds.translate( contentRect.x, contentRect.y );
+		
+		s2g( Surface.F ).overlay.setBounds( overlayLeftBounds );
+		s2g( Surface.G ).overlay.setBounds( overlayRightBounds );
+		
+		Dimension uvSize = s2g( Surface.F ).userVerification.getPreferredSize();
+		double uvXStart = surfXStart + ( surfSize - uvSize.width ) / 2;
+		
+		Rectangle uvLeftBounds = computeBoundsFullHD( content, uvXStart, surfYStart / 3, uvSize.width, uvSize.height );
+		uvLeftBounds.translate( contentRect.x, contentRect.y );
+		s2g( Surface.F ).userVerification.setBounds( uvLeftBounds);
+		
+		Rectangle uvRightBounds = computeBoundsFullHD( content, 1920 - uvXStart - uvSize.width, surfYStart / 3, uvSize.width, uvSize.height );
+		uvRightBounds.translate( contentRect.x, contentRect.y );
+		s2g( Surface.G ).userVerification.setBounds( uvRightBounds );
 		
 		repaint();
 	}
@@ -498,9 +534,60 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	return s;
     }
     
-    public void saveScreenShotLeft() { try { saveScreenShotToFile( new File( createScreenShotFilename() ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
-    public void saveScreenShotRight() { try { saveScreenShotToFile( new File( createScreenShotFilename() ) ); } catch ( IOException ioe ) { ioe.printStackTrace(); } }
+    public void saveScreenShot( Surface s )
+    {
+    	if( s != Surface.F && s != Surface.G )
+    		return;
+    	
+    	final UserVerification uv = s2g( s ).userVerification;
+    	final JPanel overlay = s2g( s ).overlay;
+    	
+    	if( Constants.enable_momath_api )
+    	{
+    		if( Constants.enable_user_verification )
+    		{
+    			// let user identify himself and save to his profile
+		    	if( s2g( s ).userVerification.isVisible() )
+		    	{
+		    		s2g( s ).userVerification.confirm();
+		    	}
+		    	else
+		    	{
+			    	final BufferedImage screenshot = screenShot();
+			    	final String name = createScreenShotFilename();
+			    	
+			    	UserVerification.ActionListener uval = new UserVerification.ActionListener() {
+						public void visitorSelected( Visitor v )
+						{
+							UserVerification.postPNGImageForVisitor( v, screenshot, name );
+							this.canceled();
+						}
+						
+						public void canceled() {
+							uv.cancelTimeout();
+							overlay.setVisible( false ); 
+							uv.setVisible( false );
+						}
+			    	};
+			    	uv.setActionListener( uval );
+			    	uv.initContent();
+			    	
+			    	overlay.setVisible( true ); 
+			    	uv.setVisible( true );
+			    	uv.timeout( Constants.user_verification_timeout * 1000 );
+			    	
+			    	refreshLayout();
+		    	}
+    		}
+    		else
+    		{
+    			// save to profiles of all users in front of sensor
+    			uv.postPNGImageForAllVisitors( screenShot(), createScreenShotFilename() );
+    		}
+	    }
+    }
     
+    /*
     public void saveScreenShotToFile( File f )
     		throws IOException
     {
@@ -523,12 +610,17 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     public void saveScreenShot( OutputStream out )
     	throws IOException
     {
+        javax.imageio.ImageIO.write( screenShot(), "png", out );    	
+    }*/
+    
+    public BufferedImage screenShot()
+    {
     	BufferedImage image = new BufferedImage( content.getWidth(), content.getHeight(), BufferedImage.TYPE_INT_RGB );
         Graphics2D graphics2D = image.createGraphics();
         setGalleryVisible( false );
         content.paint( graphics2D );
         setGalleryVisible( true );
-        javax.imageio.ImageIO.write( image, "png", out );    	
+        return image;
     }
 
     private static final String staticLaTeXSrc( Surface s )
@@ -688,8 +780,17 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
  
     public void nextSurface( Surface s, int offset )
     {
-    	s2g( s ).setId( s2g( s ).id() + offset );
-    	idChanged( s );
+    	if( s2g( s ).userVerification.isVisible() )
+    	{
+    		// navigate in user verification
+    		s2g( s ).userVerification.selectNext( offset );
+    	}
+    	else
+    	{
+    		// navigate in surface gallery
+    		s2g( s ).setId( s2g( s ).id() + offset );
+    		idChanged( s );
+    	}
     }
     
     public void previousSurface( Surface s, int offset )

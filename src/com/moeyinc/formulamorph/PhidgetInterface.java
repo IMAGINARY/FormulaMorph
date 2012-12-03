@@ -152,7 +152,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 									{
 										currentEasterEggSequences.get( surface ).poll();
 										currentEasterEggSequences.get( surface ).offer( offset > 0 ? +1 : -1 );
-                                        System.out.println(currentEasterEggSequences.toString());
+                                        //System.out.println(currentEasterEggSequences.toString());
 									}
 									
 									// test if easter egg sequences is complete							
@@ -163,6 +163,7 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 										{
 											public void run()
 											{
+												System.out.println( "Easter egg found on " + new Date() );
 												Main.gui().selectEasterEggSurface( surface );
 											}
 										} );
@@ -252,9 +253,9 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 											public void run()
 											{
 												if( id == 1 )
-													Main.gui().saveScreenShotLeft();
+													Main.gui().saveScreenShot( Surface.F );
 												else if( id == 2 )
-													Main.gui().saveScreenShotRight();
+													Main.gui().saveScreenShot( Surface.G );
 											}
 										} );
 									}

@@ -21,7 +21,10 @@ public class Constants {
 	public static final String momath_api_token;
 	public static final String momath_api_exhibit_id;
 	public static final String momath_api_location_id_left;
-	public static final String momath_api_location_id_right;	
+	public static final String momath_api_location_id_right;
+	
+	public static final int user_verification_timeout;
+	public static final boolean enable_user_verification;
 
 	static
 	{
@@ -44,6 +47,9 @@ public class Constants {
 		momath_api_exhibit_id = props.getProperty( "momath_api_exhibit_id", "FOMO.OD" );
 		momath_api_location_id_left = props.getProperty( "momath_api_location_id_left", "OD.15" );
 		momath_api_location_id_right = props.getProperty( "momath_api_location_id_right", "OD.15" );
+		
+		user_verification_timeout = toInt( props.getProperty( "user_verification_timeout" ), 5 );
+		enable_user_verification = toBoolean( props.getProperty( "enable_user_verification" ), true );
 	}
 	
 	private static int toInt( String value, int default_value )

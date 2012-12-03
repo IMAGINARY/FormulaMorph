@@ -1,6 +1,7 @@
 package com.moeyinc.formulamorph;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -15,6 +16,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import java.util.*;
+import java.util.Timer;
 import java.util.regex.*;
 
 public class UserVerification extends JPanel
@@ -177,12 +179,13 @@ public class UserVerification extends JPanel
 	private static final BufferedImage errorAvatarImage = loadResourceImage( UserVerification.class.getResource( "blank.png" ) );
 	private static final BufferedImage cancelVerificationImage = loadResourceImage( UserVerification.class.getResource( "UserVerificationCANCEL.png" ) );
 
-	
-	private JPanel fixedSizeContentPanel = new JPanel();
+	private JPanel fixedSizeContentPanel;
 	
 	private Visitor[] visitors;
 	private Button[] buttons;
-	private int selected = 0;
+	private int selected;
+	
+	private javax.swing.Timer timer;
 	
 	private abstract class Button extends JPanel
 	{
@@ -231,44 +234,41 @@ public class UserVerification extends JPanel
 		public CancelButton( Runnable r )
 		{
 			super( r );
-			
 			this.setLayout( new BorderLayout() );
 			this.add( new JLabel( new ImageIcon( cancelVerificationImage ) ), BorderLayout.CENTER );
 		}
 	}
 	
-	private final ActionListener actionListener;
+	private ActionListener actionListener;
 	private LocationID locationID;
 	
 	public UserVerification( LocationID locationID, ActionListener actionListener )
 	{	
 		this.locationID = locationID;
 		this.actionListener = actionListener;
-		this.addComponentListener( new ComponentAdapter() { public void componentResized( ComponentEvent e ) { repaint(); } } );
-		this.addKeyListener( new KeyAdapter() {
-			public void keyPressed(KeyEvent e)
-			{
-				if( e.getKeyCode() == KeyEvent.VK_DOWN )
-					selectNext();
-				else if( e.getKeyCode() == KeyEvent.VK_UP )
-					selectPrevious();
-				else if( e.getKeyCode() == KeyEvent.VK_ENTER )
-					confirm();
-			}
-		} );
 		
-		visitors = getCurrentVisitors( LocationID.LEFT );					
-		setContent();
+		this.addComponentListener( new ComponentAdapter() { public void componentResized( ComponentEvent e ) { repaint(); } } );
 		this.setFocusable( true );
-		requestFocus();
+		
+		java.awt.event.ActionListener timedAl = new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) { UserVerification.this.cancel(); }
+		};
+		this.timer = new javax.swing.Timer( 0, timedAl );
+		this.timer.setRepeats( false );
+		
+		initContent();
 	}
 	
-	private void setContent()
+	public void initContent()
 	{	
+		this.removeAll();
 		this.setLayout( null );
+		
+		fixedSizeContentPanel = new JPanel();
 		JPanel fscp = fixedSizeContentPanel;
-		fscp.setBackground( Color.WHITE );
 		this.add( fscp );
+		fscp.setBackground( Color.WHITE );
+		fscp.setOpaque( true );
 		
 		fscp.removeAll();
 		fscp.setLayout( null );
@@ -278,6 +278,7 @@ public class UserVerification extends JPanel
 		
 		int vgap = 22;
 		int i;
+		visitors = getCurrentVisitors( locationID );
 		buttons = new Button[ visitors.length + 1 ];
 		for( i = 0; i < visitors.length; ++i )
 		{
@@ -298,13 +299,30 @@ public class UserVerification extends JPanel
 		buttons[ i ].setBounds( ( headerImage.getWidth() - d.width ) / 2, headerImage.getHeight() + vgap + i * ( d.height + 1 ), d.width, d.height );
 		i++;
 		
-		buttons[ selected ].setSelected( true );
 		fscp.setBounds( 0, 0, headerImage.getWidth(), headerImage.getHeight() + 2 * vgap + ( visitors.length + 1 ) * ( d.height + 1 ) );
 		this.setPreferredSize( fscp.getSize() );
+		this.select( 0 );
+		revalidate();
+		repaint();
 	}
 	
-	private void select( int n )
+	public ActionListener getActionListener() { return this.actionListener; }
+	public void setActionListener( ActionListener actionListener ) { this.actionListener = actionListener; }
+	
+	public LocationID getLocationID() { return this.locationID; }
+	public void setLocationID( LocationID locationID )
 	{
+		if( this.locationID != locationID )
+		{
+			this.locationID = locationID;
+			initContent();
+		}
+	}
+	
+	private synchronized void select( int n )
+	{
+		if( this.timer.isRunning() )
+			this.timer.restart();
 		this.selected = Math.min( Math.max( 0, n ), this.buttons.length - 1 );
 		for( int i = 0; i < this.buttons.length; ++i )
 			this.buttons[ i ].setSelected( i == this.selected );
@@ -312,12 +330,22 @@ public class UserVerification extends JPanel
 	
 	public void selectNext()
 	{
-		select( this.selected + 1 );
+		selectNext( 1 );
 	}
 	
 	public void selectPrevious()
 	{
-		select( this.selected - 1 );
+		selectPrevious( 1 );
+	}
+	
+	public void selectNext( int offset )
+	{
+		select( this.selected + offset );
+	}
+	
+	public void selectPrevious( int offset )
+	{
+		select( this.selected - offset );
 	}
 	
 	public void selectOffset( int offset )
@@ -325,30 +353,50 @@ public class UserVerification extends JPanel
 		select( this.selected + offset );
 	}
 	
-	public void confirm()
+	public synchronized void confirm()
 	{
-		SwingUtilities.invokeLater( this.buttons[ this.selected ].action );
+		this.cancelTimeout();
+		if( this.buttons[ this.selected ].action != null )
+			SwingUtilities.invokeLater( this.buttons[ this.selected ].action );
 	}
 	
-	public void paintComponent(Graphics g)
+	public synchronized void cancel()
 	{
-		if( this.getWidth() == fixedSizeContentPanel.getWidth() && this.getHeight() == fixedSizeContentPanel.getHeight() )
+		this.cancelTimeout();
+		this.actionListener.canceled();
+	}
+		
+	public synchronized void timeout( int milliseconds )
+	{
+		this.timer.stop();
+		this.timer.setInitialDelay( milliseconds );
+		this.timer.restart();
+	}
+	
+	public synchronized void cancelTimeout()
+	{
+		this.timer.stop();
+	}
+	
+	public void paint( Graphics g )
+	{	
+		if( this.getWidth() != fixedSizeContentPanel.getWidth() || this.getHeight() != fixedSizeContentPanel.getHeight() )
 		{
-			fixedSizeContentPanel.setVisible( true );
-			super.paintComponent( g );
-		}
-		else
-		{
-			fixedSizeContentPanel.setVisible( false );
 			BufferedImage image = new BufferedImage( fixedSizeContentPanel.getWidth(), fixedSizeContentPanel.getHeight(), BufferedImage.TYPE_INT_RGB );
 	        Graphics2D graphics2D = image.createGraphics();
 	        fixedSizeContentPanel.paint( graphics2D );
 	        Image scaled = image.getScaledInstance( this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH );
 	        g.drawImage( scaled, 0, 0, scaled.getWidth( null ), scaled.getHeight( null ), null );
-	        repaint( 250 );
+	        boolean focus = this.hasFocus();
+	        this.setVisible( false );
+	        this.setVisible( true );
+	        if( focus )
+	        	this.grabFocus();
 		}
+		else
+			super.paint( g );
 	}
-	
+
     private static String HTTP_GET( URL url )
     	throws MalformedURLException, ProtocolException, IOException
     {
@@ -430,8 +478,9 @@ public class UserVerification extends JPanel
     	Matcher matcher = pattern.matcher( xml );
 
     	LinkedList< String > idList = new LinkedList< String >();
-    	idList.add( "05704f6f-03d0-4107-a04d-dbb7fe1ad333" );
-    	while( matcher.find() && idList.size() < 10 )
+    	//idList.add( "05704f6f-03d0-4107-a04d-dbb7fe1ad333" ); // dummy id with avatar
+    	
+    	while( matcher.find() && idList.size() < 11 )
     		idList.add( matcher.group( 1 ) );
     	String[] ids = new String[ idList.size() ];
     	ids = idList.toArray( ids );
@@ -480,7 +529,7 @@ public class UserVerification extends JPanel
 		try
     	{			
 			URL url = new URL( "http", host, "/api/v1/content.svc/exhibit-blob/" + exhibitID + "/" + v.getID() + "/" + name + "?tok=" + token );
-			System.out.println( url );
+			System.out.println( "image posted to " + url );
     		xml = HTTP_POST( url, bais );
     	}
     	catch( Exception e )
@@ -490,6 +539,24 @@ public class UserVerification extends JPanel
 		return xml != null && xml.toLowerCase().matches( "success" );
     }
     
+    public boolean postPNGImageForAllVisitors( BufferedImage bi, String name )
+    {
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try { ImageIO.write( bi, "png", baos ); } catch( IOException ioe ) { ioe.printStackTrace(); return false; }
+		ByteArrayInputStream bais = new ByteArrayInputStream( baos.toByteArray() );
+		String xml = null;
+		try
+    	{	
+			URL url = new URL( "http", host, "/api/v1/content/exhibit-blob-all/" + exhibitID + "/" + locationID + "/" + name + "?tok=" + token );
+			System.out.println( "image posted to " + url );
+    		xml = HTTP_POST( url, bais );
+    	}
+    	catch( Exception e )
+    	{
+    		e.printStackTrace();
+    	}
+		return xml != null && xml.toLowerCase().matches( "success" );
+    }
 
 	/**
 	 * @param args
@@ -508,27 +575,42 @@ public class UserVerification extends JPanel
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
          
         frame.getContentPane().setLayout( new BorderLayout() );
-        frame.getContentPane().add( new UserVerification(
-        	LocationID.LEFT,
-        	new UserVerification.ActionListener() {
-				
-				@Override
-				public void visitorSelected(UserVerification.Visitor v) {
-					// post user content
-					System.out.println( "visitor " + v.toString() + " selected" );
-					postPNGImageForVisitor( v, UserVerification.errorTagImage, "test0815.png" );
-				}
-				
-				@Override
-				public void canceled() {
-					System.out.println( "visitor verification canceled");
-					System.exit( 0 );
-				}
+        UserVerification.ActionListener uval = new UserVerification.ActionListener() {
+			
+			@Override
+			public void visitorSelected(UserVerification.Visitor v) {
+				// post user content
+				System.out.println( "visitor " + v.toString() + " selected" );
+				postPNGImageForVisitor( v, UserVerification.errorTagImage, "test0815.png" );
 			}
-        ) );
+			
+			@Override
+			public void canceled() {
+				System.out.println( "visitor verification canceled");
+				System.exit( 0 );
+			}
+        };
+        final UserVerification uv = new UserVerification( LocationID.LEFT, uval );
+        frame.getContentPane().add( uv, BorderLayout.CENTER );
          
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+        
+		uv.addKeyListener( new KeyAdapter() {
+			public void keyPressed(KeyEvent e)
+			{
+				if( e.getKeyCode() == KeyEvent.VK_DOWN )
+					uv.selectNext();
+				else if( e.getKeyCode() == KeyEvent.VK_UP )
+					uv.selectPrevious();
+				else if( e.getKeyCode() == KeyEvent.VK_ENTER )
+					uv.confirm();
+				else if( e.getKeyCode() == KeyEvent.VK_R )
+					uv.initContent();
+			}
+		} );
+		uv.grabFocus();
+
     }
 }

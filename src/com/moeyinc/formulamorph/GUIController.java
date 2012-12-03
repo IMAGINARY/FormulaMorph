@@ -62,7 +62,7 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		lrButtonPanel.add( levelsLeft );
 		
 		JButton screenshotLeft = new JButton( "Screenshot Left" );
-		screenshotLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().saveScreenShotLeft(); } } );
+		screenshotLeft.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().saveScreenShot( Surface.F ); } } );
 		lrButtonPanel.add( screenshotLeft );
 		
 		JButton reloadLeft = new JButton( "Reload Left" );
@@ -92,7 +92,7 @@ public class GUIController extends JPanel implements Parameter.ValueChangeListen
 		lrButtonPanel.add( reloadRight );
 
 		JButton screenshotRight = new JButton( "Screenshot Right" );
-		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().saveScreenShotRight(); } } );
+		screenshotRight.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent ae ) { Main.robot().holdBack(); Main.gui().saveScreenShot( Surface.G ); } } );
 		lrButtonPanel.add( screenshotRight );
 
 		JComboBox levelsRight = new JComboBox( levels );
