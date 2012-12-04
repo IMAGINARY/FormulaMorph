@@ -178,14 +178,7 @@ public class UserVerification extends JPanel
 	private static final BufferedImage loadingAvatarImage = loadResourceImage( UserVerification.class.getResource( "blank.png" ) );
 	private static final BufferedImage errorAvatarImage = loadResourceImage( UserVerification.class.getResource( "blank.png" ) );
 	private static final BufferedImage cancelVerificationImage = loadResourceImage( UserVerification.class.getResource( "UserVerificationCANCEL.png" ) );
-
-	private JPanel fixedSizeContentPanel;
-	
-	private Visitor[] visitors;
-	private Button[] buttons;
-	private int selected;
-	
-	private javax.swing.Timer timer;
+	private static final BufferedImage confirmVerificationImage = loadResourceImage( UserVerification.class.getResource( "UserVerificationCONFIRMATION.png" ) );
 	
 	private abstract class Button extends JPanel
 	{
@@ -241,6 +234,17 @@ public class UserVerification extends JPanel
 	
 	private ActionListener actionListener;
 	private LocationID locationID;
+
+	private JPanel fixedSizeContentPanel;
+	
+	private ImageScaler header;	
+	private Visitor[] visitors;
+	private Button[] buttons;
+	private int selected;
+	private boolean confirmed;
+	
+	private javax.swing.Timer timer;
+	
 	
 	public UserVerification( LocationID locationID, ActionListener actionListener )
 	{	
@@ -261,6 +265,7 @@ public class UserVerification extends JPanel
 	
 	public void initContent()
 	{	
+		this.confirmed = false;
 		this.removeAll();
 		this.setLayout( null );
 		
@@ -272,7 +277,7 @@ public class UserVerification extends JPanel
 		
 		fscp.removeAll();
 		fscp.setLayout( null );
-		ImageScaler header = new ImageScaler( headerImage );
+		header = new ImageScaler( headerImage );
 		fscp.add( header );
 		header.setBounds( 0, 0, headerImage.getWidth(), headerImage.getHeight() );
 		
@@ -282,7 +287,6 @@ public class UserVerification extends JPanel
 		buttons = new Button[ visitors.length + 1 ];
 		for( i = 0; i < visitors.length; ++i )
 		{
-			
 			final Visitor v = visitors[ i ];
 			final JPanel p = buttons[ i ];
 			
@@ -301,7 +305,21 @@ public class UserVerification extends JPanel
 		
 		fscp.setBounds( 0, 0, headerImage.getWidth(), headerImage.getHeight() + 2 * vgap + ( visitors.length + 1 ) * ( d.height + 1 ) );
 		this.setPreferredSize( fscp.getSize() );
+		this.selected = -1;
 		this.select( 0 );
+		revalidate();
+		repaint();
+	}
+	
+	public void showConfirmation()
+	{
+		this.confirmed = true;
+		header.setImage( confirmVerificationImage );
+		for( int i = 0; i < buttons.length; ++i )
+		{
+			buttons[ i ].setVisible( i == this.selected );
+			buttons[ i ].action = buttons[ buttons.length - 1 ].action; // set cancel action for all buttons
+		}
 		revalidate();
 		repaint();
 	}
@@ -321,11 +339,14 @@ public class UserVerification extends JPanel
 	
 	private synchronized void select( int n )
 	{
-		if( this.timer.isRunning() )
-			this.timer.restart();
-		this.selected = Math.min( Math.max( 0, n ), this.buttons.length - 1 );
-		for( int i = 0; i < this.buttons.length; ++i )
-			this.buttons[ i ].setSelected( i == this.selected );
+		if( !this.confirmed )
+		{
+			this.selected = Math.min( Math.max( 0, n ), this.buttons.length - 1 );
+			if( this.timer.isRunning() )
+				this.timer.restart();
+			for( int i = 0; i < this.buttons.length; ++i )
+				this.buttons[ i ].setSelected( i == this.selected );
+		}
 	}
 	
 	public void selectNext()
@@ -608,6 +629,8 @@ public class UserVerification extends JPanel
 					uv.confirm();
 				else if( e.getKeyCode() == KeyEvent.VK_R )
 					uv.initContent();
+				else if( e.getKeyCode() == KeyEvent.VK_C )
+					uv.showConfirmation();
 			}
 		} );
 		uv.grabFocus();

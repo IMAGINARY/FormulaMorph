@@ -559,8 +559,10 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			    	UserVerification.ActionListener uval = new UserVerification.ActionListener() {
 						public void visitorSelected( Visitor v )
 						{
+							uv.showConfirmation();
+							uv.paintImmediately( new Rectangle( uv.getSize() ) );
+							uv.timeout( Constants.verification_confirmation_timeout * 1000 );
 							UserVerification.postPNGImageForVisitor( v, screenshot, name );
-							this.canceled();
 						}
 						
 						public void canceled() {
