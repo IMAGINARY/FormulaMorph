@@ -15,6 +15,7 @@ public class Constants {
 	public static final boolean enable_easter_egg;
 	public static final float gallery_item_saturation;
 	public static final int screensaver_after_seconds;
+	public static final int steps_on_rotation_path;
 	
 	public static final boolean enable_momath_api;
 	public static final String momath_api_host;
@@ -40,6 +41,7 @@ public class Constants {
 		enable_easter_egg = toBoolean( props.getProperty( "enable_easter_egg" ), true );
 		gallery_item_saturation = toFloat( props.getProperty( "gallery_item_saturation" ), 0.0f );
 		screensaver_after_seconds = toInt( props.getProperty( "screensaver_after_seconds" ), 10 );
+		steps_on_rotation_path = toInt( props.getProperty( "steps_on_rotation_path" ), 1000 );
 		
 		enable_momath_api = toBoolean( props.getProperty( "enable_momath_api" ), true );
 		momath_api_host = props.getProperty( "momath_api_host", "api.momath.org" );

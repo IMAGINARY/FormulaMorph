@@ -1042,8 +1042,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	boolean stop;
     	boolean pause;
     	Object lock;
-    	Quat4d current;
-    	Quat4d step;
+    	double t;
+    	double steps01;
     	
     	public RotationAnimation()
     	{
@@ -1051,23 +1051,15 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     		pause = true;
     		lock = new Object();
     		
-    		current = new Quat4d();
-    		current.set( new AxisAngle4d() );
-    		
-    		step = new Quat4d();
-    		step.set( new AxisAngle4d() );
- 
-    		double angleStep = 6 * Math.PI / 1000;
-    		Quat4d rotX = new Quat4d(); rotX.set( new AxisAngle4d( 1, 0, 0, angleStep ) ); step.mul( rotX );
-    		Quat4d rotY = new Quat4d(); rotY.set( new AxisAngle4d( 0, 1, 0, angleStep ) ); step.mul( rotY );
-    		Quat4d rotZ = new Quat4d(); rotZ.set( new AxisAngle4d( 0, 0, 1, angleStep ) ); step.mul( rotZ );
+    		t = 0.0;
+    		steps01 = Constants.steps_on_rotation_path;
     	}
     	
     	public void setPathPosition()
     	{
 			Matrix4d newRotation = new Matrix4d();
 			newRotation.setIdentity();
-			newRotation.setRotation( current );
+			newRotation.setRotation( RotationPath.at( t ) );
 			for( Surface s : Surface.values() )
 			{
 				GUI.this.s2g(s).panel.getAlgebraicSurfaceRenderer().setTransform( newRotation );
@@ -1077,10 +1069,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	
     	public void stepPath( int steps )
     	{
-    		for( int i = 0; i < steps; ++i )
-    			current.mul( step );
-    		for( int i = 0; i < -steps; ++i )
-    			current.mulInverse( step );
+    		t += steps / steps01;
     		setPathPosition();
     	}
     	
