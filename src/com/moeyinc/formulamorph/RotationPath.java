@@ -84,7 +84,7 @@ public class RotationPath {
 			t = t + 1.0;
 		// now t\in[0,1]
 		
-		System.out.println( ( ( int ) ( t * q.length ) ) % q.length );
+		//System.out.println( ( ( int ) ( t * q.length ) ) % q.length );
 		
 		Quat4d q1 = q[ ( ( int ) ( t * q.length ) ) % q.length ];
 		Quat4d q2 = q[ ( ( int ) ( t * q.length + 1 ) ) % q.length ];
