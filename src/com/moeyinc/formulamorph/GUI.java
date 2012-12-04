@@ -218,8 +218,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 		// init components
 		surface2guielems.put( Surface.F, new SurfaceGUIElements( Surface.F ) );
-		surface2guielems.put( Surface.M, new SurfaceGUIElements( Surface.M ) );
 		surface2guielems.put( Surface.G, new SurfaceGUIElements( Surface.G ) );
+		surface2guielems.put( Surface.M, new SurfaceGUIElements( Surface.M ) );
 		
 		final LaTeXLabel eqF = s2g( Surface.F ).equation;
 		final LaTeXLabel eqM = s2g( Surface.M ).equation;
@@ -934,12 +934,12 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	Parameter.M_t.setMin( 0.0 );
     	Parameter.M_t.setMax( 1.0 );
 
-		for( Parameter p : Surface.F.getParameters() )
+		for( Parameter p : Surface.M.getParameters() )
 		{
 			p.notifyActivationStateListeners();
 			p.notifyValueChangeListeners();
 		}
-		for( Parameter p : Surface.M.getParameters() )
+		for( Parameter p : Surface.F.getParameters() )
 		{
 			p.notifyActivationStateListeners();
 			p.notifyValueChangeListeners();
