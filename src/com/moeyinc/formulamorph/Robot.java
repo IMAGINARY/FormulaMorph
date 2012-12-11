@@ -25,7 +25,7 @@ public class Robot implements Runnable
 		while( true )
 		{
 			// wait random amount of time before starting new
-			System.out.println( "waiting " + waitTimeS + "s");
+			//System.out.println( "waiting " + waitTimeS + "s");
 			try{ Thread.sleep( waitTimeS * 1000 ); } catch( Exception e ) {}
 			if( System.currentTimeMillis() < enableTime )
 			{
@@ -38,7 +38,7 @@ public class Robot implements Runnable
 			int task = rand.nextInt( switchFormula + changeParameter + rotateSurfaces );
 			if( task < switchFormula )
 			{
-				System.out.println( "switching formula");
+				System.out.println( "Robot: Switching formula");
 				// switch either left or right surface
 				SwingUtilities.invokeLater( new Runnable(){ public void run() { Main.gui().selectRandomSurface( switchF ? Surface.F : Surface.G, rand ); } } );
 				switchF = !switchF;
@@ -46,7 +46,6 @@ public class Robot implements Runnable
 			}
 			else if( task < switchFormula + changeParameter )
 			{
-				System.out.println( "parameter animation");
 				// start animation of parameter
 				List< Parameter > freeParmeterList = Arrays.asList( freeParameters.toArray( new Parameter[ 0 ] ) );
 				Collections.shuffle( freeParmeterList, rand );
@@ -61,6 +60,8 @@ public class Robot implements Runnable
 				}
 				if( p_to_use != null )
 				{
+					System.out.println( "Robot: Changing parameter");
+
 					double current = ( p_to_use.getValue() - p_to_use.getMin() ) / ( p_to_use.getMax() - p_to_use.getMin() );
 					double target = Math.max( rand.nextDouble() * 1.00001, 1.0 );
 							
@@ -76,7 +77,7 @@ public class Robot implements Runnable
 			}
 			else
 			{
-				System.out.println( "rotation");
+				System.out.println( "Robot: Rotation");
 				// rotate
 				Main.gui().resumeAnimation();
 				new Thread( new StopAnimation( 5 + rand.nextInt( 5 ) ) ).start();
