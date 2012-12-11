@@ -125,7 +125,6 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 				{
 					BufferedReader in = new BufferedReader( new InputStreamReader( PhidgetInterface.this.socket.getInputStream() ) );
 					String cmd;
-					boolean[] digital_switch = { false, false, false }; // element 0 is invalid
 					while( ( cmd = in.readLine() ) != null )
 					{
 						cmd = cmd.replaceAll( "#.*$", "" ); // strip comments (everything from # to the end of the command)
@@ -246,8 +245,9 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 								if( id == 1 || id == 2 )
 								{
 									boolean on = Integer.parseInt( values[ 0 ] ) == 1;		
-									if( !digital_switch[ id ] && on )
-									{ // was off, now is on
+									if( on )
+									{
+										System.out.println( "SW in" );
 										SwingUtilities.invokeLater( new Runnable()
 										{
 											public void run()
@@ -258,8 +258,8 @@ public class PhidgetInterface implements Parameter.ActivationStateListener
 													Main.gui().saveScreenShot( Surface.G );
 											}
 										} );
+										System.out.println( "SW out" );
 									}
-									digital_switch[ id ] = on;
 								}
 								else
 								{
