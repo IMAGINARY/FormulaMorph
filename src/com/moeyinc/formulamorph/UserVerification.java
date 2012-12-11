@@ -543,6 +543,7 @@ public class UserVerification extends JPanel
     
     public static boolean postPNGImageForVisitor( Visitor v, BufferedImage bi, String name )
     {
+    	try { name = URLEncoder.encode( name, "UTF-8"); } catch( UnsupportedEncodingException usee ) { usee.printStackTrace(); }
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try { ImageIO.write( bi, "png", baos ); } catch( IOException ioe ) { ioe.printStackTrace(); return false; }
 		ByteArrayInputStream bais = new ByteArrayInputStream( baos.toByteArray() );
@@ -562,6 +563,7 @@ public class UserVerification extends JPanel
     
     public boolean postPNGImageForAllVisitors( BufferedImage bi, String name )
     {
+    	try { name = URLEncoder.encode( name, "UTF-8"); } catch( UnsupportedEncodingException usee ) { usee.printStackTrace(); }
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try { ImageIO.write( bi, "png", baos ); } catch( IOException ioe ) { ioe.printStackTrace(); return false; }
 		ByteArrayInputStream bais = new ByteArrayInputStream( baos.toByteArray() );
