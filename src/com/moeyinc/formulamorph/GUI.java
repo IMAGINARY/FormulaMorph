@@ -582,7 +582,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		    	}
     		}
     		else
-    		{
+    		{ 
     			// save to profiles of all users in front of sensor
     			uv.postPNGImageForAllVisitors( screenShot(), createScreenShotFilename() );
     		}
