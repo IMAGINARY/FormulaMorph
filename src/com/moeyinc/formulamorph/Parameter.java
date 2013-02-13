@@ -11,8 +11,8 @@ public enum Parameter
 	F_b( Surface.F, 'b', new Color3f( 255.0f / 255.0f, 221.0f / 255.0f, 0.0f / 255.0f ) ),
 	F_c( Surface.F, 'c', new Color3f( 200.0f / 255.0f, 89.0f / 255.0f, 161.0f / 255.0f ) ),
 	F_d( Surface.F, 'd', new Color3f( 241.0f / 255.0f, 92.0f / 255.0f, 34.0f / 255.0f ) ), 
-	F_e( Surface.F, 'e', new Color3f( 247.0f / 255.0f, 151.0f / 255.0f, 39.0f / 255.0f ) ),
-	F_f( Surface.F, 'f', new Color3f( 27.0f / 255.0f, 62.0f / 255.0f, 147.0f / 255.0f ) ),
+	F_e( Surface.F, 'e', new Color3f( 237.0f / 255.0f, 31.0f / 255.0f, 36.0f / 255.0f ) ),
+	F_f( Surface.F, 'f', new Color3f( 104.0f / 255.0f, 8.0f / 255.0f, 220.0f / 255.0f ) ),
 	
 	M_t( Surface.M, 't', new Color3f( 101.0f / 255.0f, 105.0f / 255.0f, 109.0f / 255.0f ) ),
 	
@@ -20,8 +20,8 @@ public enum Parameter
 	G_b( Surface.G, 'b', new Color3f( 255.0f / 255.0f, 221.0f / 255.0f, 0.0f / 255.0f ) ),
 	G_c( Surface.G, 'c', new Color3f( 200.0f / 255.0f, 89.0f / 255.0f, 161.0f / 255.0f ) ),
 	G_d( Surface.G, 'd', new Color3f( 241.0f / 255.0f, 92.0f / 255.0f, 34.0f / 255.0f ) ), 
-	G_e( Surface.G, 'e', new Color3f( 247.0f / 255.0f, 151.0f / 255.0f, 39.0f / 255.0f ) ),
-	G_f( Surface.G, 'f', new Color3f( 27.0f / 255.0f, 62.0f / 255.0f, 147.0f / 255.0f ) );
+	G_e( Surface.G, 'e', new Color3f( 237.0f / 255.0f, 31.0f / 255.0f, 36.0f / 255.0f ) ),
+	G_f( Surface.G, 'f', new Color3f( 104.0f / 255.0f, 8.0f / 255.0f, 220.0f / 255.0f ) );
 	
 	public static interface ValueChangeListener
 	{
