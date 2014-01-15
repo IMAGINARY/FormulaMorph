@@ -1,0 +1,27 @@
+group = 'de.mfo.formulamorph'
+version = '1.0.0'
+
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+targetCompatibility = 1.6
+sourceCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+//    maven { url "https://oss.sonatype.org/content/groups/public/" }    
+    maven { url "http://download.tuxfamily.org/arakhne/maven" }
+    maven { url "https://raw.github.com/IMAGINARY/maven-repository/master/" }
+}
+
+dependencies {
+    compile group: 'de.mfo.jsurf', name: 'jsurf', version: '0.1.0'
+    compile group: 'javax', name: 'vecmath', version: '1.5.2'
+    compile fileTree( dir: 'libs', includes: ['*.jar'] )
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.9'
+}
