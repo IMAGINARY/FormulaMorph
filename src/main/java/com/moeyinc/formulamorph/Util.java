@@ -21,9 +21,9 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 
-import de.mfo.jsurfer.rendering.*;
-import de.mfo.jsurfer.rendering.cpu.CPUAlgebraicSurfaceRenderer;
-import de.mfo.jsurfer.util.BasicIO;
+import de.mfo.jsurf.rendering.*;
+import de.mfo.jsurf.rendering.cpu.CPUAlgebraicSurfaceRenderer;
+import de.mfo.jsurf.util.BasicIO;
 
 public class Util
 {

@@ -31,9 +31,9 @@ import java.util.Timer;
 import java.text.DecimalFormat;
 
 //import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
-import de.mfo.jsurfer.algebra.*;
-import de.mfo.jsurfer.rendering.*;
-import de.mfo.jsurfer.util.BasicIO;
+import de.mfo.jsurf.algebra.*;
+import de.mfo.jsurf.rendering.*;
+import de.mfo.jsurf.util.BasicIO;
 
 public class GUI extends JFrame implements Parameter.ValueChangeListener
 {		
@@ -213,6 +213,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
 		// setup the container which has fixed 16:9 aspect ratio
 		content = new JPanel();
+		content.setPreferredSize( new Dimension( 1920, 1080 ) );
 		content.setBackground(Color.BLACK);
 		content.setLayout( null );
 
@@ -273,6 +274,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		layeredContent.add( s2g( Surface.F ).userVerification, JLayeredPane.POPUP_LAYER );
 		layeredContent.add( s2g( Surface.G ).overlay, JLayeredPane.MODAL_LAYER );
 		layeredContent.add( s2g( Surface.G ).userVerification, JLayeredPane.POPUP_LAYER );
+
+		content.revalidate();
 
 		// layout components
 		refreshLayout();
@@ -627,8 +630,8 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 
     private static final String staticLaTeXSrc( Surface s )
     {
-		LaTeXCommands.getImageMap().put( "FMPImage" + s.name(), null ); // at least put it in the map although it is still null
-    	
+		LaTeXCommands.getImageMap().put( "FMPImage" + s.name(), new BufferedImage( 1, 1, BufferedImage.TYPE_INT_RGB ) ); // at least put dummy images it in the map
+
     	StringBuilder sb = new StringBuilder();
     	
     	sb.append( "\\newcommand{\\fixheight}{\\vphantom{Tpgqy}}" );

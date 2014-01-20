@@ -6,14 +6,12 @@ import java.util.*;
 
 import javax.vecmath.Matrix4d;
 
-
-import de.mfo.jsurfer.gui.JSurfFilter;
-import de.mfo.jsurfer.rendering.AlgebraicSurfaceRenderer;
-import de.mfo.jsurfer.rendering.LightSource;
-import de.mfo.jsurfer.rendering.cpu.AntiAliasingPattern;
-import de.mfo.jsurfer.rendering.cpu.CPUAlgebraicSurfaceRenderer;
-import de.mfo.jsurfer.rendering.cpu.CPUAlgebraicSurfaceRenderer.AntiAliasingMode;
-import de.mfo.jsurfer.util.BasicIO;
+import de.mfo.jsurf.rendering.AlgebraicSurfaceRenderer;
+import de.mfo.jsurf.rendering.LightSource;
+import de.mfo.jsurf.rendering.cpu.AntiAliasingPattern;
+import de.mfo.jsurf.rendering.cpu.CPUAlgebraicSurfaceRenderer;
+import de.mfo.jsurf.rendering.cpu.CPUAlgebraicSurfaceRenderer.AntiAliasingMode;
+import de.mfo.jsurf.util.BasicIO;
 
 
 public class Gallery
