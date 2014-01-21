@@ -12,8 +12,6 @@ import javax.swing.event.InternalFrameEvent;
 import javax.vecmath.*;
 import javax.imageio.ImageIO;
 
-import com.moeyinc.formulamorph.UserVerification.Visitor;
-
 import java.io.*;
 import java.net.*;
 
@@ -44,7 +42,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		final public LaTeXLabel equation;
 		final public JPanel levelIcon;
 		final public LaTeXLabel levelLabel;
-		final public UserVerification userVerification;
 		final public JPanel overlay;
 		
 		final private Surface surface;
@@ -119,8 +116,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 			overlay.setBackground( new Color( 0, 0, 0, 170 ) );
 			overlay.setOpaque( true );
 			overlay.setVisible( false );
-			userVerification = new UserVerification( surface == Surface.F ? UserVerification.LocationID.LEFT : UserVerification.LocationID.RIGHT, null );
-			userVerification.setVisible( false );
 		}
 		
 		public int id() { return id_in_gallery; }
@@ -271,9 +266,11 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		JLayeredPane layeredContent = this.getLayeredPane();
 		
 		layeredContent.add( s2g( Surface.F ).overlay, JLayeredPane.MODAL_LAYER );
-		layeredContent.add( s2g( Surface.F ).userVerification, JLayeredPane.POPUP_LAYER );
 		layeredContent.add( s2g( Surface.G ).overlay, JLayeredPane.MODAL_LAYER );
-		layeredContent.add( s2g( Surface.G ).userVerification, JLayeredPane.POPUP_LAYER );
+
+		// if visitor verification for sending screenshots gets implemented again, add the verification popup here
+		//layeredContent.add( s2g( Surface.F ).yourVerificationPanel, JLayeredPane.POPUP_LAYER );
+		//layeredContent.add( s2g( Surface.G ).yourVerificationPanel, JLayeredPane.POPUP_LAYER );
 
 		content.revalidate();
 
@@ -403,17 +400,6 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
 		
 		s2g( Surface.F ).overlay.setBounds( overlayLeftBounds );
 		s2g( Surface.G ).overlay.setBounds( overlayRightBounds );
-		
-		Dimension uvSize = s2g( Surface.F ).userVerification.getPreferredSize();
-		double uvXStart = surfXStart + ( surfSize - uvSize.width ) / 2;
-		
-		Rectangle uvLeftBounds = computeBoundsFullHD( content, uvXStart, surfYStart / 3, uvSize.width, uvSize.height );
-		uvLeftBounds.translate( contentRect.x, contentRect.y );
-		s2g( Surface.F ).userVerification.setBounds( uvLeftBounds);
-		
-		Rectangle uvRightBounds = computeBoundsFullHD( content, 1920 - uvXStart - uvSize.width, surfYStart / 3, uvSize.width, uvSize.height );
-		uvRightBounds.translate( contentRect.x, contentRect.y );
-		s2g( Surface.G ).userVerification.setBounds( uvRightBounds );
 		
 		repaint();
 	}
@@ -743,17 +729,9 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
  
     public void nextSurface( Surface s, int offset )
     {
-    	if( s2g( s ).userVerification.isVisible() )
-    	{
-    		// navigate in user verification
-    		s2g( s ).userVerification.selectNext( offset );
-    	}
-    	else
-    	{
-    		// navigate in surface gallery
-    		s2g( s ).setId( s2g( s ).id() + offset );
-    		idChanged( s );
-    	}
+		// navigate in surface gallery
+		s2g( s ).setId( s2g( s ).id() + offset );
+		idChanged( s );
     }
     
     public void previousSurface( Surface s, int offset )
