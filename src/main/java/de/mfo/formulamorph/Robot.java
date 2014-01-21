@@ -1,10 +1,10 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.util.Random;
 import java.util.*;
 import javax.swing.SwingUtilities;
 
-import com.moeyinc.formulamorph.GUI.SurfaceGUIElements;
+import de.mfo.formulamorph.GUI.SurfaceGUIElements;
 
 
 

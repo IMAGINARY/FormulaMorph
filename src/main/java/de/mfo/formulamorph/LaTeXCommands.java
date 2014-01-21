@@ -1,4 +1,4 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import org.scilab.forge.jlatexmath.*;
 import org.scilab.forge.jlatexmath.dynamic.*;
@@ -31,7 +31,7 @@ public class LaTeXCommands {
 			"<PredefinedCommands enabled=\"true\">\n" +
 			"	<Command name=\"FMDynamic\" enabled=\"true\">\n" +
 			"		<CreateCommand name=\"f\">\n" +
-			"			<Argument type=\"String\" value=\"com.moeyinc.formulamorph.LaTeXCommands\" />\n" +
+			"			<Argument type=\"String\" value=\"de.mfo.formulamorph.LaTeXCommands\" />\n" +
 			"			<Argument type=\"String\" value=\"formulaMorphDynamic_macro\" />\n" +
 			"			<!-- the command includeJavaImage has 1 arguments (the key to replace)-->\n" +
 			"			<Argument type=\"float\" value=\"1\" />\n" +
@@ -42,7 +42,7 @@ public class LaTeXCommands {
 			"	</Command>\n" +
 			"	<Command name=\"includejavaimage\" enabled=\"true\">\n" +
 			"		<CreateCommand name=\"f\">\n" +
-			"			<Argument type=\"String\" value=\"com.moeyinc.formulamorph.LaTeXCommands\" />\n" +
+			"			<Argument type=\"String\" value=\"de.mfo.formulamorph.LaTeXCommands\" />\n" +
 			"			<Argument type=\"String\" value=\"includeJavaImage_macro\" />\n" +
 			"			<!-- the command includeJavaImage has 1 arguments (name of the image)-->\n" +
 			"			<Argument type=\"float\" value=\"1\" />\n" +
@@ -53,7 +53,7 @@ public class LaTeXCommands {
 			"	</Command>\n" +
 			"	<Command name=\"FMOvalbox\" enabled=\"true\">\n" +
 			"		<CreateCommand name=\"f\">\n" +
-			"			<Argument type=\"String\" value=\"com.moeyinc.formulamorph.LaTeXCommands\" />\n" +
+			"			<Argument type=\"String\" value=\"de.mfo.formulamorph.LaTeXCommands\" />\n" +
 			"			<Argument type=\"String\" value=\"FMOvalbox_macro\" />\n" +
 			"			<!-- the command FMOvalbox has 1 argument (text)-->\n" +
 			"			<Argument type=\"float\" value=\"1\" />\n" +

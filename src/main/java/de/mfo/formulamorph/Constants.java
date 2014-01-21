@@ -1,4 +1,4 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.io.File;
 import java.io.FileInputStream;

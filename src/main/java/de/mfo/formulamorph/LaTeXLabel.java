@@ -1,4 +1,4 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.awt.Graphics; 
 import java.awt.Insets;

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.awt.*;
 import java.awt.geom.*;

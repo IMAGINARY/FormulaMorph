@@ -1,4 +1,4 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.util.*;
 import java.io.*;

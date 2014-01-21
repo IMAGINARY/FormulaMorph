@@ -1,4 +1,4 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.awt.Point;
 import java.awt.geom.AffineTransform;

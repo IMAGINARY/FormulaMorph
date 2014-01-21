@@ -11,7 +11,6 @@ sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
-//    maven { url "https://oss.sonatype.org/content/groups/public/" }    
     maven { url "http://download.tuxfamily.org/arakhne/maven" }
     maven { url "https://raw.github.com/IMAGINARY/maven-repository/master/" }
 }
@@ -26,4 +25,4 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '1.9'
 }
 
-mainClassName = "com.moeyinc.formulamorph.Main"
+mainClassName = "de.mfo.formulamorph.Main"

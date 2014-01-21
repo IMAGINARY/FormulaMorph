@@ -1,4 +1,4 @@
-package com.moeyinc.formulamorph;
+package de.mfo.formulamorph;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -28,7 +28,7 @@ import java.util.TimerTask;
 import java.util.Timer;
 import java.text.DecimalFormat;
 
-//import com.moeyinc.formulamorph.Parameters.ActiveParameterListener;
+//import de.mfo.formulamorph.Parameters.ActiveParameterListener;
 import de.mfo.jsurf.algebra.*;
 import de.mfo.jsurf.rendering.*;
 import de.mfo.jsurf.util.BasicIO;
