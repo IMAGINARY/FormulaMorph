@@ -539,60 +539,18 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     
     public void saveScreenShot( Surface s )
     {
-    	if( s != Surface.F && s != Surface.G )
-    		return;
-    	
-    	final UserVerification uv = s2g( s ).userVerification;
-    	final JPanel overlay = s2g( s ).overlay;
-    	
-    	if( Constants.enable_momath_api )
-    	{
-    		if( Constants.enable_user_verification )
-    		{
-    			// let user identify himself and save to his profile
-		    	if( s2g( s ).userVerification.isVisible() )
-		    	{
-		    		s2g( s ).userVerification.confirm();
-		    	}
-		    	else
-		    	{
-			    	final BufferedImage screenshot = screenShot();
-			    	final String name = createScreenShotFilename();
-			    	
-			    	UserVerification.ActionListener uval = new UserVerification.ActionListener() {
-						public void visitorSelected( Visitor v )
-						{
-							uv.showConfirmation();
-							uv.paintImmediately( new Rectangle( uv.getSize() ) );
-							uv.timeout( Constants.verification_confirmation_timeout * 1000 );
-							UserVerification.postPNGImageForVisitor( v, screenshot, name );
-						}
-						
-						public void canceled() {
-							uv.cancelTimeout();
-							overlay.setVisible( false ); 
-							uv.setVisible( false );
-						}
-			    	};
-			    	uv.setActionListener( uval );
-			    	uv.initContent();
-			    	
-			    	overlay.setVisible( true ); 
-			    	uv.setVisible( true );
-			    	uv.timeout( Constants.user_verification_timeout * 1000 );
-			    	
-			    	refreshLayout();
-		    	}
-    		}
-    		else
-    		{ 
-    			// save to profiles of all users in front of sensor
-    			uv.postPNGImageForAllVisitors( screenShot(), createScreenShotFilename() );
-    		}
-	    }
+ 		// ToDo: different actions for different surfaces s
+ 		final File file = new File( createScreenShotFilename() );
+ 		try
+ 		{
+ 			saveScreenShotToFile( file );
+ 		}
+ 		catch( IOException ioe )
+ 		{
+ 			System.err.println( "Unabke to save screenshot to " + file.getAbsolutePath() );
+ 		}
     }
     
-    /*
     public void saveScreenShotToFile( File f )
     		throws IOException
     {
@@ -616,7 +574,7 @@ public class GUI extends JFrame implements Parameter.ValueChangeListener
     	throws IOException
     {
         javax.imageio.ImageIO.write( screenShot(), "png", out );    	
-    }*/
+    }
     
     public BufferedImage screenShot()
     {
