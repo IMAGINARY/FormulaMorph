@@ -1,4 +1,4 @@
-   Copyright 2012 Christian Stussak
+Copyright 2012 Christian Stussak
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -10,4 +10,13 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-   limitations under the License.
+limitations under the License.
+
+This program is part of IMAGINARY (www.imaginary.org) by the
+Mathematisches Forschungsinstitut Oberwolfach (www.mfo.de). It was
+originally developed for and in collaboration with the National Museum
+of Mathematics (www.momath.org).
+
+The design of the program was done in collaboration with Moey Inc
+(http://moeyinc.com/), the company who also produced the hardware and
+hardware-software connection of the first exhibit.
