@@ -1,40 +1,42 @@
 <!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>Formulamorph by IMAGINARY</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Formulamorph : A virtual exhibit for interactive exploration of morphings of (implicit) algebraic surfaces" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Formulamorph</title>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
 
-        <header>
-          <h1>Formulamorph</h1>
-          <h2>A virtual exhibit for interactive exploration of morphings of (implicit) algebraic surfaces</h2>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/IMAGINARY/FormulaMorph">View on GitHub</a>
+
+          <h1 id="project_title">Formulamorph</h1>
+          <h2 id="project_tagline">A virtual exhibit for interactive exploration of morphings of (implicit) algebraic surfaces</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/IMAGINARY/FormulaMorph/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/IMAGINARY/FormulaMorph/tarball/master">Download this project as a tar.gz file</a>
+            </section>
         </header>
+    </div>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/IMAGINARY/FormulaMorph/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/IMAGINARY/FormulaMorph/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/IMAGINARY/FormulaMorph" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
-
-        <hr>
-
-        <section id="main_content">
-          <h1>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
 <a name="formulamorph" class="anchor" href="#formulamorph"><span class="octicon octicon-link"></span></a>FormulaMorph</h1>
 
-<p>This software allows to explore the beauty of algebraic surfaces using real time visualizations. The user can select two algebraic surfaces from a predefined list and interactively modify surface parameters in order to achieve deformations. Both surfaces are interpolated ("morphed") so that a third surface is created. In most cases, the results are very aesthetical and astonishing.</p>
+<p>This software allows to explore the beauty of algebraic surfaces using real time visualizations. The user can select two algebraic surfaces from a predefined list and interactively modify surface parameters in order to achieve deformations. Both surfaces are interpolated ("morphed") so that a third surface is created. In most cases, the results are very aesthetical and astonishing!</p>
+
+<p><img src="https://raw.github.com/IMAGINARY/FormulaMorph/gh-pages/images/FormulaMorphScreenShot.png" alt="FormulaMorph screen shot"></p>
 
 <p>This virtual exhibit is designed to be controlled using physical input devices (wheels, levers, buttons). A software panel is provided for testing purposes.</p>
 
@@ -49,19 +51,24 @@
 <p>Once the main screen shows up, you need to perform a right click on the window to bring up the software control panel. There are essentially three ways to connect physical input devices to FormulaMorph:</p>
 
 <ol>
-<li>Build your own combination of <a href="http://www.phidgets.com/">Phidgets</a> together with [Link to AH's Phidget controller (not yet online)].</li>
+<li>Build your own combination of <a href="http://www.phidgets.com/">Phidgets</a> together with [Link to AH's Phidget controller (not yet online)]. This has been used at the MoMath NYC:
+<img src="https://raw.github.com/IMAGINARY/FormulaMorph/gh-pages/images/FormulaMorphAtMoMath.jpg" alt="FormulaMorph exhibit at the MoMath">
+</li>
 <li>Use whatever input devices you like and communicate with FormulaMorph via the simple network protocol defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.</li>
 <li>Add support for other devices directly into the ForumulaMorph code.</li>
 </ol>
-        </section>
-
-        <footer>
-          Formulamorph is maintained by <a href="https://github.com/IMAGINARY">IMAGINARY</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
-      </div>
+      </section>
     </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Formulamorph maintained by <a href="https://github.com/IMAGINARY">IMAGINARY</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
   </body>
 </html>
