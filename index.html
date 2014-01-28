@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Formulamorph : A virtual exhibit for interactive exploration of morphings of (implicit) algebraic surfaces" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Formulamorph</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>FormulaMorph by IMAGINARY</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/IMAGINARY/FormulaMorph">View on GitHub</a>
-
-          <h1 id="project_title">Formulamorph</h1>
-          <h2 id="project_tagline">A virtual exhibit for interactive exploration of morphings of (implicit) algebraic surfaces</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/IMAGINARY/FormulaMorph/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/IMAGINARY/FormulaMorph/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>FormulaMorph</h1>
+          <h2>A virtual exhibit for interactive exploration of morphings of (implicit) algebraic surfaces</h2>
         </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="formulamorph" class="anchor" href="#formulamorph"><span class="octicon octicon-link"></span></a>FormulaMorph</h1>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/IMAGINARY/FormulaMorph/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/IMAGINARY/FormulaMorph/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/IMAGINARY/FormulaMorph" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-<p>This software allows to explore the beauty of algebraic surfaces using real time visualizations. The user can select two algebraic surfaces from a predefined list and interactively modify surface parameters in order to achieve deformations. Both surfaces are interpolated ("morphed") so that a third surface is created. In most cases, the results are very aesthetical and astonishing!</p>
+        <hr>
+
+        <section id="main_content">
+          <p>This software allows to explore the beauty of algebraic surfaces using real time visualizations. The user can select two algebraic surfaces from a predefined list and interactively modify surface parameters in order to achieve deformations. Both surfaces are interpolated ("morphed") so that a third surface is created. In most cases, the results are very aesthetical and astonishing!</p>
 
 <p><img src="https://raw.github.com/IMAGINARY/FormulaMorph/gh-pages/images/FormulaMorphScreenShot.png" alt="FormulaMorph screen shot"></p>
 
 <p>This virtual exhibit is designed to be controlled using physical input devices (wheels, levers, buttons). A software panel is provided for testing purposes.</p>
 
-<h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<h1>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h1>
 
 <p>Clone the repository locally and test it using</p>
 
@@ -54,21 +51,76 @@
 <li>Build your own combination of <a href="http://www.phidgets.com/">Phidgets</a> together with [Link to AH's Phidget controller (not yet online)]. This has been used at the MoMath NYC:
 <img src="https://raw.github.com/IMAGINARY/FormulaMorph/gh-pages/images/FormulaMorphAtMoMath.jpg" alt="FormulaMorph exhibit at the MoMath">
 </li>
-<li>Use whatever input devices you like and communicate with FormulaMorph via the simple network protocol defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.</li>
+<li>Use whatever input devices you like and communicate with FormulaMorph via the simple <a href="#network-protocol">network protocol</a> defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.</li>
 <li>Add support for other devices directly into the ForumulaMorph code.</li>
-</ol>
-      </section>
+</ol><h1>
+<a name="network-protocol" class="anchor" href="#network-protocol"><span class="octicon octicon-link"></span></a>Network protocol</h1>
+
+<p>FormulaMorph can be controlled via the network. It acts as a client that connects to the server and port given in the file <a href="settings.properties">settings.properties</a>. The protocol itself is best explained using an example session.</p>
+
+<pre><code># a comment
+# S: message sent by the server
+# C: message sent by the client (FormulaMorph)
+
+C: # send a heart beat comment every second to recognize broken connections
+S: # send a heart beat comment every second to recognize broken connections
+
+S: FS,1,3     # select the formula from the list on the left which is 3 formulas ahead of the current one 
+C: LD,1,1     # let server know that the new (left) fomula contains a parameter 'a',
+              # (allows server to provide feedback to the user, e.g. by enabling the knob controlling this parameter)
+C: LD,2,0     # new (left) formula does not contain parameter 'b' 
+C: LD,3,0     # new (left) formula does not contain parameter 'c' 
+C: LD,4,0     # new (left) formula does not contain parameter 'd' 
+C: LD,5,0     # new (left) formula does not contain parameter 'e' 
+C: LD,6,0     # new (left) formula does not contain parameter 'f'
+
+C: # heart beat comment
+S: # heart beat comment
+
+S: RE,1,10    # increase the value of left parameter 'a' by 10/360 of its range
+S: JW,1,5     # rotate the surfaces by moving 5 steps along the rotation path
+
+S: FS,2,-1    # select the formula from the list on the right which is 3 formulas before the current one 
+C: LD,7,1     # new (right) formula contains parameter 'a' 
+C: LD,8,0     # new (right) formula does not contain parameter 'b' 
+C: LD,9,1     # new (right) formula contains parameter 'c' 
+C: LD,10,0    # new (right) formula does not contain parameter 'd' 
+C: LD,11,0    # new (right) formula does not contain parameter 'e' 
+C: LD,12,0    # new (right) formula does not contain parameter 'f'
+
+C: # heart beat comment
+S: # heart beat comment
+
+S: RE,9,20    # increase the value of right parameter 'c' by 20/360 of its range
+
+S: JS,1,0.125 # set the morph parameter to 0.125
+
+S: SW,1,1     # save screenshot for the left surface
+S: SW,1,2     # save screenshot for the right surface (currently the same as for the left surface)
+
+C: # heart beat comment
+S: # heart beat comment
+
+...
+</code></pre>
+
+<h1>
+<a name="contribute--collaborate" class="anchor" href="#contribute--collaborate"><span class="octicon octicon-link"></span></a>Contribute &amp; Collaborate</h1>
+
+<p>FormulaMorph is part of <a href="http://www.imaginary.org">IMAGINARY</a> by the <a href="http://www.mfo.de">Mathematisches Forschungsinstitut Oberwolfach</a>. It was originally developed for and in collaboration with the <a href="http://www.momath.org">National Museum of Mathematics, NYC</a>.</p>
+
+<p>The design of the program was done in collaboration with <a href="http://moeyinc.com/">Moey Inc</a>, the company who also produced the hardware and hardware-software connection of the first exhibit.</p>
+
+<p>If you are interested in showing FormulaMorph at your museum or exhibition, you may <a href="http://http://www.imaginary.org/contact">contact us and ask for support</a>. </p>
+        </section>
+
+        <footer>
+          FormulaMorph is maintained by <a href="https://github.com/IMAGINARY">IMAGINARY</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Formulamorph maintained by <a href="https://github.com/IMAGINARY">IMAGINARY</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
