@@ -73,3 +73,12 @@ S: # heart beat comment
 
 ...
 ```
+
+Contribute & Collaborate
+------------------------
+
+FormulaMorph is part of [IMAGINARY](http://www.imaginary.org) by the [Mathematisches Forschungsinstitut Oberwolfach](http://www.mfo.de). It was originally developed for and in collaboration with the [National Museum of Mathematics, NYC](http://www.momath.org).
+
+The design of the program was done in collaboration with [Moey Inc](http://moeyinc.com/), the company who also produced the hardware and hardware-software connection of the first exhibit.
+
+If you are interested in showing FormulaMorph at your museum or exhibition, you may [contact us and ask for support](http://http://www.imaginary.org/contact). 
