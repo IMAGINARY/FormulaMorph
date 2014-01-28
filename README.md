@@ -19,7 +19,7 @@ Once the main screen shows up, you need to perform a right click on the window t
 
 1. Build your own combination of [Phidgets](http://www.phidgets.com/) together with [Link to AH's Phidget controller (not yet online)]. This has been used at the MoMath NYC:
    ![FormulaMorph exhibit at the MoMath](https://raw.github.com/IMAGINARY/FormulaMorph/gh-pages/images/FormulaMorphAtMoMath.jpg)
-2. Use whatever input devices you like and communicate with FormulaMorph via the simple [network protocol](#Network protocol) defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.
+2. Use whatever input devices you like and communicate with FormulaMorph via the simple [network protocol](#network-protocol) defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.
 3. Add support for other devices directly into the ForumulaMorph code.
 
 Network protocol
@@ -61,7 +61,7 @@ C: LD,12,0    # new (right) formula does not contain parameter 'f'
 C: # heart beat comment
 S: # heart beat comment
 
-S: RE,9,20    # increase the value of right parameter 'ca' by 20/360 of its range
+S: RE,9,20    # increase the value of right parameter 'c' by 20/360 of its range
 
 S: JS,1,0.125 # set the morph parameter to 0.125
 
