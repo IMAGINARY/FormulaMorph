@@ -17,7 +17,7 @@ Clone the repository locally and test it using
 
 Once the main screen shows up, you need to perform a right click on the window to bring up the software control panel. There are essentially three ways to connect physical input devices to FormulaMorph:
 
-1. Build your own combination of [Phidgets](http://www.phidgets.com/) together with [Link to AH's Phidget controller (not yet online)]. This has been used at the MoMath NYC:
+1. Build your own combination of [Phidgets](http://www.phidgets.com/) together with [this Phidget controller](https://github.com/ahrv/FormulaMorph). This has been used at the MoMath NYC:
    ![FormulaMorph exhibit at the MoMath](https://raw.github.com/IMAGINARY/FormulaMorph/gh-pages/images/FormulaMorphAtMoMath.jpg)
 2. Use whatever input devices you like and communicate with FormulaMorph via the simple [network protocol](#network-protocol) defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.
 3. Add support for other devices directly into the ForumulaMorph code.
