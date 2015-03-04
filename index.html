@@ -4,9 +4,9 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -38,7 +38,7 @@
 <p>This virtual exhibit is designed to be controlled using physical input devices (wheels, levers, buttons). A software panel is provided for testing purposes.</p>
 
 <h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
 <p>Clone the repository locally and test it using</p>
 
@@ -53,8 +53,10 @@
 </li>
 <li>Use whatever input devices you like and communicate with FormulaMorph via the simple <a href="#network-protocol">network protocol</a> defined below. This requires to implement your own software layer which abstracts from the physical devices. You don't need to modify the FormulaMorph soruce code.</li>
 <li>Add support for other devices directly into the ForumulaMorph code.</li>
-</ol><h2>
-<a name="network-protocol" class="anchor" href="#network-protocol"><span class="octicon octicon-link"></span></a>Network protocol</h2>
+</ol>
+
+<h2>
+<a id="network-protocol" class="anchor" href="#network-protocol" aria-hidden="true"><span class="octicon octicon-link"></span></a>Network protocol</h2>
 
 <p>FormulaMorph can be controlled via the network. It acts as a client that connects to the server and port given in the file <a href="settings.properties">settings.properties</a>. The protocol itself is best explained using an example session.</p>
 
@@ -104,8 +106,15 @@ S: # heart beat comment
 ...
 </code></pre>
 
+<p>In order to test the network protocol, you can just create a new server using NetCat. On Mac and Linux systems it looks like this:</p>
+
+<pre><code>nc -l port
+</code></pre>
+
+<p><code>port</code> has to be replaced by the port value defined in <code>settings.properties</code>. As soon as FormulaMorph connects to the server you see various messages comming in. Just type in a few of the commands listed above and see what happens (the server commands are prefixed with <code>S:</code> in the above listing).</p>
+
 <h2>
-<a name="contribute--collaborate" class="anchor" href="#contribute--collaborate"><span class="octicon octicon-link"></span></a>Contribute &amp; Collaborate</h2>
+<a id="contribute--collaborate" class="anchor" href="#contribute--collaborate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribute &amp; Collaborate</h2>
 
 <p>FormulaMorph is part of <a href="http://www.imaginary.org">IMAGINARY</a> by the <a href="http://www.mfo.de">Mathematisches Forschungsinstitut Oberwolfach</a>. It was originally developed for and in collaboration with the <a href="http://www.momath.org">National Museum of Mathematics, NYC</a>.</p>
 
