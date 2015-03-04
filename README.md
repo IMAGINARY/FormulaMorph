@@ -73,6 +73,11 @@ S: # heart beat comment
 
 ...
 ```
+In order to test the network protocol, you can just create a new server using NetCat. On Mac and Linux systems it looks like this:
+```
+nc -l port
+```
+`port` has to be replaced by the port value defined in `settings.properties`. As soon as FormulaMorph connects to the server you see various messages comming in. Just type in a few of the commands listed above and see what happens (the server commands are prefixed with `S: ` in the above listing).
 
 Contribute & Collaborate
 ------------------------
