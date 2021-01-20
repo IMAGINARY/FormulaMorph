@@ -86,4 +86,4 @@ FormulaMorph is part of [IMAGINARY](http://www.imaginary.org) by the [Mathematis
 
 The design of the program was done in collaboration with [Moey Inc](http://moeyinc.com/), the company who also produced the hardware and hardware-software connection of the first exhibit.
 
-If you are interested in showing FormulaMorph at your museum or exhibition, you may [contact us and ask for support](http://http://www.imaginary.org/contact). 
+If you are interested in showing FormulaMorph at your museum or exhibition, you may [contact us and ask for support](https://www.imaginary.org/contact). 
