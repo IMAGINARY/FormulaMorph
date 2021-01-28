@@ -25,4 +25,9 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '1.9'
 }
 
+applicationDistribution.from(".") {
+  include "gallery/**/*"
+  include "settings.properties"
+}
+
 mainClassName = "de.mfo.formulamorph.Main"
