@@ -14,8 +14,8 @@ To run FormulaMorph:
 
 1. Download ZIP or TAR from the releases.
 2. Extract the archive.
-3. Change into the `bin` folder of the extracted folder (`FormulaMorph-VERSION`).
-4. Execute `./FormulaMorph` (Linux/Mac) or `FormulaMorph.bat` (Windows)
+3. Change into the extracted folder (`FormulaMorph-VERSION`) or set the working directory to it.
+4. Execute `./bin/FormulaMorph` (Linux/Mac) or `bin/FormulaMorph.bat` (Windows)
 
 Once the main screen shows up, you need to perform a right click on the window to bring up the software control panel. There are essentially three ways to connect physical input devices to FormulaMorph:
 
