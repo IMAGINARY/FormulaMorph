@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'de.mfo.jsurf', name: 'jsurf', version: '0.1.0'
+    compile group: 'de.mfo.jsurf', name: 'jsurf', version: '0.3.0'
     compile group: 'javax.vecmath', name: 'vecmath', version: '1.5.2'
     compile fileTree( dir: 'libs', includes: ['*.jar'] )
 }
